@@ -3,14 +3,16 @@
       <!-- Sidebar -->
       <div class="sidebar">
         <div class="header">
-            <h1>🍽️ 食尚阁 - 前台管理系统</h1>
+            <h1>食尚阁 - 前台管理系统</h1>
         </div>
         <ul>
-            <li><router-link to="/add-manager">👤➕ 添加管理员</router-link></li> 
-            <li><router-link to="/check-orders">💵 查看订单及结账</router-link></li>
-            <li><router-link to="/distribute-coupons">🎟️ 分配优惠券</router-link></li>
-            <li><router-link to="/manage-delivery">🛵 外卖员管理</router-link></li>
-            <li><router-link to="/manage-tables">🪑 餐桌预定</router-link></li>
+          <li><router-link to="/check-orders">（1）管理堂食订单</router-link></li>
+          <li><router-link to="/distribute-coupons">（2）管理优惠券</router-link></li>
+          <li><router-link to="/manage-delivery">（3）管理外卖订单</router-link></li>
+          <li><router-link to="/manage-tables">（4）管理餐桌</router-link></li>
+          <li><router-link to="/dishes">（5）管理菜品</router-link></li>
+          <li><router-link to="/data-analytics">（6）数据分析</router-link></li>
+
         </ul>
       </div>
   

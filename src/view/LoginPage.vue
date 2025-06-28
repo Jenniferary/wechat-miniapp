@@ -7,7 +7,7 @@
       <form @submit.prevent="submitLogin">
         <label for="role">请选择身份：</label>
         <select id="role" v-model="role" required>
-          <option value="admin">管理员</option>
+  
           <option value="counter">前台</option>
           <option value="hr">HR</option>
           <option value="chef">厨师</option>
@@ -63,28 +63,33 @@ export default {
         } catch (error) {
           alert("管理员登录失败：" + error.message);
         }
-      } else if (role === "counter") {
-      try {
-          const response = await fetch("http://localhost:8080/api/counter/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, password }),
-          });
-        const result = await response.json();
-        if (response.ok && result.status === "success") {
-        alert("前台登录成功");
-        localStorage.setItem("role", "counter");
-        localStorage.setItem("username", username);
-        this.$router.push("/counter");
-      } else {
-        alert("前台账号或密码错误");
       }
-      } catch (error) {
-      alert("前台登录失败：" + error.message);
-      }
-    }
 
-        else if (role === "hr") {
+      // 前台：采用版本2的思路
+      else if (role === "counter") {
+        try {
+          const response = await fetch("http://localhost:8080/api/manager/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password }),
+          });
+          const result = await response.json();
+          if (response.ok && result.status === "success") {
+            alert("前台登录成功");
+            localStorage.setItem("role", "counter");
+            localStorage.setItem("username", username);
+            // 版本2做法：可使用 user 对象存储
+            // localStorage.setItem("user", JSON.stringify({ username }));
+            this.$router.push("/counter");
+          } else {
+            alert(result.message || "前台账号或密码错误");
+          }
+        } catch (error) {
+          alert("前台登录失败：" + error.message);
+        }
+      }
+
+      else if (role === "hr") {
         try {
           const response = await fetch("http://localhost:8080/api/hr/login", {
             method: "POST",
@@ -96,7 +101,7 @@ export default {
             alert("HR登录成功");
             localStorage.setItem("role", "hr");
             localStorage.setItem("username", username);
-            localStorage.setItem("hrId", result.data.id); 
+            localStorage.setItem("hrId", result.data.id);
             this.$router.push("/hr-dashboard");
           } else {
             alert("HR账号或密码错误");
@@ -104,7 +109,9 @@ export default {
         } catch (error) {
           alert("HR登录失败：" + error.message);
         }
-      } else if (role === "chef") {
+      }
+
+      else if (role === "chef") {
         try {
           const response = await fetch("http://localhost:8080/api/chef/login", {
             method: "POST",
@@ -116,34 +123,37 @@ export default {
             alert("厨师登录成功");
             localStorage.setItem("role", "chef");
             localStorage.setItem("username", username);
-            this.$router.push("/chef-dashboard");  // 厨师登录后页面
+            this.$router.push("/chef-dashboard");
           } else {
             alert("厨师账号或密码错误");
           }
         } catch (error) {
           alert("厨师登录失败：" + error.message);
         }
-      } 
-      else if (role === "waiter") {
-      try {
-          const response = await fetch("http://localhost:8080/api/waiters/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, password }),
-        });
-        const result = await response.json();
-        if (response.ok && result.status === "success") {
-        alert("服务员登录成功");
-        localStorage.setItem("role", "waiter");
-        localStorage.setItem("username", username); 
-        this.$router.push("/waiter-dashboard");
-        } else {
-            alert("服务员账号或密码错误");
-        }
-      } catch (error) {
-        alert("服务员登录失败：" + error.message);
       }
-    }else {
+
+      else if (role === "waiter") {
+        try {
+          const response = await fetch("http://localhost:8080/api/waiters/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password }),
+          });
+          const result = await response.json();
+          if (response.ok && result.status === "success") {
+            alert("服务员登录成功");
+            localStorage.setItem("role", "waiter");
+            localStorage.setItem("username", username);
+            this.$router.push("/waiter-dashboard");
+          } else {
+            alert("服务员账号或密码错误");
+          }
+        } catch (error) {
+          alert("服务员登录失败：" + error.message);
+        }
+      }
+
+      else {
         alert("请选择正确的身份");
       }
     },

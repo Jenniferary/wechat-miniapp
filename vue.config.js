@@ -1,12 +1,13 @@
-// vue.config.js
 
+
+// vue.config.js
 module.exports = {
   devServer: {
+    port: 8081,  // 🆕 添加这行，指定前端端口
     proxy: {
       '/api': {
-        target: 'http://localhost:8080', // 你的 Spring Boot 后端地址
-        changeOrigin: true,              // 支持跨域
-        // 如果后端接口没有以 /api 开头，则打开下面这行：
+        target: 'http://localhost:8080', // 后端地址保持不变
+        changeOrigin: true,
         // pathRewrite: { '^/api': '' }
       }
     }

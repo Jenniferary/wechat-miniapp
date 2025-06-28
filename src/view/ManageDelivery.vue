@@ -4,55 +4,39 @@
     <div class="sidebar">
       <h3>前台管理系统</h3>
       <ul>
-        <li>
-          <router-link to="/counter">
-            🏠 回到管理主页
-          </router-link>
-        </li>
-        <li><router-link to="/add-manager">
-          👤➕ 添加管理员
-        </router-link></li> 
-        <li>
-          <router-link to="/check-orders">
-            💵 查看订单及结账
-          </router-link>
-        </li>
-        <li>
-          <router-link to="/distribute-coupons">
-            🎟️ 分配优惠券
-          </router-link>
-        </li>
-        <li>
-          <router-link to="/manage-tables">
-            🪑 餐桌预定
-          </router-link>
-        </li>
+        <li><router-link to="/check-orders">（1）管理堂食订单</router-link></li>
+        <li><router-link to="/distribute-coupons">（2）管理优惠券</router-link></li>
+        <li><router-link to="/manage-delivery">（3）管理外卖订单</router-link></li>
+        <li><router-link to="/manage-tables">（4）管理餐桌</router-link></li>
+        <li><router-link to="/dishes">（5）管理菜品</router-link></li>
+        <li><router-link to="/data-analytics">（6）数据分析</router-link></li>
+        <li><router-link to="/counter">回到管理主页</router-link></li>
       </ul>
     </div>
   
     <!-- Main Content -->
     <div class="content">
       <h2 class="page-title">
-        📦 管理外卖订单
+        管理外卖订单
       </h2>
       <div class="action-buttons">
         <router-link
           to="/assign-delivery"
           class="redirect-button"
         >
-          🚚 分配外卖员
+          分配外卖员
         </router-link>
         <router-link
           to="/add-delivery-person"
           class="redirect-button"
         >
-          ➕ 添加外卖员
+          添加外卖员
         </router-link>
         <router-link
           to="/view-delivery-orders"
           class="redirect-button"
         >
-          📄 查看外卖订单
+          查看外卖订单
         </router-link>
       </div>
     </div>

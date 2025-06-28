@@ -35,6 +35,7 @@ import HrAttendanceVue from '@/view/HrAttendance.vue'
 
 
 
+import DataAnalytics from '@/view/DataAnalytics.vue'
 
 const routes = [
   // 默认路由重定向到登录页面
@@ -65,6 +66,7 @@ const routes = [
   {path: '/coupon', component:CouponPage},
   //管理员页面
   {path: '/admin', component:AdminPage},
+  { path: '/dishes',   component: AdminPage },
   //评价页面
   {path: '/reviews', component:OrderReviewPage},
   //前台页面
@@ -108,6 +110,8 @@ const routes = [
   { path: '/hr-attendance', component: HrAttendanceVue},
   
 
+
+  {path: '/data-analytics', component: DataAnalytics}
  
 ]
 
@@ -115,3 +119,4 @@ export default createRouter({
   history: createWebHistory(),
   routes,
 })
+

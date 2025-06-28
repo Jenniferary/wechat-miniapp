@@ -4,18 +4,20 @@
     <div class="sidebar">
       <h3>前台管理系统</h3>
       <ul>
-        <li><router-link to="/counter">🏠 回到管理主页</router-link></li>
-        <li><router-link to="/add-manager">👤➕ 添加管理员</router-link></li> 
-        <li><router-link to="/check-orders">💵 查看订单及结账</router-link></li>
-        <li><router-link to="/manage-delivery">🛵 外卖员管理</router-link></li>
-        <li><router-link to="/distribute-coupons">🎟️ 分配优惠券</router-link></li>
+        <li><router-link to="/check-orders">（1）管理堂食订单</router-link></li>
+        <li><router-link to="/distribute-coupons">（2）管理优惠券</router-link></li>
+        <li><router-link to="/manage-delivery">（3）管理外卖订单</router-link></li>
+        <li><router-link to="/manage-tables">（4）管理餐桌</router-link></li>
+        <li><router-link to="/dishes">（5）管理菜品</router-link></li>
+        <li><router-link to="/data-analytics">（6）数据分析</router-link></li>
+        <li><router-link to="/counter">回到管理主页</router-link></li>
       </ul>
     </div>
 
     <!-- Content (main page content) -->
     <div class="content">
       <div class="form-card">
-        <h2>🪑餐桌管理</h2>
+        <h2>管理餐桌</h2>
 
         <!-- Toggle between the two actions: 分配餐桌 and 释放餐桌 -->
         <div class="button-group">
@@ -25,7 +27,7 @@
 
         <!-- 分配餐桌 Form -->
         <div v-if="showDistribute">
-          <h3>🍽️ 分配餐桌</h3>
+          <h3>分配餐桌</h3>
           <div class="form-group">
             <label for="userId">用户 ID</label>
             <input v-model="userId" type="number" placeholder="请输入用户编号" required>

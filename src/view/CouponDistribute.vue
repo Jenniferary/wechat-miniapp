@@ -4,18 +4,20 @@
       <div class="sidebar">
         <h3>前台管理系统</h3>
         <ul>
-            <li><router-link to="/counter">🏠 回到管理主页</router-link></li>
-            <li><router-link to="/check-manager">👤 查看管理员</router-link></li> 
-            <li><router-link to="/check-orders">💵 查看订单及结账</router-link></li>
-            <li><router-link to="/manage-delivery">🛵 外卖员管理</router-link></li>
-            <li><router-link to="/manage-tables">🪑 餐桌预定</router-link></li>
+          <li><router-link to="/check-orders">（1）管理堂食订单</router-link></li>
+          <li><router-link to="/distribute-coupons">（2）管理优惠券</router-link></li>
+          <li><router-link to="/manage-delivery">（3）管理外卖订单</router-link></li>
+          <li><router-link to="/manage-tables">（4）管理餐桌</router-link></li>
+          <li><router-link to="/dishes">（5）管理菜品</router-link></li>
+          <li><router-link to="/data-analytics">（6）数据分析</router-link></li>
+          <li><router-link to="/counter">回到管理主页</router-link></li>
         </ul>
       </div>
   
   
       <!-- Content (main page content) -->
       <div class="content">
-        <h2 class="page-title">🎟️ 分配优惠券</h2>
+        <h2 class="page-title">管理优惠券</h2>
         <form @submit.prevent="submitForm" class="coupon-form">
           <div class="form-group">
             <label>用户 ID（填 ALL 分发全部）:</label>
@@ -42,7 +44,7 @@
             <input type="number" v-model="form.discountAmount" required />
           </div>
   
-          <button type="submit">🚀 分发优惠券</button>
+          <button type="submit">分发优惠券</button>
         </form>
   
         <div v-if="message" :class="{'success': success, 'error': !success}" class="message">

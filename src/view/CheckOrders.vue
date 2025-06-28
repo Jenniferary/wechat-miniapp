@@ -4,17 +4,19 @@
     <div class="sidebar">
       <h3>前台管理系统</h3>
       <ul>
-        <li><router-link to="/counter">🏠 回到管理主页</router-link></li>
-        <li><router-link to="/add-manager">👤➕ 添加管理员</router-link></li>
-        <li><router-link to="/distribute-coupons">🎟️ 分配优惠券</router-link></li>
-        <li><router-link to="/manage-delivery">🛵 外卖员管理</router-link></li>
-        <li><router-link to="/manage-tables">🪑 餐桌预定</router-link></li>
+        <li><router-link to="/check-orders">（1）管理堂食订单</router-link></li>
+        <li><router-link to="/distribute-coupons">（2）管理优惠券</router-link></li>
+        <li><router-link to="/manage-delivery">（3）管理外卖订单</router-link></li>
+        <li><router-link to="/manage-tables">（4）管理餐桌</router-link></li>
+        <li><router-link to="/dishes">（5）管理菜品</router-link></li>
+        <li><router-link to="/data-analytics">（6）数据分析</router-link></li>
+        <li><router-link to="/counter">回到管理主页</router-link></li>
       </ul>
     </div>
 
     <!-- 订单容器 -->
     <div class="order-container">
-      <h2>💵 所有订单</h2>
+      <h2>管理堂食订单</h2>
       <div v-if="orders.length" class="orders-list">
         <div v-for="order in orders" :key="order.order_id" class="order-item">
           <div class="order-header">

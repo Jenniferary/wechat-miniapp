@@ -1,6 +1,6 @@
 <template>
   <div class="admin-container">
-    <h1>🍽️ 食尚阁 - 管理后台</h1>
+    <h1>食尚阁 - 管理后台</h1>
 
     <!-- 上传菜品 -->
     <section class="card">
