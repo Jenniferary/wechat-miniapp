@@ -1,0 +1,30 @@
+<view class="bg">
+  <image src="/assets/background.jpg" mode="aspectFill" style="width:100%;height:100%;" />
+</view>
+
+<view class="deepseek-page">
+  <view class="title">🤖 智能点餐助手</view>
+
+  <scroll-view scroll-y="true" class="chat-box">
+  <!-- 用户输入的气泡：只有在有输入时才显示 -->
+  <view wx:if="{{input}}" class="bubble user-bubble">
+    <text class="bubble-text">{{input}}</text>
+  </view>
+
+  <!-- 默认欢迎提示：仅在没有用户输入时显示 -->
+  <view wx:if="{{!input}}" class="bubble user-bubble">
+    <text class="bubble-text">👋 请输入您的需求，例如“推荐一个热菜”</text>
+  </view>
+
+  <!-- 模型回复 -->
+  <view wx:if="{{reply}}" class="bubble bot-bubble">
+    <text class="bubble-text">{{reply}}</text>
+  </view>
+</scroll-view>
+
+
+  <view class="input-area">
+    <input class="input" placeholder="请输入您的需求…" bindinput="onInput" value="{{input}}" />
+    <button class="btn" bindtap="sendQuery">发送</button>
+  </view>
+</view>

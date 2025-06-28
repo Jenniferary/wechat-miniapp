@@ -1,0 +1,54 @@
+<view class="container">
+  <image class="bg" src="/assets/background.jpg" mode="aspectFill" />
+
+  <view class="checkout-form">
+    <view class="form-title">🛵 提交外卖订单</view>
+
+    <view class="section">
+      <view class="section-title">🍱 已选择的菜品：</view>
+      <view wx:if="{{dishList.length}}">
+        <view class="item" wx:for="{{dishList}}" wx:key="index">
+          <text class="item-name">{{item.name}}</text>
+          <text class="item-price">￥{{item.price}}</text>
+        </view>
+      </view>
+      <view wx:else class="empty-tip">暂无菜品，请返回菜单选择</view>
+    </view>
+
+    <view class="section total">
+      <view class="section-title">💰 总价：<text class="price">￥{{totalPrice}}</text></view>
+    </view>
+
+    <view class="section">
+      <view class="section-title">📍 送达地址：</view>
+      <input type="text" placeholder="请输入详细地址" value="{{deliveryAddress}}" bindinput="onAddressChange" class="input" />
+    </view>
+
+    <view class="section">
+      <view class="section-title">📅 预计送达日期：</view>
+      <picker mode="date" value="{{deliveryDate}}" start="{{today}}" bindchange="onDateChange">
+        <view class="picker">{{deliveryDate || '请选择日期'}}</view>
+      </picker>
+    </view>
+
+    <view class="section">
+      <view class="section-title">⏰ 预计送达时间：</view>
+      <picker mode="time" value="{{deliveryTime}}" start="09:00" end="22:00" bindchange="onTimeChange">
+        <view class="picker">{{deliveryTime || '请选择时间'}}</view>
+      </picker>
+    </view>
+
+    <view class="section">
+      <view class="section-title">🎁 可用优惠券：</view>
+      <picker mode="selector" range="{{couponDescriptions}}" bindchange="onCouponChange">
+        <view class="picker">{{selectedCouponText}}</view>
+      </picker>
+    </view>
+    <view class="form-group">
+  <text>备注</text>
+  <textarea placeholder="请输入备注（最多100字）" maxlength="100" bindinput="onRemarkInput" auto-height></textarea>
+</view>
+
+    <button class="submit-btn" bindtap="submitOrder">✅ 确认提交订单</button>
+  </view>
+</view>

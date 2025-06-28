@@ -1,0 +1,67 @@
+<view class="page">
+  <image class="bg" src="/assets/background.jpg" mode="aspectFill" />
+
+  <view class="header-banner">
+    <swiper class="poster-swiper" autoplay interval="3000" circular>
+      <swiper-item><image src="/assets/poster1.png" mode="aspectFill" class="poster-img" /></swiper-item>
+      <swiper-item><image src="/assets/poster2.png" mode="aspectFill" class="poster-img" /></swiper-item>
+      <swiper-item><image src="/assets/poster3.png" mode="aspectFill" class="poster-img" /></swiper-item>
+    </swiper>
+  </view>
+
+  <view class="container">
+    <view class="main">
+      <!-- 左侧侧边栏 -->
+      <scroll-view class="sidebar" scroll-y scroll-with-animation>
+        <navigator class="menu-link" url="/pages/menu/menu">主菜单</navigator>
+        <navigator class="menu-link" url="/pages/afternoonTea/afternoonTea">自助餐</navigator>
+        <navigator class="menu-link active" url="/pages/package/package">套餐</navigator>
+      </scroll-view>
+
+      <!-- 右侧套餐列表 -->
+      <scroll-view class="menu-list" scroll-y scroll-with-animation>
+        <view class="package-card" wx:for="{{packages}}" wx:key="packageId" wx:for-item="item">
+          <view class="package-header">
+            <text class="package-title">{{item.packageName}}</text>
+            <view class="quantity-controls">
+              <text class="btn minus" bindtap="decreasePackage" data-package="{{item}}">-</text>
+              <text class="btn plus" bindtap="increasePackage" data-package="{{item}}">+</text>
+            </view>
+          </view>
+
+          <view class="package-price">价格: ￥{{item.packagePrice}}</view>
+
+          <view class="package-dishes">
+            <view wx:for="{{item.dishList}}" wx:key="id" wx:for-item="dish">
+              • {{dish.dishName}} - ￥{{dish.dishPrice}}
+            </view>
+          </view>
+
+          <scroll-view class="image-scroll" scroll-x scroll-with-animation>
+            <image
+              wx:for="{{item.dishList}}"
+              wx:key="dish.id"
+              wx:for-item="dish"
+              src="{{dish.imgUrl}}"
+              mode="aspectFill"
+              class="dish-image"
+              binderror="onImageError"
+            />
+          </scroll-view>
+        </view>
+      </scroll-view>
+    </view>
+
+    <!-- 底部固定购物车 -->
+    <view class="cart-fullwidth">
+      <view class="cart-title">🛒 购物车</view>
+      <view class="cart-item" wx:for="{{cart}}" wx:key="index">
+        {{item.packageName}} - ￥{{item.packagePrice}} x 1
+        <text class="btn minus" bindtap="removeFromCart" data-index="{{index}}">-</text>
+      </view>
+      <view class="cart-buttons">
+        <button bindtap="checkout" class="cart-btn">提交订单</button>
+      </view>
+    </view>
+  </view>
+</view>

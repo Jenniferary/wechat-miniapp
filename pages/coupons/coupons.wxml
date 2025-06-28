@@ -1,0 +1,76 @@
+<view class="container">
+  <image class="bg" src="/assets/bg.jpg" mode="aspectFill" />
+  <view class="bg-overlay"></view>
+
+  <view class="content">
+    <!-- 积分展示 -->
+    <!-- 积分展示 -->
+    <view class="points-card">
+    <text class="label">🎯 {{ username }}的积分：</text>
+    <text class="points">{{ memberPoints }}</text>
+  </view>
+
+
+    <!-- 老虎机抽奖区域 -->
+    <view class="lottery-section">
+  <text class="title">🎰 10积分抽好礼！！(海量优惠券等你来拿）！</text>
+
+  <view class="slot-machine">
+    <image class="slot-frame" src="/assets/slot-frame.png" mode="aspectFit" />
+    <view class="slot-reels">
+      <image class="reel" src="{{ reels[0] }}" mode="aspectFit" />
+      <image class="reel" src="{{ reels[1] }}" mode="aspectFit" />
+      <image class="reel" src="{{ reels[2] }}" mode="aspectFit" />
+    </view>
+  </view>
+
+  <button class="draw-btn" bindtap="drawLottery" disabled="{{spinning}}">
+    {{ spinning ? '抽奖中...' : '点击抽奖' }}
+  </button>
+</view>
+    <!-- 抽奖结果弹窗 -->
+    <view wx:if="{{ showResult }}" class="result-popup">
+      <view class="popup-content">
+        <text class="prize">{{ lotteryResult }}</text>
+        <button class="close-btn" bindtap="closeResult">关闭</button>
+      </view>
+    </view>
+  </view>
+  <!-- 切换按钮 -->
+<view class="tab-switch">
+  <button 
+    class="{{ !showExpired ? 'active' : '' }}" 
+    bindtap="toggleCouponView"
+  >有效优惠券</button>
+  <button 
+    class="{{ showExpired ? 'active' : '' }}" 
+    bindtap="toggleCouponView"
+  >已过期优惠券</button>
+</view>
+
+<!-- 优惠券列表 -->
+<view class="coupon-list">
+  <block wx:if="{{ !showExpired }}">
+    <block wx:for="{{ couponsValid }}" wx:key="coupon_id">
+      <view class="coupon-card">
+        <text class="coupon-amount">💰 满{{ item.min_threshold }}减{{ item.discount_amount }}</text>
+        <text class="coupon-dates">🕒 有效期：{{ item.start_date }} ~ {{ item.expiry_date }}</text>
+      </view>
+    </block>
+    <view wx:if="{{ couponsValid.length === 0 }}">暂无有效优惠券</view>
+  </block>
+
+  <block wx:if="{{ showExpired }}">
+    <block wx:for="{{ couponsExpired }}" wx:key="coupon_id">
+      <view class="coupon-card expired">
+        <text class="coupon-amount">💰 满{{ item.min_threshold }}减{{ item.discount_amount }}</text>
+        <text class="coupon-dates">
+          🕒 有效期：{{ item.start_date }} ~ {{ item.expiry_date }}
+          <text class="expired-label">（已过期）</text>
+        </text>
+      </view>
+    </block>
+    <view wx:if="{{ couponsExpired.length === 0 }}">暂无已过期优惠券</view>
+  </block>
+</view>
+</view>

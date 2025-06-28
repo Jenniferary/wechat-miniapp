@@ -1,0 +1,86 @@
+<view class="page">
+  <!-- 内容区 -->
+  <view class="content">
+    <!-- 主页 -->
+    <view wx:if="{{activeTab==='home'}}">
+      <!-- 滚动容器包裹主页所有内容 -->
+      <scroll-view scroll-y="true" class="scroll-container">
+        <!-- 自定义顶部背景 -->
+        <image class="header-bg" src="/assets/main-bg.png" mode="aspectFill" />
+
+        <!-- 欢迎文字 -->
+        <view class="header-content">
+          <text class="greeting">你好，{{username || '游客'}}</text>
+          <text class="subtitle">开启您的美味旅程</text>
+        </view>
+
+        <view class="store-selector" bindtap="openStoreSelector">
+          <image class="location-icon" src="/assets/icons/location.png" mode="aspectFit" />
+          <text class="location-text">选择门店</text>
+        </view>
+        
+        <!-- 功能卡片 -->
+        <view class="home-cards">
+          <view class="card" bindtap="goToMenu">
+            <image class="card-icon" src="/assets/icons/dish.png" mode="aspectFit" />
+            <text class="label">开始点餐</text>
+          </view>
+          <view class="card" bindtap="goToOrderTable">
+            <image class="card-icon" src="/assets/icons/table.png" mode="aspectFit" />
+            <text class="label">预定餐桌</text>
+          </view>
+        </view>
+            <!-- 新增功能卡片（第二排） -->
+    <view class="home-cards">
+      <view class="card" bindtap="goToTakeaway">
+        <image class="card-icon" src="/assets/icons/takeaway.png" mode="aspectFit" />
+        <text class="label">外卖点餐</text>
+      </view>
+      <view class="card" bindtap="goToCoupons">
+        <image class="card-icon" src="/assets/icons/coupon.png" mode="aspectFit" />
+        <text class="label">优惠领券</text>
+      </view>
+    </view>
+        <!-- 海报区域 -->
+        <view class="poster-list">
+          <block wx:for="{{posters}}" wx:for-item="p" wx:key="img">
+            <navigator url="{{p.url}}" class="poster-link">
+              <image src="{{p.img}}" class="poster-img" mode="widthFix" />
+            </navigator>
+          </block>
+        </view>
+        <view style="height: 140rpx;"></view>
+      </scroll-view>
+    </view>
+
+    <!-- 订单 占位 -->
+    <view wx:elif="{{activeTab==='orders'}}" class="orders-view">
+      <text class="empty">暂无订单</text>
+    </view>
+
+    <!-- 我的 占位 -->
+    <view wx:elif="{{activeTab==='profile'}}" class="profile-view">
+      <text class="empty">个人中心</text>
+    </view>
+  </view>
+
+  <!-- 自定义底部 TabBar -->
+  <view class="tabbar">
+    <view class="tab-item" bindtap="switchTab" data-tab="home">
+      <image class="tab-icon" src="/assets/tab/home-{{activeTab==='home'?'active':'inactive'}}.png" mode="aspectFit" />
+      <text class="{{activeTab==='home'?'active':''}}">主页</text>
+    </view>
+    <view class="tab-item" bindtap="switchTab" data-tab="orders">
+      <image class="tab-icon" src="/assets/tab/orders-{{activeTab==='orders'?'active':'inactive'}}.png" mode="aspectFit" />
+      <text class="{{activeTab==='orders'?'active':''}}">订单</text>
+    </view>
+    <view class="tab-item" bindtap="switchTab" data-tab="review">
+      <image class="tab-icon" src="/assets/tab/review-{{activeTab==='review'?'active':'inactive'}}.png"         mode="aspectFit" />
+      <text class="{{activeTab==='review'?'active':''}}">评价</text>
+    </view>
+    <view class="tab-item" bindtap="switchTab" data-tab="profile">
+      <image class="tab-icon" src="/assets/tab/profile-{{activeTab==='profile'?'active':'inactive'}}.png" mode="aspectFit" />
+      <text class="{{activeTab==='profile'?'active':''}}">我的</text>
+    </view>
+  </view>
+</view>

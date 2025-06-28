@@ -1,0 +1,249 @@
+/* 背景图及遮罩 */
+.bg {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -2;
+  filter: brightness(0.85);
+}
+
+.bg-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.5);
+  z-index: -1;
+}
+
+/* 内容容器 */
+.content {
+  padding: 30rpx 30rpx 0rpx; /* 调小上下内边距 */
+  background: transparent; 
+  box-sizing: border-box;
+  overflow-y: auto;
+  border-radius: 0;
+}
+
+.tab-switch {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20rpx; /* 缩小底部间距 */
+}
+
+.tab-switch button {
+  flex: 1;
+  padding: 20rpx 0;
+  font-size: 32rpx;
+  border: none;
+  background: #f5e6b4;
+  color: #b37800;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border-radius: 40rpx 40rpx 0 0;
+  margin: 0 10rpx;
+  box-shadow: 0 0 0 transparent;
+}
+
+.tab-switch button.active {
+  background: #ffb800;
+  color: #3a2600;
+  box-shadow: 0 6rpx 12rpx rgba(255, 184, 0, 0.8);
+}
+
+/* 积分展示 */
+.points-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff7cc;
+  padding: 10rpx 20rpx;
+  border-radius: 10rpx;
+  box-shadow: 0 8rpx 24rpx rgba(255, 196, 0, 0.3);
+  font-weight: 700;
+  font-size: 38rpx;
+  color: #b37f00;
+  margin-bottom: 60rpx;
+}
+
+/* 抽奖区 */
+.lottery-section {
+  background: radial-gradient(circle at center, #fffbe6 0%, #f5e6b4 100%);
+  border-radius: 48rpx;
+  padding: 80rpx 40rpx;
+  margin-bottom: 80rpx;
+  text-align: center;
+  box-shadow: 0 12rpx 36rpx rgba(243, 233, 204, 0.4);
+  transform: scale(1.02);
+  border: 6rpx dashed #e7cc60;
+}
+
+.title {
+  font-size: 40rpx;          
+  font-weight: 800;            
+  color: #f5b536;             
+  margin-bottom: 48rpx;   
+  letter-spacing: 2rpx;       
+  text-shadow: 0 2rpx 6rpx rgba(255, 174, 0, 0.35);
+  font-family: "HYQiHei", sans-serif; 
+}
+
+.slot-machine {
+  position: relative;
+  width: 690rpx;
+  height: 380rpx;
+  margin: 0 auto 60rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.slot-frame {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.slot-reels {
+  position: absolute;
+  top: 45%; /* 向上偏移一些，原来是 50% */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  display: flex;
+  gap: 0rpx; /* 原来是 20rpx，减小间距 */
+}
+
+.reel {
+  width: 65rpx;
+  height: 90rpx;
+  border-radius: 7rpx;
+  background: rgb(255, 221, 147);
+  box-shadow: 0 6rpx 12rpx rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+/* 抽奖按钮 */
+.draw-btn {
+  background-color: #ffb800;
+  color: #3a2600;
+  font-weight: 900;
+  font-size: 36rpx;
+  padding: 30rpx 70rpx;
+  border-radius: 60rpx;
+  box-shadow: 0 10rpx 20rpx rgba(255, 184, 0, 0.75);
+  transition: background-color 0.3s ease;
+  animation: bounce 1.2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+.draw-btn:disabled {
+  background-color: #d3d3d3;
+  color: #888;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* 抽奖结果弹窗 */
+.result-popup {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.popup-content {
+  background: #fff9e3;
+  padding: 100rpx 80rpx;
+  border-radius: 60rpx;
+  text-align: center;
+  width: 92%;
+  max-width: 580rpx;
+  box-shadow: 0 20rpx 60rpx rgba(255, 138, 0, 0.9);
+}
+
+.prize {
+  font-size: 56rpx;
+  font-weight: 900;
+  color: #ff5c00;
+  margin-bottom: 60rpx;
+  letter-spacing: 4rpx;
+  text-shadow: 0 4rpx 10rpx rgba(255, 122, 0, 0.5);
+}
+
+.close-btn {
+  background: #ff7a00;
+  color: #fff;
+  font-weight: 800;
+  font-size: 34rpx;
+  padding: 26rpx 65rpx;
+  border-radius: 40rpx;
+  box-shadow: 0 8rpx 20rpx rgba(255, 122, 0, 0.85);
+  transition: background-color 0.3s ease;
+}
+
+.close-btn:hover {
+  background-color: #e36b00;
+  cursor: pointer;
+}
+
+/* 优惠券列表 */
+.coupon-list {
+  margin-top: 20rpx; /* 原50rpx，缩小了间距 */
+}
+
+.section-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #b37800;
+  margin-top: 0;      /* 去掉上边距 */
+  margin-bottom: 30rpx; /* 缩小底部间距 */
+  text-align: left;
+}
+
+/* 优惠券卡片 */
+.coupon-card {
+  background: #fffbe2;
+  border-radius: 36rpx;
+  padding: 32rpx 40rpx;
+  margin-bottom: 28rpx;
+  box-shadow: 0 6rpx 20rpx rgba(255, 198, 0, 0.3);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  color: #6b4e00;
+  font-size: 30rpx;
+  font-weight: 700;
+  width: 700rpx;
+}
+
+.coupon-card.expired {
+  background: #f0f0f0;
+  color: #bbb;
+  width: 700rpx;
+  text-decoration: line-through;
+  box-shadow: none;
+}
+
+.coupon-amount {
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.coupon-dates {
+  font-weight: 400;
+  font-size: 26rpx;
+  color: #4e4e4e;
+}
+
+.expired-label {
+  color: #d94242;
+  font-weight: 700;
+  margin-left: 20rpx;
+}

@@ -1,0 +1,368 @@
+.profile-page {
+  position: relative;
+  height: 100vh;
+  background: linear-gradient(135deg, #e3ecf5, #ffffff);
+}
+.profile-header-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 240rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 40rpx;
+  z-index: 5;
+}
+
+.user-avatar {
+  width: 128rpx;
+  height: 128rpx;
+  border-radius: 50%;
+  box-shadow: 0 6rpx 12rpx rgba(0,0,0,0.2);
+  margin-bottom: 12rpx;
+}
+
+.greeting {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: rgb(0, 0, 0);
+}
+
+.subtitle {
+  font-size: 24rpx;
+  color: #000000;
+  margin-top: 4rpx;
+}
+
+
+
+.page-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 300rpx;
+  z-index: 0; /* 确保它在背景之上，在内容之下 */
+  overflow: hidden;
+}
+
+
+.bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.profile-scroll {
+  height: 100vh;
+  padding: 310rpx 24rpx 120rpx;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+.profile-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 40rpx;
+}
+
+.user-avatar {
+  width: 128rpx;
+  height: 128rpx;
+  border-radius: 50%;
+  box-shadow: 0 6rpx 12rpx rgba(0,0,0,0.2);
+  margin-bottom: 20rpx;
+}
+
+.greeting {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: rgb(0, 0, 0);
+}
+
+.subtitle {
+  font-size: 24rpx;
+  color: #000000;
+  margin-top: 8rpx;
+}
+
+/* 卡片样式 */
+.card {
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 36rpx;
+  margin-bottom: 32rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0,0,0,0.05);
+}
+
+.card-title {
+  font-size: 30rpx;
+  color: #222;
+  font-weight: bold;
+  margin-bottom: 28rpx;
+}
+
+/* 信息行 */
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18rpx 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.info-value {
+  font-size: 26rpx;
+  color: #111;
+}
+
+/* 表单输入项 */
+.form-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 28rpx;
+}
+
+.label {
+  font-size: 26rpx;
+  color: #333;
+  width: 160rpx;
+}
+
+.input {
+  flex: 1;
+  height: 68rpx;
+  border: 1px solid #dcdcdc;
+  padding: 0 20rpx;
+  border-radius: 16rpx;
+  font-size: 26rpx;
+  background: #fafafa;
+}
+
+.tooltip {
+  margin-left: 16rpx;
+  color: #007aff;
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+/* 按钮 */
+.btn {
+  width: 100%;
+  height: 90rpx;
+  background: linear-gradient(90deg, #4facfe, #00f2fe);
+  color: #fff;
+  font-size: 30rpx;
+  border-radius: 45rpx;
+  box-shadow: 0 6rpx 16rpx rgba(0, 191, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* 提示信息框 */
+.info-box {
+  margin-top: 24rpx;
+  background-color: #e8f6ff;
+  padding: 24rpx;
+  border-radius: 16rpx;
+}
+
+.info-text {
+  font-size: 24rpx;
+  color: #444;
+  line-height: 1.7;
+}
+
+/* 底部导航栏 */
+.tabbar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 100rpx;
+  display: flex;
+  border-top: 1px solid #ddd;
+  background: #ffffff;
+  z-index: 10;
+}
+
+.tab-item {
+  flex: 1;
+  text-align: center;
+  padding-top: 12rpx;
+}
+
+.tab-icon {
+  width: 44rpx;
+  height: 44rpx;
+  margin-bottom: 6rpx;
+}
+
+.tab-item text {
+  display: block;
+  font-size: 22rpx;
+  color: #999;
+}
+
+.tab-item text.active {
+  color: #007aff;
+  font-weight: bold;
+}
+/* 完善会员信息卡 */
+.complete-info-card {
+  padding: 40rpx 36rpx 48rpx;
+  border-radius: 28rpx;
+  background: #f9fcff;
+  box-shadow: 0 12rpx 32rpx rgba(0, 126, 255, 0.12);
+}
+
+.complete-info-card .card-title {
+  font-size: 32rpx;
+  color: #005bbb;
+  font-weight: 700;
+  margin-bottom: 36rpx;
+  text-align: center;
+  letter-spacing: 1rpx;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 32rpx;
+}
+
+.label {
+  width: 140rpx;
+  font-size: 28rpx;
+  color: #444;
+  font-weight: 600;
+}
+
+.value {
+  flex: 1;
+  font-size: 28rpx;
+  color: #222;
+}
+
+.input {
+  flex: 1;
+  height: 72rpx;
+  border-radius: 20rpx;
+  border: 1.5rpx solid #aacfff;
+  background: #e8f2ff;
+  padding: 0 28rpx;
+  font-size: 28rpx;
+  color: #222;
+  outline: none;
+}
+
+.input::placeholder {
+  color: #a1b9d7;
+}
+
+
+/* 补充内容容器 */
+.complete-info-card .content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+/* 更新按钮 */
+.btn-edit {
+  height: 44rpx;
+  padding: 0 16rpx;
+  font-size: 22rpx;
+  color: #007aff;
+  border-radius: 22rpx;
+  border: 1px solid #cce3ff;
+  background: #f5faff;
+  line-height: 44rpx;
+  user-select: none;
+  white-space: nowrap;
+  text-align: center;
+  box-sizing: border-box;
+  min-width: 100rpx;
+}
+.birthday-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.birthday-popup {
+  background: #f7f5ec;
+  border-radius: 24rpx;
+  padding: 40rpx 30rpx;
+  text-align: center;
+  width: 600rpx;
+  height: 120px;
+  box-shadow: 0 10rpx 40rpx rgba(0, 0, 0, 0.15);
+  position: relative;
+  animation: popupScale 0.3s ease-in-out;
+}
+
+@keyframes popupScale {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.birthday-icon {
+  display: block;
+  width: 100rpx;
+  height: 100rpx;
+  margin: 0 auto 20rpx auto;
+}
+
+
+.birthday-text {
+  font-size: 36rpx;
+  color: #e67e22;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+}
+
+.birthday-subtext {
+  font-size: 26rpx;
+  color: #555;
+  margin-bottom: 30rpx;
+}
+
+.close-btn {
+  background-color: #ffbd59;
+  color: white;
+  border-radius: 30rpx;
+  padding: 14rpx 40rpx;
+  font-size: 28rpx;
+  border: none;
+}
+
+
+
+

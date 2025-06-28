@@ -1,0 +1,84 @@
+/* 页面主容器应在图层上方 */
+.deepseek-page {
+  position: relative; /* 🔹 关键：确保 z-index 生效 */
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 20rpx;
+  background-color: transparent;
+}
+.bg {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  opacity: 0.5; 
+}
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20rpx;
+}
+
+.chat-box {
+  flex: 1;
+  padding: 10rpx 0;
+  overflow-y: scroll;
+}
+
+.bubble {
+  max-width: 70%;
+  padding: 20rpx;
+  margin: 10rpx;
+  border-radius: 24rpx;
+  font-size: 28rpx;
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+
+.user-bubble {
+  align-self: flex-end;
+  background-color: #4facfe;
+  color: white;
+  margin-left: auto;
+}
+
+.bot-bubble {
+  align-self: flex-start;
+  background-color: #ffffff;
+  color: #333;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+  margin-right: auto;
+}
+.input-area {
+  display: flex;
+  flex-direction: column; /* 改为纵向排列 */
+  gap: 12rpx;
+  padding: 20rpx;
+  background: #fff;
+  border-top: 1px solid #ddd;
+}
+
+
+.input {
+  flex: 1; /* 让输入框占据剩余空间 */
+  padding: 16rpx;
+  border-radius: 20rpx;
+  background: #f5f5f5;
+  font-size: 28rpx;
+  border: none;
+}
+
+.btn {
+  background: #4facfe;
+  color: #fff;
+  padding: 16rpx 0;
+  border-radius: 32rpx;
+  font-size: 28rpx;
+  width: 100%;         /* 按钮宽度占满一行 */
+  text-align: center;
+}
+
