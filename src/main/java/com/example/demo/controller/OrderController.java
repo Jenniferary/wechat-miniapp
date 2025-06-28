@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/order")
@@ -176,7 +177,7 @@ public class OrderController {
                     remark
             );
 
-            // ✅ 更新库存：每道菜减1
+            // ✅ 更新库存逻辑：将菜品数量合并后处理
             Map<String, Integer> dishCountMap = new HashMap<>();
             for (String dishName : items) {
                 dishCountMap.put(dishName, dishCountMap.getOrDefault(dishName, 0) + 1);
@@ -186,12 +187,13 @@ public class OrderController {
                 String dishName = entry.getKey();
                 int count = entry.getValue();
 
-                // 检查库存是否足够（可选）
+                // 检查库存是否足够
                 Integer currentStock = jdbc.queryForObject(
                         "SELECT dish_stock FROM dishes WHERE dish_name = ?",
                         new Object[]{dishName},
                         Integer.class
                 );
+
                 if (currentStock == null || currentStock < count) {
                     response.put("success", false);
                     response.put("message", "菜品库存不足：" + dishName);
@@ -206,6 +208,7 @@ public class OrderController {
                         dishName
                 );
             }
+
 
             // 删除使用的优惠券（如有）
             if (selectedCoupon > 0) {
@@ -330,7 +333,141 @@ public class OrderController {
         }
         return response;
     }
+    @DeleteMapping("/cancel/{orderId}")
+    public Map<String, Object> cancelOrder(@PathVariable int orderId) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            // 1. 查询订单是否存在、未支付
+            Map<String, Object> order = jdbc.queryForMap(
+                    "SELECT is_paid, dish_list FROM orders WHERE order_id = ?", orderId
+            );
+            if ((boolean) order.get("is_paid")) {
+                response.put("success", false);
+                response.put("message", "订单已支付，无法取消");
+                return response;
+            }
 
+            // 2. 拆分 dish_list，并统计每道菜数量（统一 trim 和小写）
+            String dishListStr = (String) order.get("dish_list");
+            List<String> dishes = Arrays.stream(dishListStr.split(","))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .collect(Collectors.toList());
+
+            Map<String, Integer> dishCountMap = new HashMap<>();
+            for (String dish : dishes) {
+                String key = dish.toLowerCase(); // lower case 作为 key
+                dishCountMap.put(key, dishCountMap.getOrDefault(key, 0) + 1);
+            }
+
+            // 3. 获取所有菜品映射（lower -> 原名）确保数据库匹配
+            List<Map<String, Object>> dishRows = jdbc.queryForList("SELECT dish_name FROM dishes");
+            Map<String, String> lowerNameToReal = new HashMap<>();
+            for (Map<String, Object> row : dishRows) {
+                String realName = ((String) row.get("dish_name")).trim();
+                lowerNameToReal.put(realName.toLowerCase(), realName);
+            }
+
+            // 4. 更新库存（如果匹配不到，跳过）
+            for (Map.Entry<String, Integer> entry : dishCountMap.entrySet()) {
+                String realName = lowerNameToReal.get(entry.getKey());
+                if (realName != null) {
+                    jdbc.update(
+                            "UPDATE dishes SET dish_stock = dish_stock + ? WHERE dish_name = ?",
+                            entry.getValue(),
+                            realName
+                    );
+                } else {
+                    System.err.println("⚠️ 菜品库存释放失败：找不到菜名 -> " + entry.getKey());
+                }
+            }
+
+            // 5. 删除订单
+            int rows = jdbc.update("DELETE FROM orders WHERE order_id = ?", orderId);
+            if (rows > 0) {
+                response.put("success", true);
+            } else {
+                response.put("success", false);
+                response.put("message", "订单删除失败");
+            }
+        } catch (EmptyResultDataAccessException e) {
+            response.put("success", false);
+            response.put("message", "订单不存在");
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "取消订单失败：" + e.getMessage());
+        }
+        return response;
+    }
+
+
+
+    @PutMapping("/update-dishes")
+    public Map<String, Object> updateDishes(@RequestBody Map<String, Object> payload) {
+        Map<String, Object> response = new HashMap<>();
+        int orderId = (int) payload.get("order_id");
+        String dishToRemove = ((String) payload.get("dish_name")).trim();
+
+        try {
+            Map<String, Object> order = jdbc.queryForMap("SELECT dish_list, is_paid FROM orders WHERE order_id = ?", orderId);
+            if ((boolean) order.get("is_paid")) {
+                response.put("success", false);
+                response.put("message", "订单已支付，无法修改");
+                return response;
+            }
+
+            String dishListStr = (String) order.get("dish_list");
+            List<String> dishList = new ArrayList<>(Arrays.asList(dishListStr.split(",")));
+
+            boolean removed = false;
+            for (int i = 0; i < dishList.size(); i++) {
+                if (dishList.get(i).trim().equalsIgnoreCase(dishToRemove)) {
+                    dishList.remove(i);
+                    removed = true;
+                    break;
+                }
+            }
+
+            if (!removed) {
+                response.put("success", false);
+                response.put("message", "未找到菜品");
+                return response;
+            }
+
+            // ✅ 释放库存 +1
+            jdbc.update("UPDATE dishes SET dish_stock = dish_stock + 1 WHERE dish_name = ?", dishToRemove);
+
+            // 查询所有菜品及价格
+            List<Map<String, Object>> dishes = jdbc.queryForList("SELECT dish_name, dish_price FROM dishes");
+            Map<String, Double> dishPriceMap = new HashMap<>();
+            for (Map<String, Object> dish : dishes) {
+                dishPriceMap.put(((String) dish.get("dish_name")).trim(), ((Number) dish.get("dish_price")).doubleValue());
+            }
+
+            double newTotal = 0.0;
+            for (String dish : dishList) {
+                String name = dish.trim();
+                Double price = dishPriceMap.get(name);
+                if (price != null) newTotal += price;
+            }
+
+            String newDishListStr = String.join(", ", dishList);
+            jdbc.update("UPDATE orders SET dish_list = ?, price = ? WHERE order_id = ?",
+                    newDishListStr, newTotal, orderId);
+
+            response.put("success", true);
+            response.put("new_dish_list", newDishListStr);
+            response.put("new_price", newTotal);
+        } catch (EmptyResultDataAccessException e) {
+            response.put("success", false);
+            response.put("message", "订单不存在");
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "更新失败：" + e.getMessage());
+        }
+        return response;
+    }
 
 }
+
 

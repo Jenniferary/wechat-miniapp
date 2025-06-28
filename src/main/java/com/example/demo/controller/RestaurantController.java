@@ -3,10 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.dto.RestaurantNearbyDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -41,6 +38,23 @@ public class RestaurantController {
         return Map.of("status", "success", "data", list);
     }
 
+    @GetMapping("/all-names")
+    public Map<String, Object> getAllBranchNames() {
+        String sql = "SELECT id, name FROM restaurant_branches";
+        List<Map<String, Object>> list = jdbc.queryForList(sql);
+        return Map.of("status", "success", "data", list);
+    }
+
+    @GetMapping("/branches/{id}")
+    public Map<String, Object> getBranchById(@PathVariable Integer id) {
+        String sql = "SELECT id, name, latitude, longitude, phone FROM restaurant_branches WHERE id = ?";
+        List<Map<String, Object>> list = jdbc.queryForList(sql, id);
+        if (list.isEmpty()) {
+            return Map.of("status", "error", "message", "门店不存在");
+        }
+        return Map.of("status", "success", "data", list.get(0));
+    }
+
     private RestaurantNearbyDTO mapToDto(ResultSet rs) throws SQLException {
         return new RestaurantNearbyDTO(
                 rs.getInt("id"),
@@ -48,7 +62,7 @@ public class RestaurantController {
                 rs.getDouble("latitude"),
                 rs.getDouble("longitude"),
                 rs.getDouble("distance_km"),
-                rs.getString("phone")  // 新增电话字段映射
+                rs.getString("phone")
         );
     }
 }

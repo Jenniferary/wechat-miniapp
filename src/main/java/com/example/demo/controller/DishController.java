@@ -36,7 +36,7 @@ public class DishController {
         String originalFileName = image.getOriginalFilename();
         String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
         String fileName = dishName + extension;
-        String filePath = "D:/projects/order-dish-frontend/public/img/" + fileName;
+        String filePath = "C:/Users/张静娴/WeChatProjects/miniprogram-1/images" + fileName;
 
         try {
             image.transferTo(new File(filePath));
@@ -55,7 +55,18 @@ public class DishController {
         return "上传成功";
     }
 
-
+    // ✅ 修改菜品库存
+    @PutMapping("/{id}/stock")
+    public String updateDishStock(@PathVariable Long id, @RequestParam Integer stock) {
+        Dish dish = dishRepository.findById(id).orElse(null);
+        if (dish != null) {
+            dish.setDishStock(stock);
+            dishRepository.save(dish);
+            return "库存更新成功";
+        } else {
+            return "菜品不存在";
+        }
+    }
     // 删除菜品（根据 ID）
     @DeleteMapping("/{id}")
     public String deleteDishById(@PathVariable Long id) {

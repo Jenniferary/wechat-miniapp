@@ -43,7 +43,7 @@ public class TakeawayController {
             String dishList = String.join(", ", items);
             double finalPrice = totalPrice - selectedCoupon;
             boolean isCouponUsed = selectedCoupon > 0;
-            // ✅ 更新库存：每道菜减1
+            // ✅ 更新库存逻辑：将菜品数量合并后处理
             Map<String, Integer> dishCountMap = new HashMap<>();
             for (String dishName : items) {
                 dishCountMap.put(dishName, dishCountMap.getOrDefault(dishName, 0) + 1);
@@ -53,12 +53,13 @@ public class TakeawayController {
                 String dishName = entry.getKey();
                 int count = entry.getValue();
 
-                // 检查库存是否足够（可选）
+                // 检查库存是否足够
                 Integer currentStock = jdbc.queryForObject(
                         "SELECT dish_stock FROM dishes WHERE dish_name = ?",
                         new Object[]{dishName},
                         Integer.class
                 );
+
                 if (currentStock == null || currentStock < count) {
                     response.put("success", false);
                     response.put("message", "菜品库存不足：" + dishName);
