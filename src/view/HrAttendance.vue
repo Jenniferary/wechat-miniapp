@@ -3,11 +3,12 @@
       <div class="sidebar">
         <h2>⏰ 考勤打卡</h2>
         <ul>
-          <li @click="$router.push('/hr-dashboard')">待审批列表</li>
+          <li @click="$router.push('/hr-dashboard')">入职待审批列表</li>
           <li @click="$router.push('/hr-profile')">个人档案</li>
           <li @click="$router.push('/hr-employee')">员工档案</li>
           <li><strong>考勤打卡</strong></li>
           <li @click="$router.push('/hr-leave')">请假申请</li>
+          <li @click="$router.push('/hr-leave-review')">请假待审批</li>
           <li @click="logout" class="logout">退出系统</li>
         </ul>
       </div>

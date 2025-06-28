@@ -32,7 +32,8 @@ import ApplicantProgressVue from '@/view/ApplicantProgress.vue'
 import HRDashboardVue from '@/view/HRDashboard.vue'
 import HrProfileVue from '@/view/HrProfile.vue'
 import HrAttendanceVue from '@/view/HrAttendance.vue'
-
+import HrLeaveApplyVue from '@/view/HrLeaveApply.vue'
+import HrLeaveReviewVue from '@/view/HrLeaveReview.vue' 
 
 
 import DataAnalytics from '@/view/DataAnalytics.vue'
@@ -108,8 +109,10 @@ const routes = [
   { path: '/hr-profile', component: HrProfileVue},
   //HR打卡界面
   { path: '/hr-attendance', component: HrAttendanceVue},
-  
-
+  //HR请假界面
+  { path: '/hr-leave', component: HrLeaveApplyVue},
+  //HR批准请假界面
+  { path: '/hr-leave-review', component: HrLeaveReviewVue }, 
 
   {path: '/data-analytics', component: DataAnalytics}
  

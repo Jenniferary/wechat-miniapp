@@ -1,64 +1,49 @@
 <template>
     <div class="resume-page">
       <div class="sidebar">
-        <h2>📋 个人档案</h2>
+        <h2>📌 请假申请</h2>
         <ul>
           <li @click="$router.push('/hr-dashboard')">入职待审批列表</li>
-          <li><strong>个人档案</strong></li>
+          <li @click="$router.push('/hr-profile')">个人档案</li>
           <li @click="$router.push('/hr-employee')">员工档案</li>
           <li @click="$router.push('/hr-attendance')">考勤打卡</li>
-          <li @click="$router.push('/hr-leave')">请假申请</li>
+          <li><strong>请假申请</strong></li>
           <li @click="$router.push('/hr-leave-review')">请假待审批</li>
           <li @click="logout" class="logout">退出系统</li>
         </ul>
       </div>
   
       <div class="form-section">
-        <h3>我的信息</h3>
-  
-        <form @submit.prevent="saveProfile" v-if="hrInfo">
+        <h3>提交请假申请</h3>
+        <form @submit.prevent="submitLeave">
           <div class="form-row">
-            <label>用户名：</label>
-            <input type="text" v-model="hrInfo.username" disabled />
+            <label>开始日期：</label>
+            <input type="date" v-model="form.startDate" required />
           </div>
-  
           <div class="form-row">
-            <label>姓名：</label>
-            <input type="text" v-model="hrInfo.name" disabled />
+            <label>结束日期：</label>
+            <input type="date" v-model="form.endDate" required />
           </div>
-  
           <div class="form-row">
-            <label>邮箱：</label>
-            <input type="email" v-model="hrInfo.email" />
+            <label>请假原因：</label>
+            <textarea v-model="form.reason" required rows="4"></textarea>
           </div>
-  
-          <div class="form-row">
-            <label>电话：</label>
-            <input type="tel" v-model="hrInfo.phone" />
-          </div>
-  
-          <div class="form-row">
-            <label>门店ID：</label>
-            <input type="number" v-model="hrInfo.branchId" disabled />
-          </div>
-          <div class="form-row" v-if="hrInfo.hireDate">
-            <label>入职日期：</label>
-            <input type="text" :value="formatDateDisplay(hrInfo.hireDate)" disabled />
-          </div>
-  
-          <button type="submit">保存修改</button>
+          <button type="submit">提交申请</button>
         </form>
-  
-        <p v-else>加载中...</p>
       </div>
     </div>
   </template>
   
   <script>
   export default {
-    name: "HrProfile",
+    name: "HrLeaveApply",
     data() {
       return {
+        form: {
+          startDate: '',
+          endDate: '',
+          reason: '',
+        },
         hrInfo: null,
       };
     },
@@ -70,53 +55,50 @@
         const hrId = localStorage.getItem("hrId");
         if (!hrId) {
           alert("未登录");
-          this.$router.push("/hr-login");
-          return;
+          return this.$router.push("/login");
         }
-        try {
-          const res = await fetch(`/api/hr/${hrId}`);
-          const json = await res.json();
-          if (json.status === "success") {
-            this.hrInfo = json.data;
-          } else {
-            alert(json.message || "加载失败");
-          }
-        } catch (error) {
-          alert("请求错误：" + error.message);
+        const res = await fetch(`/api/hr/${hrId}`);
+        const json = await res.json();
+        if (json.status === "success") {
+          this.hrInfo = json.data;
+        } else {
+          alert("加载失败");
         }
       },
-      async saveProfile() {
+      async submitLeave() {
+        if (!this.hrInfo) return;
         try {
-          const res = await fetch(`/api/hr/${this.hrInfo.id}`, {
-            method: "PUT",
+          const payload = {
+            employeeId: this.hrInfo.id,
+            employeeType: 'hr',
+            branchId: this.hrInfo.branchId,
+            startDate: this.form.startDate,
+            endDate: this.form.endDate,
+            reason: this.form.reason
+          };
+          const res = await fetch("/api/leave/apply", {
+            method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(this.hrInfo),
+            body: JSON.stringify(payload),
           });
           const json = await res.json();
           if (json.status === "success") {
-            alert("保存成功");
+            alert("请假申请提交成功！");
+            this.form = { startDate: '', endDate: '', reason: '' };
           } else {
-            alert(json.message || "保存失败");
+            alert(json.message || "提交失败");
           }
-        } catch (error) {
-          alert("请求错误：" + error.message);
+        } catch (err) {
+          alert("请求错误：" + err.message);
         }
       },
       logout() {
-        localStorage.removeItem("hrId");
-        localStorage.removeItem("hrUsername");
+        localStorage.clear();
         this.$router.push("/login");
-      },
-      formatDateDisplay(dateStr) {
-        // 如果是字符串，转Date对象
-        const d = typeof dateStr === "string" ? new Date(dateStr) : dateStr;
-        if (!d || isNaN(d.getTime())) return "";
-        return d.toLocaleDateString();
-      },
-    },
+      }
+    }
   };
   </script>
-  
   
   <style scoped>
   .resume-page {
@@ -132,19 +114,17 @@
     padding: 30px 20px;
     display: flex;
     flex-direction: column;
-    box-sizing: border-box;
   }
   .sidebar h2 {
     margin-bottom: 30px;
     font-size: 22px;
-    border-bottom: 2px solid #fff;
+    border-bottom: 2px solid white;
     padding-bottom: 10px;
   }
   .sidebar ul {
     list-style: none;
-    padding-left: 0;
+    padding: 0;
     margin: 0;
-    flex: 1;
   }
   .sidebar li {
     padding: 10px 0;
@@ -153,14 +133,13 @@
   }
   .logout {
     color: #ffb3b3;
-    transition: color 0.3s ease;
   }
   .logout:hover {
-    color: #ffffff;
+    color: white;
     font-weight: bold;
   }
   .form-section {
-    width: calc(100vw - 220px);
+    width: calc(100vw - 240px);
     background: white;
     padding: 40px 60px;
     box-sizing: border-box;
@@ -183,12 +162,16 @@
     font-weight: 600;
     color: #555;
   }
-  .form-row input {
+  .form-row input,
+  .form-row textarea {
     flex: 1;
-    padding: 6px 10px;
+    padding: 8px 12px;
     font-size: 16px;
-    border: 1px solid #ddd;
+    border: 1px solid #ccc;
     border-radius: 4px;
+  }
+  textarea {
+    resize: vertical;
   }
   button {
     background-color: #007bff;
@@ -206,17 +189,13 @@
     .resume-page {
       flex-direction: column;
     }
-    .form-section {
-      width: 100vw;
-      padding: 30px 20px;
-    }
     .sidebar {
       width: 100vw;
       text-align: center;
     }
-    .sidebar li {
-      display: inline-block;
-      padding: 10px 15px;
+    .form-section {
+      width: 100vw;
+      padding: 20px;
     }
   }
   </style>

@@ -65,7 +65,6 @@ export default {
         }
       }
 
-      // 前台：采用版本2的思路
       else if (role === "counter") {
         try {
           const response = await fetch("http://localhost:8080/api/manager/login", {
@@ -78,8 +77,6 @@ export default {
             alert("前台登录成功");
             localStorage.setItem("role", "counter");
             localStorage.setItem("username", username);
-            // 版本2做法：可使用 user 对象存储
-            // localStorage.setItem("user", JSON.stringify({ username }));
             this.$router.push("/counter");
           } else {
             alert(result.message || "前台账号或密码错误");
