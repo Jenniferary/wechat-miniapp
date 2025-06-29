@@ -82,12 +82,12 @@
       },
       translateStatus(status) {
         switch (status) {
-          case "待审批":
-            return "待审批";
-          case "审批中":
-            return "审批中";
-          case "已通过":
-            return "已通过";
+          case "已提交待审批":
+            return "已提交待审批";
+          case "HR审批通过待店长审批":
+            return "HR审批通过待店长审批";
+          case "店长审批通过已正式入职":
+            return "店长审批通过已正式入职";
           case "已驳回":
             return "已驳回";
           default:
@@ -96,11 +96,11 @@
       },
       statusClass(status) {
         switch (status) {
-          case "待审批":
+          case "已提交待审批":
             return "pending";
-          case "审批中":
+          case "HR审批通过待店长审批":
             return "in-review";
-          case "已通过":
+          case "店长审批通过已正式入职":
             return "approved";
           case "已驳回":
             return "rejected";

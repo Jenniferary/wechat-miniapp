@@ -39,8 +39,8 @@
                 <span :class="['status', statusClass(req.status)]">{{ translateStatus(req.status) }}</span>
               </td>
               <td>
-                <button v-if="req.status === '待审批'" @click="approve(req.requestId)" class="btn-approve">通过</button>
-                <button v-if="req.status === '待审批'" @click="reject(req.requestId)" class="btn-reject">驳回</button>
+                <button v-if="req.status === '已提交待审批'" @click="approve(req.requestId)" class="btn-approve">通过</button>
+                <button v-if="req.status === '已提交待审批'" @click="reject(req.requestId)" class="btn-reject">驳回</button>
               </td>
             </tr>
           </tbody>
@@ -95,18 +95,18 @@
    },
       translateStatus(status) {
         switch (status) {
-          case "待审批": return "待审批";
-          case "审批中": return "审批中";
-          case "已通过": return "已通过";
+          case "已提交待审批": return "已提交待审批";
+          case "HR审批通过待店长审批": return "HR审批通过待店长审批";
+          case "店长审批通过已正式入职": return "店长审批通过已正式入职";
           case "已驳回": return "已驳回";
           default: return "未知";
         }
       },
       statusClass(status) {
         switch (status) {
-          case "待审批": return "pending";
-          case "审批中": return "in-review";
-          case "已通过": return "approved";
+          case "已提交待审批": return "pending";
+          case "HR审批通过待店长审批": return "in-review";
+          case "店长审批通过已正式入职": return "approved";
           case "已驳回": return "rejected";
           default: return "unknown";
         }
@@ -121,7 +121,7 @@
       },
       async approve(requestId) {
         try {
-          const res = await fetch(`/api/onboarding/${requestId}/status?status=审批中`, {
+          const res = await fetch(`/api/onboarding/${requestId}/status?status=HR审批通过待店长审批`, {
             method: "PUT",
           });
           if (!res.ok) throw new Error(`HTTP ${res.status}`);

@@ -34,13 +34,14 @@ import HrProfileVue from '@/view/HrProfile.vue'
 import HrAttendanceVue from '@/view/HrAttendance.vue'
 import HrLeaveApplyVue from '@/view/HrLeaveApply.vue'
 import HrLeaveReviewVue from '@/view/HrLeaveReview.vue' 
-
-
 import DataAnalytics from '@/view/DataAnalytics.vue'
-
+import AllLogin from '@/view/branch_manager/All_login.vue'
+import BranchManagerLoginVue from '@/view/branch_manager/BranchManagerLogin.vue'
+import BranchDashBoardVue from '@/view/branch_manager/BranchDashBoard.vue'
+import BranchEmployeeVue from '@/view/branch_manager/BranchEmployee.vue'
 const routes = [
   // 默认路由重定向到登录页面
-  { path: '/', redirect: '/login' },
+  { path: '/', redirect: '/all-login' },
   
   // 注册页面路由
   { path: '/register', component: RegisterPage },
@@ -114,12 +115,19 @@ const routes = [
   //HR批准请假界面
   { path: '/hr-leave-review', component: HrLeaveReviewVue }, 
 
-  {path: '/data-analytics', component: DataAnalytics}
- 
+  {path: '/data-analytics', component: DataAnalytics},
+  //总登录界面
+  {path: '/all-login', component:AllLogin },
+  //店长登录界面
+  {path: '/branch-login', component:BranchManagerLoginVue },
+  //店长操作界面
+  {path: '/branch-dashboard', component:BranchDashBoardVue},
+  //员工管理界面
+  {path:'/branch-employee',component:BranchEmployeeVue}
+
 ]
 
 export default createRouter({
   history: createWebHistory(),
   routes,
 })
-
