@@ -21,7 +21,7 @@ public class UserController {
 
     private final String url = "jdbc:mysql://localhost:3306/order_dish?useSSL=false&serverTimezone=UTC";
     private final String dbUser = "root";
-    private final String dbPass = "123456";
+    private final String dbPass = "040707++";
     // 添加到 UserController.java 中
     @GetMapping("/captcha")
     public void getCaptcha(HttpServletResponse response, HttpSession session) throws IOException {

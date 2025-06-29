@@ -36,11 +36,11 @@ public class OnboardingRequest {
     private Integer appliedBranchId;
 
     @Enumerated(EnumType.STRING)
-    private ApprovalStatus status = ApprovalStatus.待审批;
+    private ApprovalStatus status = ApprovalStatus.已提交待审批;
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
     public enum Gender { 男, 女 }
     public enum Position { 服务员, 前台, 后厨 }
-    public enum ApprovalStatus { 待审批, 审批中, 已通过, 已驳回 }
+    public enum ApprovalStatus { 已提交待审批, HR审批通过待店长审批, 店长审批通过已正式入职, 已驳回 }
 }
