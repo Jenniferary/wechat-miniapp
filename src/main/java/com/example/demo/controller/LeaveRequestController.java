@@ -39,19 +39,26 @@ public class LeaveRequestController {
     @GetMapping("/by-branch")
     public List<LeaveRequest> getByBranchAndRole(@RequestParam Integer branchId,
                                                  @RequestParam String role,
-                                                 @RequestParam(required = false) Integer hrId) {
+                                                 @RequestParam(required = false) Integer hrId,
+                                                 @RequestParam(required = false) String hrType) {
         String status = role.equals("hr") ? "待HR审批" : "HR审批通过待店长审批";
         String sql;
         Object[] params;
-        if ("hr".equals(role) && hrId != null) {
-            sql = "SELECT * FROM leave_requests WHERE branch_id = ? AND status = ? AND employee_id != ? ORDER BY created_at DESC";
-            params = new Object[]{branchId, status, hrId};
+        if ("hr".equals(role) && hrId != null && hrType != null) {
+            sql = """
+            SELECT * FROM leave_requests 
+            WHERE branch_id = ? AND status = ? 
+            AND NOT (employee_id = ? AND employee_type = ?) 
+            ORDER BY created_at DESC
+        """;
+            params = new Object[]{branchId, status, hrId, hrType};
         } else {
             sql = "SELECT * FROM leave_requests WHERE branch_id = ? AND status = ? ORDER BY created_at DESC";
             params = new Object[]{branchId, status};
         }
         return jdbcTemplate.query(sql, new LeaveRequestRowMapper(), params);
     }
+
 
     // 3. HR 初审：通过或驳回
     @PutMapping("/hr-approve/{id}")

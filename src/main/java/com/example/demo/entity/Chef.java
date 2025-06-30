@@ -2,6 +2,8 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "chefs")
 public class Chef {
@@ -26,7 +28,8 @@ public class Chef {
 
     @Column(name = "branch_id")
     private Integer branchId;
-
+    @Column(name = "hire_date")
+    private LocalDateTime hireDate;
     // getters and setters
 
     public Integer getId() { return id; }
@@ -49,4 +52,6 @@ public class Chef {
 
     public Integer getBranchId() { return branchId; }
     public void setBranchId(Integer branchId) { this.branchId = branchId; }
+    public LocalDateTime getHireDate() { return hireDate; }
+    public void setHireDate(LocalDateTime hireDate) { this.hireDate = hireDate; }
 }

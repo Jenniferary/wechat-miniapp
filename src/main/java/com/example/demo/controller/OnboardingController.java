@@ -149,6 +149,7 @@ public class OnboardingController {
                 chef.setPhone(req.getPhone());
                 chef.setEmail(req.getEmail());
                 chef.setBranchId(req.getAppliedBranchId());
+                chef.setHireDate(LocalDate.now().atStartOfDay());
                 chefRepository.save(chef);
             }
             case HR -> {

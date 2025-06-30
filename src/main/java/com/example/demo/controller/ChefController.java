@@ -19,6 +19,7 @@ public class ChefController {
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+    // 注册接口
     @PostMapping("/register")
     public Map<String, Object> register(@RequestBody Chef chef) {
         if (chefRepository.findByUsername(chef.getUsername()).isPresent()) {
@@ -33,6 +34,7 @@ public class ChefController {
         return Map.of("status", "success", "message", "注册成功");
     }
 
+    // 登录接口
     @PostMapping("/login")
     public Map<String, Object> login(@RequestBody Map<String, String> loginData) {
         String username = loginData.get("username");
@@ -59,5 +61,30 @@ public class ChefController {
                         "branchId", chef.getBranchId()
                 )
         );
+    }
+
+    // 根据ID查询厨师信息
+    @GetMapping("/{id}")
+    public Map<String, Object> getChefById(@PathVariable Integer id) {
+        return chefRepository.findById(id)
+                .map(chef -> Map.of(
+                        "status", "success",
+                        "data", chef
+                ))
+                .orElseGet(() -> Map.of(
+                        "status", "error",
+                        "message", "用户不存在"
+                ));
+    }
+
+    // 更新厨师信息
+    @PutMapping("/{id}")
+    public Map<String, String> updateChef(@PathVariable Integer id, @RequestBody Chef updatedChef) {
+        return chefRepository.findById(id).map(chef -> {
+            chef.setPhone(updatedChef.getPhone());
+            chef.setEmail(updatedChef.getEmail());
+            chefRepository.save(chef);
+            return Map.of("status", "success", "message", "信息已更新");
+        }).orElseGet(() -> Map.of("status", "error", "message", "用户不存在"));
     }
 }
