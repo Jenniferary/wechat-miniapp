@@ -39,6 +39,9 @@ import AllLogin from '@/view/branch_manager/All_login.vue'
 import BranchManagerLoginVue from '@/view/branch_manager/BranchManagerLogin.vue'
 import BranchDashBoardVue from '@/view/branch_manager/BranchDashBoard.vue'
 import BranchEmployeeVue from '@/view/branch_manager/BranchEmployee.vue'
+import ChefDashboardVue from '@/view/ChefDashboard.vue'
+import ChefAttendanceVue from '@/view/ChefAttendance.vue'
+import ChefLeaveApplyVue from '@/view/ChefLeaveApply.vue'
 const routes = [
   // 默认路由重定向到登录页面
   { path: '/', redirect: '/all-login' },
@@ -123,8 +126,13 @@ const routes = [
   //店长操作界面
   {path: '/branch-dashboard', component:BranchDashBoardVue},
   //员工管理界面
-  {path:'/branch-employee',component:BranchEmployeeVue}
-
+  {path:'/branch-employee',component:BranchEmployeeVue},
+  //chef个人信息界面
+  { path: '/chef-dashboard', component: ChefDashboardVue},
+  //chef打卡界面
+  { path: '/chef-attendance', component: ChefAttendanceVue},
+  //chef请假界面
+  { path: '/chef-leave', component: ChefLeaveApplyVue},
 ]
 
 export default createRouter({
