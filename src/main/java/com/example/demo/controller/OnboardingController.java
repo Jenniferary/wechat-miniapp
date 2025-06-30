@@ -1,16 +1,17 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.OnboardingRequest;
-import com.example.demo.entity.Waiter;
-import com.example.demo.entity.Chef;
-import com.example.demo.repository.WaiterRepository;
-import com.example.demo.repository.ChefRepository;
+import com.example.demo.entity.*;
+import com.example.demo.repository.*;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +28,14 @@ public class OnboardingController {
 
     @Autowired
     private ChefRepository chefRepository;
+
+    @Autowired
+    private CounterRepository counterRepository; // 前台
+
+    @Autowired
+    private HrManagerRepository hrManagerRepository; // HR
+
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     // 获取所有入职申请
     @GetMapping
@@ -72,7 +81,7 @@ public class OnboardingController {
         return Map.of("status", "success", "message", "状态更新成功");
     }
 
-    // 店长审批通过
+    // 店长审批通过（仅修改状态）
     @PutMapping("/{id}/approve")
     @Transactional
     public Map<String, String> approveRequest(@PathVariable int id) {
@@ -80,40 +89,88 @@ public class OnboardingController {
         if (req == null) {
             return Map.of("status", "error", "message", "申请不存在");
         }
-
-        // 确保当前状态为 "HR审批通过待店长审批"
         if (!req.getStatus().equals(OnboardingRequest.ApprovalStatus.HR审批通过待店长审批)) {
-            return Map.of("status", "error", "message", "只能对待店长审批的申请进行审批");
+            return Map.of("status", "error", "message", "只能审批待店长审批的申请");
         }
 
-        // 更新状态为 "店长审批通过已正式入职"
         req.setStatus(OnboardingRequest.ApprovalStatus.店长审批通过已正式入职);
-        em.merge(req); // 保存更新
+        em.merge(req);
 
-        // 根据 position 字段判断是服务员还是后厨
-        if (req.getPosition() == OnboardingRequest.Position.服务员) {
-            // 创建 Waiter 实体并保存
-            waiterRepository.addWaiter(
-                    req.getName(),
-                    "defaultPassword",  // 默认密码
-                    req.getName(),  // 使用申请人的名字作为姓名
-                    req.getPhone(),
-                    req.getEmail(),
-                    req.getAppliedBranchId()
-            );
-        } else if (req.getPosition() == OnboardingRequest.Position.后厨) {
-            // 创建 Chef 实体并保存
-            chefRepository.addChef(
-                    req.getName(),
-                    "defaultPassword",  // 默认密码
-                    req.getName(),  // 使用申请人的名字作为姓名
-                    req.getPhone(),
-                    req.getEmail(),
-                    req.getAppliedBranchId()
-            );
+        return Map.of("status", "success", "message", "店长审批通过，等待员工确认入职");
+    }
+
+    // 员工确认入职，创建账户接口
+    @PostMapping("/{id}/confirm")
+    @Transactional
+    public Map<String, String> confirmOnboarding(@PathVariable int id,
+                                                 @RequestBody Map<String, String> confirmData) {
+        OnboardingRequest req = em.find(OnboardingRequest.class, id);
+        if (req == null) {
+            return Map.of("status", "error", "message", "申请不存在");
+        }
+        if (!req.getStatus().equals(OnboardingRequest.ApprovalStatus.店长审批通过已正式入职)) {
+            return Map.of("status", "error", "message", "当前状态不允许确认入职");
         }
 
-        return Map.of("status", "success", "message", "店长审批通过，员工已添加");
+        String username = confirmData.get("username");
+        String rawPassword = confirmData.get("password");
+        if (username == null || username.isEmpty() || rawPassword == null || rawPassword.isEmpty()) {
+            return Map.of("status", "error", "message", "用户名或密码不能为空");
+        }
+
+        String encodedPassword = passwordEncoder.encode(rawPassword);
+
+        switch (req.getPosition()) {
+            case 服务员 -> {
+                Waiter waiter = new Waiter();
+                waiter.setUsername(username);
+                waiter.setPasswordHash(encodedPassword);
+                waiter.setName(req.getName());
+                waiter.setPhone(req.getPhone());
+                waiter.setEmail(req.getEmail());
+                waiter.setBranchId(req.getAppliedBranchId());
+                waiterRepository.save(waiter);
+            }
+            case 前台 -> {
+                Counter counter = new Counter();
+                counter.setUsername(username);
+                counter.setPasswordHash(encodedPassword);
+                counter.setName(req.getName());
+                counter.setPhone(req.getPhone());
+                counter.setEmail(req.getEmail());
+                counter.setBranchId(req.getAppliedBranchId());
+                counterRepository.save(counter);
+            }
+            case 后厨 -> {
+                Chef chef = new Chef();
+                chef.setUsername(username);
+                chef.setPasswordHash(encodedPassword);
+                chef.setName(req.getName());
+                chef.setPhone(req.getPhone());
+                chef.setEmail(req.getEmail());
+                chef.setBranchId(req.getAppliedBranchId());
+                chefRepository.save(chef);
+            }
+            case HR -> {
+                HrManager hr = new HrManager();
+                hr.setUsername(username);
+                hr.setPasswordHash(encodedPassword);
+                hr.setName(req.getName());
+                hr.setPhone(req.getPhone());
+                hr.setEmail(req.getEmail());
+                hr.setBranchId(req.getAppliedBranchId());
+                hr.setHireDate(LocalDate.now().atStartOfDay());
+                hrManagerRepository.save(hr);
+            }
+            default -> {
+                return Map.of("status", "error", "message", "职位不支持");
+            }
+        }
+
+        req.setStatus(OnboardingRequest.ApprovalStatus.员工已确认入职);
+        em.merge(req);
+
+        return Map.of("status", "success", "message", "员工已确认入职，账号创建成功");
     }
 
     // 店长驳回
@@ -124,15 +181,11 @@ public class OnboardingController {
         if (req == null) {
             return Map.of("status", "error", "message", "申请不存在");
         }
-
-        // 确保当前状态为 "HR审批通过待店长审批"
         if (!req.getStatus().equals(OnboardingRequest.ApprovalStatus.HR审批通过待店长审批)) {
-            return Map.of("status", "error", "message", "只能对待店长审批的申请进行驳回");
+            return Map.of("status", "error", "message", "只能驳回待店长审批的申请");
         }
-
-        // 更新状态为 "已驳回"
         req.setStatus(OnboardingRequest.ApprovalStatus.已驳回);
-        em.merge(req); // 保存更新
+        em.merge(req);
         return Map.of("status", "success", "message", "申请已被驳回");
     }
 

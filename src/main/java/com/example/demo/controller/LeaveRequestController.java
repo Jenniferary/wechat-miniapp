@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,7 @@ public class LeaveRequestController {
     public List<LeaveRequest> getByBranchAndRole(@RequestParam Integer branchId,
                                                  @RequestParam String role,
                                                  @RequestParam(required = false) Integer hrId) {
-        String status = role.equals("hr") ? "待HR审批" : "待店长审批";
+        String status = role.equals("hr") ? "待HR审批" : "HR审批通过待店长审批";
         String sql;
         Object[] params;
         if ("hr".equals(role) && hrId != null) {
@@ -57,7 +58,7 @@ public class LeaveRequestController {
     public Map<String, Object> hrApprove(@PathVariable Integer id, @RequestParam String decision) {
         String newStatus;
         if ("approve".equalsIgnoreCase(decision)) {
-            newStatus = "待店长审批";
+            newStatus = "HR审批通过待店长审批";
         } else if ("reject".equalsIgnoreCase(decision)) {
             newStatus = "已驳回";
         } else {
@@ -72,7 +73,7 @@ public class LeaveRequestController {
     public Map<String, Object> managerApprove(@PathVariable Integer id, @RequestParam String decision) {
         String newStatus;
         if ("approve".equalsIgnoreCase(decision)) {
-            newStatus = "已通过";
+            newStatus = "审批成功";
         } else if ("reject".equalsIgnoreCase(decision)) {
             newStatus = "已驳回";
         } else {
@@ -82,7 +83,7 @@ public class LeaveRequestController {
         return Map.of("status", rows > 0 ? "success" : "error");
     }
 
-    // RowMapper 内部类
+    // RowMapper 内部类（处理 null 安全）
     static class LeaveRequestRowMapper implements RowMapper<LeaveRequest> {
         @Override
         public LeaveRequest mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -95,10 +96,14 @@ public class LeaveRequestController {
             r.setEndDate(rs.getDate("end_date").toLocalDate());
             r.setReason(rs.getString("reason"));
             r.setStatus(rs.getString("status"));
-            r.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-            r.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+
+            // 处理 created_at 和 updated_at 可能为 null 的情况
+            Timestamp createdAt = rs.getTimestamp("created_at");
+            Timestamp updatedAt = rs.getTimestamp("updated_at");
+            r.setCreatedAt(createdAt != null ? createdAt.toLocalDateTime() : null);
+            r.setUpdatedAt(updatedAt != null ? updatedAt.toLocalDateTime() : null);
+
             return r;
         }
     }
 }
-

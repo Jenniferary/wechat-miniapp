@@ -41,6 +41,6 @@ public class OnboardingRequest {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     public enum Gender { 男, 女 }
-    public enum Position { 服务员, 前台, 后厨 }
-    public enum ApprovalStatus { 已提交待审批, HR审批通过待店长审批, 店长审批通过已正式入职, 已驳回 }
+    public enum Position { 服务员, 前台, 后厨, HR }
+    public enum ApprovalStatus { 已提交待审批, HR审批通过待店长审批, 店长审批通过已正式入职, 员工已确认入职, 已驳回 }
 }
