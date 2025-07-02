@@ -51,6 +51,8 @@ import WaiterLeaveProgressVue from '@/view/WaiterLeaveProgress.vue'
 import CounterDashboardVue from '@/view/CounterDashboard.vue'
 import CounterDineinOrderVue from '@/view/CounterDineinOrder.vue'
 import CounterAttendanceVue from '@/view/CounterAttendance.vue'
+import CounterLeaveApplyVue from '@/view/CounterLeaveApply.vue'
+import CounterLeaveProgressVue from '@/view/CounterLeaveProgress.vue'
 const routes = [
   // 默认路由重定向到登录页面
   { path: '/', redirect: '/all-login' },
@@ -160,6 +162,10 @@ const routes = [
   {path: '/manage-tables', component:ManageTable},
   //counter打卡界面
   { path: '/counter-attendance', component: CounterAttendanceVue},
+  //counter请假界面
+  { path: '/counter-leave', component: CounterLeaveApplyVue},
+  //counter请假查看界面
+  { path: '/counter-leave-progress', component: CounterLeaveProgressVue},
 ]
 
 export default createRouter({
