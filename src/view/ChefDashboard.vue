@@ -6,6 +6,7 @@
           <li><strong>个人档案</strong></li>
           <li @click="$router.push('/chef-attendance')">考勤打卡</li>
           <li @click="$router.push('/chef-leave')">请假申请</li>
+          <li @click="$router.push('/chef-leave-progress')">我的请假记录</li>
           <li @click="logout" class="logout">退出系统</li>
         </ul>
       </div>

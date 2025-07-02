@@ -8,6 +8,7 @@
           <li @click="$router.push('/hr-employee')">员工档案</li>
           <li @click="$router.push('/hr-attendance')">考勤打卡</li>
           <li @click="$router.push('/hr-leave')">请假申请</li>
+          <li @click="$router.push('/hr-leave-progress')">我的请假记录</li>
           <li @click="$router.push('/hr-leave-review')">请假待审批</li>
           <li @click="logout" class="logout">退出系统</li>
         </ul>
@@ -89,7 +90,7 @@
       },
       async fetchLeaveRequests() {
         try {
-          const url = `/api/leave/by-branch?branchId=${this.hrInfo.branchId}&role=hr&hrId=${this.hrInfo.id}&hrType=${this.hrInfo.type}`;
+          const url = `/api/leave/by-branch?branchId=${this.hrInfo.branchId}&role=hr&hrId=${this.hrInfo.id}&hrType=hr`;
           const res = await fetch(url);
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
           const json = await res.json();
@@ -99,22 +100,22 @@
         }
       },
       async handleDecision(id, decision) {
-        try {
-          const res = await fetch(`/api/leave/hr-approve/${id}?decision=${decision}`, {
-            method: "PUT",
-          });
-          if (!res.ok) throw new Error(`HTTP ${res.status}`);
-          const json = await res.json();
-          if (json.status === "success") {
-            alert(`已${decision === "approve" ? "通过" : "驳回"}该请假申请`);
-            this.fetchLeaveRequests();
-          } else {
-            alert("操作失败：" + (json.message || ""));
-          }
-        } catch (err) {
-          alert("请求错误：" + err.message);
-        }
-      },
+  try {
+    const res = await fetch(`/api/leave/hr-approve/${id}?decision=${decision}&hrId=${this.hrInfo.id}&hrType=hr`, {
+      method: "PUT",
+    });
+    const json = await res.json();
+    if (json.status === "success") {
+      alert(`已${decision === "approve" ? "通过" : "驳回"}该请假申请`);
+      this.fetchLeaveRequests();
+    } else {
+      alert("操作失败：" + (json.message || ""));
+    }
+  } catch (err) {
+    alert("请求错误：" + err.message);
+  }
+},
+
       formatDate(dateStr) {
         if (!dateStr) return "";
         return new Date(dateStr).toLocaleDateString();

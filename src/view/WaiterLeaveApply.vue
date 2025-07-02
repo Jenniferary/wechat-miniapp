@@ -1,15 +1,12 @@
 <template>
     <div class="resume-page">
       <div class="sidebar">
-        <h2>📌 请假申请</h2>
+        <h2>👨‍🍳 请假申请</h2>
         <ul>
-          <li @click="$router.push('/hr-dashboard')">入职待审批列表</li>
-          <li @click="$router.push('/hr-profile')">个人档案</li>
-          <li @click="$router.push('/hr-employee')">员工档案</li>
-          <li @click="$router.push('/hr-attendance')">考勤打卡</li>
+          <li @click="$router.push('/waiter-dashboard')">个人档案</li>
+          <li @click="$router.push('/waiter-attendance')">考勤打卡</li>
           <li><strong>请假申请</strong></li>
-          <li @click="$router.push('/hr-leave-progress')">我的请假记录</li>
-          <li @click="$router.push('/hr-leave-review')">请假待审批</li>
+          <li @click="$router.push('/waiter-leave-progress')">我的请假记录</li>
           <li @click="logout" class="logout">退出系统</li>
         </ul>
       </div>
@@ -37,45 +34,57 @@
   
   <script>
   export default {
-    name: "HrLeaveApply",
+    name: "WaiterLeave",
     data() {
       return {
         form: {
-          startDate: '',
-          endDate: '',
-          reason: '',
+          startDate: "",
+          endDate: "",
+          reason: "",
         },
-        hrInfo: null,
+        waiterInfo: null,
       };
     },
     created() {
-      this.loadHrInfo();
+      this.loadWaiterInfo();
     },
     methods: {
-      async loadHrInfo() {
-        const hrId = localStorage.getItem("hrId");
-        if (!hrId) {
+      async loadWaiterInfo() {
+        const waiterId = localStorage.getItem("waiterId");
+        if (!waiterId) {
           alert("未登录");
-          return this.$router.push("/login");
+          this.$router.push("/login");
+          return;
         }
-        const res = await fetch(`/api/hr/${hrId}`);
-        const json = await res.json();
-        if (json.status === "success") {
-          this.hrInfo = json.data;
-        } else {
-          alert("加载失败");
+        try {
+          const res = await fetch(`/api/waiters/${waiterId}`);
+          const json = await res.json();
+          if (json.status === "success") {
+            this.waiterInfo = json.data;
+          } else {
+            alert(json.message || "加载失败");
+          }
+        } catch (err) {
+          alert("请求错误：" + err.message);
         }
       },
       async submitLeave() {
-        if (!this.hrInfo) return;
+        if (!this.waiterInfo) {
+          alert("用户信息未加载");
+          return;
+        }
+        if (this.form.endDate < this.form.startDate) {
+          alert("结束日期不能早于开始日期");
+          return;
+        }
         try {
           const payload = {
-            employeeId: this.hrInfo.id,
-            employeeType: 'hr',
-            branchId: this.hrInfo.branchId,
+            employeeId: this.waiterInfo.id,
+            employeeType: "waiter",
+            branchId: this.waiterInfo.branchId,
             startDate: this.form.startDate,
             endDate: this.form.endDate,
-            reason: this.form.reason
+            reason: this.form.reason,
           };
           const res = await fetch("/api/leave/apply", {
             method: "POST",
@@ -85,7 +94,7 @@
           const json = await res.json();
           if (json.status === "success") {
             alert("请假申请提交成功！");
-            this.form = { startDate: '', endDate: '', reason: '' };
+            this.form = { startDate: "", endDate: "", reason: "" };
           } else {
             alert(json.message || "提交失败");
           }
@@ -94,10 +103,10 @@
         }
       },
       logout() {
-        localStorage.clear();
+        localStorage.removeItem("waiterId");
         this.$router.push("/login");
-      }
-    }
+      },
+    },
   };
   </script>
   
@@ -115,6 +124,7 @@
     padding: 30px 20px;
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
   }
   .sidebar h2 {
     margin-bottom: 30px;
@@ -126,6 +136,7 @@
     list-style: none;
     padding: 0;
     margin: 0;
+    flex: 1;
   }
   .sidebar li {
     padding: 10px 0;
@@ -134,6 +145,7 @@
   }
   .logout {
     color: #ffb3b3;
+    transition: color 0.3s ease;
   }
   .logout:hover {
     color: white;

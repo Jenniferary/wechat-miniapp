@@ -33,6 +33,7 @@ import HRDashboardVue from '@/view/HRDashboard.vue'
 import HrProfileVue from '@/view/HrProfile.vue'
 import HrAttendanceVue from '@/view/HrAttendance.vue'
 import HrLeaveApplyVue from '@/view/HrLeaveApply.vue'
+import HrLeaveProgressVue from '@/view/HrLeaveProgress.vue'
 import HrLeaveReviewVue from '@/view/HrLeaveReview.vue' 
 import DataAnalytics from '@/view/DataAnalytics.vue'
 import AllLogin from '@/view/branch_manager/All_login.vue'
@@ -42,6 +43,11 @@ import BranchEmployeeVue from '@/view/branch_manager/BranchEmployee.vue'
 import ChefDashboardVue from '@/view/ChefDashboard.vue'
 import ChefAttendanceVue from '@/view/ChefAttendance.vue'
 import ChefLeaveApplyVue from '@/view/ChefLeaveApply.vue'
+import ChefLeaveProgressVue from '@/view/ChefLeaveProgress.vue'
+import WaiterDashboardVue from '@/view/WaiterDashboard.vue'
+import WaiterAttendanceVue from '@/view/WaiterAttendance.vue'
+import WaiterLeaveApplyVue from '@/view/WaiterLeaveApply.vue'
+import WaiterLeaveProgressVue from '@/view/WaiterLeaveProgress.vue'
 const routes = [
   // 默认路由重定向到登录页面
   { path: '/', redirect: '/all-login' },
@@ -115,6 +121,8 @@ const routes = [
   { path: '/hr-attendance', component: HrAttendanceVue},
   //HR请假界面
   { path: '/hr-leave', component: HrLeaveApplyVue},
+  //HR请假查看界面
+  { path: '/hr-leave-progress', component: HrLeaveProgressVue},
   //HR批准请假界面
   { path: '/hr-leave-review', component: HrLeaveReviewVue }, 
 
@@ -133,6 +141,16 @@ const routes = [
   { path: '/chef-attendance', component: ChefAttendanceVue},
   //chef请假界面
   { path: '/chef-leave', component: ChefLeaveApplyVue},
+  //chef请假查看界面
+  { path: '/chef-leave-progress', component: ChefLeaveProgressVue},
+  //waiter个人信息界面
+  { path: '/waiter-dashboard', component: WaiterDashboardVue},
+  //waiter打卡界面
+  { path: '/waiter-attendance', component: WaiterAttendanceVue},
+  //waiter请假界面
+  { path: '/waiter-leave', component: WaiterLeaveApplyVue},
+  //waiter请假查看界面
+  { path: '/waiter-leave-progress', component: WaiterLeaveProgressVue},
 ]
 
 export default createRouter({

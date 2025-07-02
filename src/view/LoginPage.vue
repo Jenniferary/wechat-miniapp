@@ -142,6 +142,7 @@ export default {
             alert("服务员登录成功");
             localStorage.setItem("role", "waiter");
             localStorage.setItem("username", username);
+            localStorage.setItem("waiterId", result.data.id);
             this.$router.push("/waiter-dashboard");
           } else {
             alert("服务员账号或密码错误");
