@@ -79,4 +79,18 @@ public class WaiterController {
         }
         return Map.of("status", "success", "data", waiterOpt.get());
     }
+    @PutMapping("/{id}")
+    public Map<String, Object> updateWaiter(@PathVariable Integer id, @RequestBody Waiter updated) {
+        Optional<Waiter> opt = waiterRepository.findById(id);
+        if (opt.isEmpty()) {
+            return Map.of("status", "error", "message", "服务员不存在");
+        }
+
+        Waiter waiter = opt.get();
+        waiter.setPhone(updated.getPhone());
+        waiter.setEmail(updated.getEmail());
+
+        waiterRepository.save(waiter);
+        return Map.of("status", "success", "message", "修改成功");
+    }
 }
