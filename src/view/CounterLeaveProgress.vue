@@ -178,7 +178,7 @@
     cursor: pointer;
   }
   .menu-list li.active {
-    color: #ffd166;
+    color: #00b4d8;
     font-weight: bold;
   }
   .logout {

@@ -31,6 +31,7 @@ import ApplicantRegisterVue from '@/view/ApplicantRegister.vue'
 import ApplicantProgressVue from '@/view/ApplicantProgress.vue'
 import HRDashboardVue from '@/view/HRDashboard.vue'
 import HrProfileVue from '@/view/HrProfile.vue'
+import HrEmployeeVue from '@/view/HrEmployee.vue'
 import HrAttendanceVue from '@/view/HrAttendance.vue'
 import HrLeaveApplyVue from '@/view/HrLeaveApply.vue'
 import HrLeaveProgressVue from '@/view/HrLeaveProgress.vue'
@@ -120,6 +121,8 @@ const routes = [
   { path: '/hr-dashboard', component: HRDashboardVue },
   //HR个人信息界面
   { path: '/hr-profile', component: HrProfileVue},
+  //HR个人信息界面
+  { path: '/hr-employee', component: HrEmployeeVue},
   //HR打卡界面
   { path: '/hr-attendance', component: HrAttendanceVue},
   //HR请假界面

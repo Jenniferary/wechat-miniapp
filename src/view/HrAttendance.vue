@@ -450,7 +450,7 @@
     background: #f0f2f5;
   }
   .sidebar {
-    width: 220px;
+    width: 240px;
     background: #1d3557;
     color: #fff;
     padding: 30px 20px;
