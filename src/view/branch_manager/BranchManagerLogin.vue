@@ -1,31 +1,24 @@
 <template>
   <div class="login-container">
-    <div class="form-container">
-      <h1>店长登录</h1>
+    <div class="container">
+      <h1>欢迎回来，店长！</h1>
+      <p class="welcome-message">管理您的门店从这里开始</p>
 
       <form @submit.prevent="submitLogin">
         <label for="username">用户名：</label>
-        <input
-          type="text"
-          id="username"
-          v-model="username"
-          placeholder="请输入用户名"
-          required
-        />
+        <input type="text" id="username" v-model="username" required />
 
         <label for="password">密码：</label>
-        <input
-          type="password"
-          id="password"
-          v-model="password"
-          placeholder="请输入密码"
-          required
-        />
+        <input type="password" id="password" v-model="password" required />
 
-        <button type="submit">登录</button>
+        <div class="button-container">
+          <button type="submit">登录</button>
+        </div>
       </form>
 
-      <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+      <div class="button-container">
+        <a href="/register" class="login-link">还没有账号？点击注册</a>
+      </div>
     </div>
   </div>
 </template>
@@ -34,35 +27,35 @@
 export default {
   data() {
     return {
-      username: "",
-      password: "",
-      errorMessage: ""
+      username: '',
+      password: ''
     };
   },
   methods: {
     async submitLogin() {
-      const { username, password } = this;
-      
       try {
-        const response = await fetch("http://localhost:8080/api/branch-managers/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, password })
+        const response = await fetch('http://localhost:8080/api/branch-managers/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: this.username,
+            password: this.password
+          })
         });
-        
+
         const result = await response.json();
 
-        if (response.ok && result.status === "success") {
-          // 登录成功，保存店长信息并跳转
-          localStorage.setItem("managerId", result.data.id);  // 保存 managerId
-          localStorage.setItem("branchId", result.data.branchId);  // 保存 branchId
-          localStorage.setItem("managerName", result.data.name);  // 保存 managerName
-          this.$router.push("/branch-dashboard"); // 跳转到店长管理界面
+        if (response.ok && result.status === 'success') {
+          alert('店长登录成功');
+          localStorage.setItem('managerId', result.data.id);
+          localStorage.setItem('branchId', result.data.branchId);
+          localStorage.setItem('managerName', result.data.name);
+          this.$router.push('/branch-dashboard');
         } else {
-          this.errorMessage = result.message || "登录失败，请重试";
+          alert(result.message || '账号或密码错误');
         }
-      } catch (error) {
-        this.errorMessage = "网络错误，请稍后再试";
+      } catch (err) {
+        alert('登录失败：' + err.message);
       }
     }
   }
@@ -70,40 +63,54 @@ export default {
 </script>
 
 <style scoped>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #f4f4f4;
+  background-size: cover;
+  background-position: center;
 }
 
-.form-container {
-  background-color: white;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+.container {
+  text-align: center;
+  padding: 30px 40px;
+  background-color: rgba(255, 255, 255, 0.88);
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
 }
 
 h1 {
-  text-align: center;
-  margin-bottom: 20px;
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.welcome-message {
+  font-size: 18px;
+  margin-bottom: 25px;
+  color: #555;
 }
 
 label {
   display: block;
   font-size: 16px;
-  margin-top: 10px;
+  margin-top: 20px;
+  text-align: left;
 }
 
 input {
-  width: 100%;
+  width: 280px;
   padding: 10px;
-  font-size: 16px;
-  margin-top: 5px;
-  margin-bottom: 20px;
-  border-radius: 4px;
+  font-size: 15px;
   border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-top: 8px;
+  box-sizing: border-box;
 }
 
 button {
@@ -111,9 +118,10 @@ button {
   padding: 10px;
   font-size: 18px;
   background-color: #3498db;
-  color: white;
+  color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
+  margin-top: 25px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
@@ -122,9 +130,15 @@ button:hover {
   background-color: #2980b9;
 }
 
-.error-message {
-  color: red;
-  text-align: center;
+.login-link {
+  display: block;
   margin-top: 20px;
+  font-size: 15px;
+  color: #333;
+  text-decoration: none;
+}
+
+.login-link:hover {
+  text-decoration: underline;
 }
 </style>
