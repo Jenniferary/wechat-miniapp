@@ -19,6 +19,19 @@ public class CounterController {
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+    // 前台注册
+    @PostMapping("/register")
+    public Map<String, Object> register(@RequestBody Counter counter) {
+        if (counterRepository.findByUsername(counter.getUsername()).isPresent()) {
+            return Map.of("status", "error", "message", "用户名已存在");
+        }
+
+        counter.setPasswordHash(passwordEncoder.encode(counter.getPasswordHash()));
+        counterRepository.save(counter);
+        return Map.of("status", "success", "message", "注册成功");
+    }
+
+    // 前台登录
     @PostMapping("/login")
     public Map<String, Object> login(@RequestBody Map<String, String> data) {
         String username = data.get("username");
@@ -42,8 +55,41 @@ public class CounterController {
                         "name", counter.getName(),
                         "phone", counter.getPhone(),
                         "email", counter.getEmail(),
-                        "branchId", counter.getBranchId()
+                        "branchId", counter.getBranchId(),
+                        "hireDate", counter.getHireDate()
                 )
         );
+    }
+
+    // 获取所有前台（可选）
+    @GetMapping
+    public java.util.List<Counter> getAllCounters() {
+        return counterRepository.findAll();
+    }
+
+    // 根据 ID 获取前台信息
+    @GetMapping("/{id}")
+    public Map<String, Object> getCounterById(@PathVariable Integer id) {
+        Optional<Counter> opt = counterRepository.findById(id);
+        if (opt.isEmpty()) {
+            return Map.of("status", "error", "message", "前台不存在");
+        }
+        return Map.of("status", "success", "data", opt.get());
+    }
+
+    // 修改前台信息（只改电话和邮箱）
+    @PutMapping("/{id}")
+    public Map<String, Object> updateCounter(@PathVariable Integer id, @RequestBody Counter updated) {
+        Optional<Counter> opt = counterRepository.findById(id);
+        if (opt.isEmpty()) {
+            return Map.of("status", "error", "message", "前台不存在");
+        }
+
+        Counter counter = opt.get();
+        counter.setPhone(updated.getPhone());
+        counter.setEmail(updated.getEmail());
+
+        counterRepository.save(counter);
+        return Map.of("status", "success", "message", "修改成功");
     }
 }
