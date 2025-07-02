@@ -75,7 +75,7 @@ export default {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #f4f4f4;
+  background-color: rgba(255, 255, 255, 0.8); /* 透明背景 */
 }
 
 .form-container {
