@@ -48,6 +48,9 @@ import WaiterDashboardVue from '@/view/WaiterDashboard.vue'
 import WaiterAttendanceVue from '@/view/WaiterAttendance.vue'
 import WaiterLeaveApplyVue from '@/view/WaiterLeaveApply.vue'
 import WaiterLeaveProgressVue from '@/view/WaiterLeaveProgress.vue'
+import CounterDashboardVue from '@/view/CounterDashboard.vue'
+import CounterDineinOrderVue from '@/view/CounterDineinOrder.vue'
+import CounterAttendanceVue from '@/view/CounterAttendance.vue'
 const routes = [
   // 默认路由重定向到登录页面
   { path: '/', redirect: '/all-login' },
@@ -91,16 +94,14 @@ const routes = [
   { path: '/delivery-checkout', component: TakeawayOrder },
   // 我的外卖订单
   { path: '/takeaway-order', component: DeliveryOrders },
-  //前台管理餐桌
-  {path: '/manage-tables', component:ManageTable},
   //前台管理外卖员
   {path: '/manage-delivery', component:ManageDelivery},
   //前台分配外卖员
-  {path: '/assign-delivery', component:AssignDelivery},
+  {path: '/delivery-assign', component:AssignDelivery},
   //前台添加外卖员
-  {path: '/add-delivery-person', component:AddDeliveryPerson},
+  {path: '/delivery-add', component:AddDeliveryPerson},
   //前台查看外卖订单
-  {path: '/view-delivery-orders', component:ViewDeliveryOrders},
+  {path: '/delivery-view', component:ViewDeliveryOrders},
   //添加管理员
   {path: '/add-manager',component: AddManagerPage},
   //查看管理员
@@ -151,6 +152,14 @@ const routes = [
   { path: '/waiter-leave', component: WaiterLeaveApplyVue},
   //waiter请假查看界面
   { path: '/waiter-leave-progress', component: WaiterLeaveProgressVue},
+  //counter个人信息界面
+  { path: '/counter-dashboard', component: CounterDashboardVue},
+  //counter个人信息界面
+  { path: '/counter-dinein-order', component: CounterDineinOrderVue},
+  //counter管理餐桌
+  {path: '/manage-tables', component:ManageTable},
+  //counter打卡界面
+  { path: '/counter-attendance', component: CounterAttendanceVue},
 ]
 
 export default createRouter({

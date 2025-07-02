@@ -67,7 +67,7 @@ export default {
 
       else if (role === "counter") {
         try {
-          const response = await fetch("http://localhost:8080/api/manager/login", {
+          const response = await fetch("http://localhost:8080/api/counter/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ username, password }),
@@ -77,7 +77,8 @@ export default {
             alert("前台登录成功");
             localStorage.setItem("role", "counter");
             localStorage.setItem("username", username);
-            this.$router.push("/counter");
+            localStorage.setItem("counterId", result.data.id); 
+            this.$router.push("/counter-dashboard");
           } else {
             alert(result.message || "前台账号或密码错误");
           }
