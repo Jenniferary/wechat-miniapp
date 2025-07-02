@@ -2,6 +2,8 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "waiters")
 public class Waiter {
@@ -27,9 +29,10 @@ public class Waiter {
 
     @Column(name = "branch_id")
     private Integer branchId;
+    @Column(name = "hire_date")
+    private LocalDateTime hireDate;
 
     // Getters and Setters
-    // ... （省略，建议使用 Lombok @Data 或手动生成）
 
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
@@ -45,4 +48,6 @@ public class Waiter {
     public void setEmail(String email) { this.email = email; }
     public Integer getBranchId() { return branchId; }
     public void setBranchId(Integer branchId) { this.branchId = branchId; }
+    public LocalDateTime getHireDate() { return hireDate; }
+    public void setHireDate(LocalDateTime hireDate) { this.hireDate = hireDate; }
 }

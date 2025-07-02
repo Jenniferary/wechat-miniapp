@@ -62,7 +62,22 @@ public class LeaveRequestController {
 
     // 3. HR 初审：通过或驳回
     @PutMapping("/hr-approve/{id}")
-    public Map<String, Object> hrApprove(@PathVariable Integer id, @RequestParam String decision) {
+    public Map<String, Object> hrApprove(@PathVariable Integer id,
+                                         @RequestParam String decision,
+                                         @RequestParam Integer hrId,
+                                         @RequestParam String hrType) {
+        // 查出该申请记录
+        String checkSql = "SELECT * FROM leave_requests WHERE id = ?";
+        List<LeaveRequest> list = jdbcTemplate.query(checkSql, new LeaveRequestRowMapper(), id);
+        if (list.isEmpty()) {
+            return Map.of("status", "error", "message", "请假申请不存在");
+        }
+
+        LeaveRequest req = list.get(0);
+        if (req.getEmployeeId().equals(hrId) && req.getEmployeeType().equalsIgnoreCase(hrType)) {
+            return Map.of("status", "error", "message", "不能审批自己提交的请假申请");
+        }
+
         String newStatus;
         if ("approve".equalsIgnoreCase(decision)) {
             newStatus = "HR审批通过待店长审批";
@@ -71,9 +86,11 @@ public class LeaveRequestController {
         } else {
             return Map.of("status", "error", "message", "无效的决策");
         }
+
         int rows = jdbcTemplate.update("UPDATE leave_requests SET status = ? WHERE id = ?", newStatus, id);
         return Map.of("status", rows > 0 ? "success" : "error");
     }
+
 
     // 4. 店长终审
     @PutMapping("/manager-approve/{id}")
@@ -113,4 +130,13 @@ public class LeaveRequestController {
             return r;
         }
     }
+    // 5. 查询员工请假历史（带分页或全部，方便前端展示自己的请假流程）
+    @GetMapping("/history/{employeeId}")
+    public Map<String, Object> getLeaveHistory(@PathVariable Integer employeeId,
+                                               @RequestParam String employeeType) {
+        String sql = "SELECT * FROM leave_requests WHERE employee_id = ? AND employee_type = ? ORDER BY created_at DESC";
+        List<LeaveRequest> list = jdbcTemplate.query(sql, new LeaveRequestRowMapper(), employeeId, employeeType);
+        return Map.of("status", "success", "data", Map.of("records", list));
+    }
+
 }

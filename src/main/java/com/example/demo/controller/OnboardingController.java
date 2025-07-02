@@ -129,6 +129,7 @@ public class OnboardingController {
                 waiter.setPhone(req.getPhone());
                 waiter.setEmail(req.getEmail());
                 waiter.setBranchId(req.getAppliedBranchId());
+                waiter.setHireDate(LocalDate.now().atStartOfDay());
                 waiterRepository.save(waiter);
             }
             case 前台 -> {
@@ -139,6 +140,7 @@ public class OnboardingController {
                 counter.setPhone(req.getPhone());
                 counter.setEmail(req.getEmail());
                 counter.setBranchId(req.getAppliedBranchId());
+                counter.setHireDate(LocalDate.now().atStartOfDay());
                 counterRepository.save(counter);
             }
             case 后厨 -> {
