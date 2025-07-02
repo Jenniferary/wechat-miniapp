@@ -42,6 +42,11 @@ import BranchEmployeeVue from '@/view/branch_manager/BranchEmployee.vue'
 import ChefDashboardVue from '@/view/ChefDashboard.vue'
 import ChefAttendanceVue from '@/view/ChefAttendance.vue'
 import ChefLeaveApplyVue from '@/view/ChefLeaveApply.vue'
+import BranchLeavingVue from '@/view/branch_manager/BranchLeaving.vue'
+import ChefLeaveWorkingVue from '@/view/employee/ChefLeaveWorking.vue'
+import EmployeeLeavingStatusVue from '@/view/employee/EmployeeLeavingStatus.vue'
+import HrLeavingWorkingReviewVue from '@/view/Hr/HrLeavingWorkingReview.vue'
+import BranchLeavingWorkingReviewVue from '@/view/branch_manager/BranchLeavingWorkingReview.vue'
 const routes = [
   // 默认路由重定向到登录页面
   { path: '/', redirect: '/all-login' },
@@ -133,6 +138,17 @@ const routes = [
   { path: '/chef-attendance', component: ChefAttendanceVue},
   //chef请假界面
   { path: '/chef-leave', component: ChefLeaveApplyVue},
+  //店长审批请假
+  { path: '/branch-leaving', component: BranchLeavingVue},
+  //厨师离职申请
+   { path: '/chef-leaving-working', component: ChefLeaveWorkingVue},
+   //查看离职进度
+   { path: '/employ-leaving-Status', component: EmployeeLeavingStatusVue},
+   //Hr离职审批
+   { path: '/hr-leavingworking-review', component: HrLeavingWorkingReviewVue},
+   //店长离职审批
+   { path: '/branch-leavingworking-review', component: BranchLeavingWorkingReviewVue}
+
 ]
 
 export default createRouter({
