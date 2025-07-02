@@ -5,10 +5,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.jpa.repository.Query;
 import com.example.demo.entity.Waiter;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
 import java.util.Optional;
 
 public interface WaiterRepository extends JpaRepository<Waiter, Integer> {
     Optional<Waiter> findByUsername(String username);
+    List<Waiter> findByBranchId(Integer branchId);
 
     @Modifying
     @Transactional
