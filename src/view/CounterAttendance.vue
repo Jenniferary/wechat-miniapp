@@ -1,14 +1,87 @@
 <template>
-    <div class="attendance-page">
+    <div class="resume-page">
       <div class="sidebar">
-        <h2>⏰ 考勤打卡</h2>
-        <ul>
-          <li @click="$router.push('/chef-dashboard')">个人档案</li>
-          <li><strong>考勤打卡</strong></li>
-          <li @click="$router.push('/chef-leave')">请假申请</li>
-          <li @click="$router.push('/chef-leave-progress')">我的请假记录</li>
-          <li @click="logout" class="logout">退出系统</li>
-        </ul>
+        <h2>💁‍♀️ 前台管理系统</h2>
+        <ul class="menu-list">
+        <li
+        :class="{ active: activeSection === 'profile' }"
+        @click="selectSection('profile', '/counter-dashboard')"
+        >
+        个人档案
+        </li>
+
+        <li
+        :class="{ active: activeSection === 'dinein' }"
+        @click="selectSection('dinein', '/counter-dinein-order')"
+        >
+        管理堂食订单
+        </li>
+
+        <li
+        :class="{ active: activeSection === 'tables' }"
+        @click="selectSection('tables', '/manage-tables')"
+        >
+        管理餐桌
+        </li>
+        <li>
+        <strong
+        @click="toggleSection('delivery')"
+        :class="{ active: activeSection === 'delivery' }"
+        style="margin-top: 20px; cursor: pointer; color: #fff; font-weight: bold;"
+        >
+        外卖管理
+        </strong>
+        </li>
+
+        <li
+        v-if="activeSection === 'delivery'"
+        :class="{ active: activeSubsection === 'assign' }"
+        @click="selectSubsection('assign', '/delivery-assign')"
+        style="padding-left: 15px; cursor: pointer;"
+        >
+        分配外卖员
+        </li>
+        <li
+        v-if="activeSection === 'delivery'"
+        :class="{ active: activeSubsection === 'add' }"
+        @click="selectSubsection('add', '/delivery-add')"
+        style="padding-left: 15px; cursor: pointer;"
+        >
+        添加外卖员
+    </li>
+
+  <li
+    v-if="activeSection === 'delivery'"
+    :class="{ active: activeSubsection === 'view' }"
+    @click="selectSubsection('view', '/delivery-view')"
+    style="padding-left: 15px; cursor: pointer;"
+  >
+    查看外卖订单
+  </li>
+
+  <li
+    :class="{ active: activeSection === 'attendance' }"
+    @click="selectSection('attendance', '/counter-attendance')"
+  >
+    考勤打卡
+  </li>
+
+  <li
+    :class="{ active: activeSection === 'leave' }"
+    @click="selectSection('leave', '/counter-leave')"
+  >
+    请假申请
+  </li>
+
+  <li
+    :class="{ active: activeSection === 'leaveProgress' }"
+    @click="selectSection('leaveProgress', '/counter-leave-progress')"
+  >
+    我的请假记录
+  </li>
+</ul>
+  
+        <div class="logout" @click="logout">退出系统</div>
       </div>
   
       <div class="map-section">
@@ -41,9 +114,9 @@
                     class="check-icon"
                     v-if="!day.beforeHire && !day.isFuture"
                     :class="day.checkedIn ? 'checked' : 'unchecked'"
-                    >
+                  >
                     {{ day.checkedIn ? '✔' : '✘' }}
-                    </span>
+                  </span>
                 </template>
                 <template v-else>
                   <span class="day-number no-current-month">{{ day.day }}</span>
@@ -59,10 +132,10 @@
   <script>
   /* global AMap */
   export default {
-    name: "ChefAttendance",
+    name: "CounterAttendance",
     data() {
       return {
-        chefId: null,
+        counterId: null,
         branchId: null,
         branchName: "",
         branchLatLng: null,
@@ -72,7 +145,8 @@
         checkingIn: false,
         message: "",
         amapLoaded: false,
-  
+        activeSection: "",
+        activeSubsection: null,
         hireDate: null,
         attendanceRecords: [],
   
@@ -91,7 +165,7 @@
       this.currentYear = now.getFullYear();
       this.currentMonth = now.getMonth();
   
-      if (this.chefId) {
+      if (this.counterId) {
         await this.loadHireDateAndAttendance();
       }
     },
@@ -161,23 +235,48 @@
     },
   
     methods: {
+        selectSection(section, routePath) {
+    this.activeSection = section;
+    this.activeSubsection = null;
+    if (routePath) {
+      this.$router.push(routePath);
+    }
+  },
+
+  toggleSection(section) {
+    if (this.activeSection === section) {
+      this.activeSection = null;
+      this.activeSubsection = null;
+    } else {
+      this.activeSection = section;
+      this.activeSubsection = null;
+    }
+  },
+
+  selectSubsection(subsection, routePath) {
+    this.activeSection = 'delivery';
+    this.activeSubsection = subsection;
+    if (routePath) {
+      this.$router.push(routePath);
+    }
+  },
       async initData() {
-        this.chefId = localStorage.getItem("chefId");
-        if (!this.chefId) {
+        this.counterId = localStorage.getItem("counterId");
+        if (!this.counterId) {
           alert("未登录，请先登录");
           this.$router.push("/login");
           return;
         }
   
         try {
-          const res = await fetch(`/api/chef/${this.chefId}`);
+          const res = await fetch(`/api/counter/${this.counterId}`);
           const json = await res.json();
           if (json.status === "success") {
             this.branchId = json.data.branchId;
             await this.loadBranchInfo();
             this.hireDate = new Date(json.data.hireDate);
           } else {
-            alert("获取厨师信息失败：" + (json.message || ""));
+            alert("获取前台信息失败：" + (json.message || ""));
           }
         } catch (e) {
           alert("请求异常：" + e.message);
@@ -204,11 +303,10 @@
   
       async loadHireDateAndAttendance() {
         try {
-          const res = await fetch(`/api/attendance/history/${this.chefId}?employeeType=chef`);
+          const res = await fetch(`/api/attendance/history/${this.counterId}?employeeType=counter`);
           const json = await res.json();
           if (json.status === "success") {
             this.attendanceRecords = json.data.records || [];
-            // hireDate 由 initData 里加载了，这里不重复
           } else {
             alert("获取历史打卡失败：" + (json.message || ""));
           }
@@ -292,7 +390,6 @@
         const beijingDate = new Date(utc + 8 * 3600000);
         const h = beijingDate.getHours();
         const m = beijingDate.getMinutes();
-        // 和HR时间段一样，你可以根据需求调整
         return (
           (h === 7 && m >= 40) ||
           (h === 8 && m === 0) ||
@@ -349,16 +446,16 @@
               return;
             }
   
-            const chefId = localStorage.getItem("chefId");
-            if (!chefId) {
+            const counterId = localStorage.getItem("counterId");
+            if (!counterId) {
               this.message = "未登录，无法打卡";
               this.checkingIn = false;
               return;
             }
   
             const checkInData = {
-              employeeId: parseInt(chefId),
-              employeeType: "chef",
+              employeeId: parseInt(counterId),
+              employeeType: "counter",
               branchId: this.branchId,
               checkInTime: this.getBeijingTimeString(),
               latitude: pos.coords.latitude,
@@ -430,163 +527,192 @@
       },
   
       logout() {
-        localStorage.removeItem("chefId");
+        localStorage.removeItem("counterId");
         this.$router.push("/login");
       },
     },
   };
   </script>
-   <style scoped>
-   .attendance-page {
-     display: flex;
-     height: 100vh;
-     width: 100vw;
-     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-     background: #f0f2f5;
-   }
-   .sidebar {
-     width: 220px;
-     background: #1d3557;
-     color: #fff;
-     padding: 30px 20px;
-     box-sizing: border-box;
-     display: flex;
-     flex-direction: column;
-   }
-   .sidebar h2 {
-     font-size: 24px;
-     margin-bottom: 30px;
-     border-bottom: 2px solid #fff;
-     padding-bottom: 10px;
-   }
-   .sidebar ul {
-     list-style: none;
-     padding: 0;
-     margin: 0;
-     flex-grow: 1;
-   }
-   .sidebar li {
-     padding: 12px 0;
-     font-size: 16px;
-     cursor: pointer;
-     user-select: none;
-   }
-   .sidebar li:hover {
-     background-color: #457b9d;
-   }
-   .sidebar .logout {
-     margin-top: auto;
-     color: #ffb3b3;
-     transition: color 0.3s ease;
-   }
-   .sidebar .logout:hover {
-     color: #fff;
-     font-weight: bold;
-   }
-   .map-section {
-     flex: 1;
-     padding: 40px;
-     background: white;
-     box-sizing: border-box;
-     display: flex;
-     flex-direction: column;
-     align-items: center;
-     overflow: auto;
-   }
-   .map-section h3 {
-     margin-bottom: 20px;
-     color: #333;
-     font-weight: 600;
-   }
-   #map {
-     width: 100%;
-     max-width: 1100px;
-     height: 600px;
-     border-radius: 8px;
-     box-shadow: 0 0 15px rgb(0 0 0 / 0.1);
-     margin-bottom: 20px;
-     flex-shrink: 0;
-   }
-   .checkin-btn {
-     background-color: #1d3557;
-     border: none;
-     color: white;
-     font-size: 18px;
-     padding: 12px 30px;
-     border-radius: 6px;
-     cursor: pointer;
-     user-select: none;
-     transition: background-color 0.3s ease;
-   }
-   .checkin-btn:disabled {
-     background-color: #777;
-     cursor: not-allowed;
-   }
-   .checkin-btn:hover:not(:disabled) {
-     background-color: #457b9d;
-   }
-   .message {
-     color: #555;
-     font-size: 16px;
-     margin-top: 10px;
-     min-height: 24px;
-     text-align: center;
-     max-width: 700px;
-   }
-   .history-section {
-     margin-top: 30px;
-     width: 100%;
-     max-width: 700px;
-   }
-   .calendar {
-     border: 1px solid #ccc;
-     border-radius: 6px;
-     padding: 10px;
-   }
-   .calendar-header {
-     display: flex;
-     justify-content: space-between;
-     align-items: center;
-     margin-bottom: 10px;
-   }
-   .calendar-grid {
-     display: grid;
-     grid-template-columns: repeat(7, 1fr);
-     gap: 6px;
-   }
-   .calendar-weekday {
-     font-weight: bold;
-     text-align: center;
-     color: #555;
-   }
-   .calendar-day {
-     background: #f9f9f9;
-     padding: 10px 6px;
-     border-radius: 4px;
-     text-align: center;
-     user-select: none;
-     position: relative;
-     font-weight: 600;
-     font-size: 16px;
-   }
-   .no-current-month {
-     color: #bbb;
-     background: transparent !important;
-   }
-   .day-number {
-     display: block;
-     margin-bottom: 4px;
-   }
-   .check-icon {
-     font-weight: bold;
-     font-size: 20px;
-     user-select: none;
-   }
-   .check-icon.checked {
-     color: green;
-   }
-   .check-icon.unchecked {
-     color: red;
-   }
-   </style>
-   
+  
+  <style scoped>
+ .resume-page {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  }
+  .sidebar {
+    width: 240px;
+    background: #1d3557;
+    color: white;
+    padding: 30px 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  .sidebar h2 {
+    margin-bottom: 30px;
+    font-size: 22px;
+    border-bottom: 2px solid #fff;
+    padding-bottom: 10px;
+  }
+  .menu-list {
+    flex: 1;
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+    overflow-y: auto;
+  }
+  .menu-list li {
+    padding: 10px 0;
+    font-size: 15px;
+    cursor: pointer;
+    color: #ccc;
+    user-select: none;
+  }
+  .menu-list li.active {
+    color: #00b4d8;
+    font-weight: bold;
+  }
+  .menu-list strong.active {
+    color: #00b4d8;
+  }
+
+.logout {
+  color: #ffb3b3;
+  transition: color 0.3s ease;
+  margin-top: auto;
+}
+
+.logout:hover {
+  color: #ffffff;
+  font-weight: bold;
+}
+  .map-section {
+    flex: 1;
+    padding: 40px;
+    background: white;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: auto;
+  }
+  .map-section h3 {
+    margin-bottom: 20px;
+    color: #333;
+    font-weight: 600;
+  }
+  #map {
+    width: 100%;
+    max-width: 1100px;
+    height: 600px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgb(0 0 0 / 0.1);
+    margin-bottom: 20px;
+    flex-shrink: 0;
+  }
+  .checkin-btn {
+    background-color: #1d3557;
+    border: none;
+    color: white;
+    font-size: 18px;
+    padding: 12px 30px;
+    border-radius: 6px;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+  .checkin-btn:disabled {
+    background-color: #777;
+    cursor: not-allowed;
+  }
+  .checkin-btn:hover:not(:disabled) {
+    background-color: #457b9d;
+  }
+  .message {
+    color: #555;
+    font-size: 16px;
+    margin-top: 10px;
+    min-height: 24px;
+    text-align: center;
+    max-width: 700px;
+  }
+  .history-section {
+    margin-top: 30px;
+    width: 100%;
+    max-width: 700px;
+  }
+  .calendar {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 10px;
+  }
+  .calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .calendar-header button {
+    background-color: #1d3557;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 12px;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+  .calendar-header button:hover {
+    background-color: #457b9d;
+  }
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+  }
+  .calendar-weekday {
+    font-weight: 600;
+    text-align: center;
+    padding: 6px 0;
+    background-color: #f4f4f4;
+    border-radius: 4px;
+    user-select: none;
+  }
+  .calendar-day {
+    border-radius: 4px;
+    height: 48px;
+    padding: 2px 5px;
+    text-align: center;
+    position: relative;
+    user-select: none;
+    font-size: 14px;
+    line-height: 1;
+    color: #555;
+    background: #fafafa;
+  }
+  .calendar-day.no-current-month {
+    color: #aaa;
+    background: #f9f9f9;
+  }
+  .day-number {
+    display: block;
+    font-weight: 600;
+  }
+  .check-icon {
+    position: absolute;
+    right: 6px;
+    top: 6px;
+    font-size: 18px;
+    user-select: none;
+  }
+  .check-icon.checked {
+    color: green;
+  }
+  .check-icon.unchecked {
+    color: red;
+  }
+  </style>
+  

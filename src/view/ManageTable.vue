@@ -1,85 +1,145 @@
 <template>
-  <div class="container">
-    <!-- Sidebar -->
+  <div class="resume-page">
+    <!-- 侧边栏 -->
     <div class="sidebar">
-      <h3>前台管理系统</h3>
-      <ul>
-        <li><router-link to="/check-orders">（1）管理堂食订单</router-link></li>
-        <li><router-link to="/distribute-coupons">（2）管理优惠券</router-link></li>
-        <li><router-link to="/manage-delivery">（3）管理外卖订单</router-link></li>
-        <li><router-link to="/manage-tables">（4）管理餐桌</router-link></li>
-        <li><router-link to="/dishes">（5）管理菜品</router-link></li>
-        <li><router-link to="/data-analytics">（6）数据分析</router-link></li>
-        <li><router-link to="/counter">回到管理主页</router-link></li>
+      <h2>💁‍♀️ 前台管理系统</h2>
+      <ul class="menu-list">
+        <li
+          :class="{ active: activeSection === 'profile' }"
+          @click="selectSection('profile'); $router.push('/counter-dashboard')"
+        >
+          <strong>个人档案</strong>
+        </li>
+        <li
+          :class="{ active: activeSection === 'dinein' }"
+          @click="selectSection('dinein'); $router.push('/counter-dinein-order')"
+        >
+          管理堂食订单
+        </li>
+        <li
+          :class="{ active: activeSection === 'tables' }"
+          @click="selectSection('tables'); $router.push('/manage-tables')"
+        >
+          管理餐桌
+        </li>
+
+        <li>
+          <strong
+            @click="toggleSection('delivery')"
+            :class="{ active: activeSection === 'delivery' }"
+            style="margin-top: 20px; cursor: pointer; color: #fff; font-weight: bold;"
+          >
+            外卖管理
+          </strong>
+        </li>
+
+        <li
+          v-if="activeSection === 'delivery'"
+          :class="{ active: activeSubsection === 'assign' }"
+          @click="selectSubsection('assign'); $router.push('/delivery-assign')"
+          style="padding-left: 15px; cursor: pointer;"
+        >
+          分配外卖员
+        </li>
+        <li
+          v-if="activeSection === 'delivery'"
+          :class="{ active: activeSubsection === 'add' }"
+          @click="selectSubsection('add'); $router.push('/delivery-add')"
+          style="padding-left: 15px; cursor: pointer;"
+        >
+          添加外卖员
+        </li>
+        <li
+          v-if="activeSection === 'delivery'"
+          :class="{ active: activeSubsection === 'view' }"
+          @click="selectSubsection('view'); $router.push('/delivery-view')"
+          style="padding-left: 15px; cursor: pointer;"
+        >
+          查看外卖订单
+        </li>
+
+        <li
+          :class="{ active: activeSection === 'attendance' }"
+          @click="selectSection('attendance'); $router.push('/counter-attendance')"
+        >
+          考勤打卡
+        </li>
+        <li
+          :class="{ active: activeSection === 'leave' }"
+          @click="selectSection('leave'); $router.push('/counter-leave')"
+        >
+          请假申请
+        </li>
+        <li
+          :class="{ active: activeSection === 'leave-progress' }"
+          @click="selectSection('leave-progress'); $router.push('/counter-leave-progress')"
+        >
+          我的请假记录
+        </li>
       </ul>
+
+      <div class="logout" @click="logout">退出系统</div>
     </div>
 
-    <!-- Content (main page content) -->
-    <div class="content">
-      <div class="form-card">
-        <h2>管理餐桌</h2>
+    <!-- 主体内容 -->
+    <div class="form-section">
+      <h3>管理餐桌</h3>
 
-        <!-- Toggle between the two actions: 分配餐桌 and 释放餐桌 -->
-        <div class="button-group">
-          <button @click="showDistribute = true" :class="{ active: showDistribute }">分配餐桌</button>
-          <button @click="showDistribute = false" :class="{ active: !showDistribute }">释放餐桌</button>
+      <div class="button-group">
+        <button @click="showDistribute = true" :class="{ active: showDistribute }">分配餐桌</button>
+        <button @click="showDistribute = false" :class="{ active: !showDistribute }">释放餐桌</button>
+      </div>
+
+      <!-- 分配餐桌表单 -->
+      <div v-if="showDistribute" class="form-card">
+        <div class="form-group">
+          <label for="userId">用户 ID</label>
+          <input v-model="userId" type="number" placeholder="请输入用户编号" required />
         </div>
 
-        <!-- 分配餐桌 Form -->
-        <div v-if="showDistribute">
-          <h3>分配餐桌</h3>
-          <div class="form-group">
-            <label for="userId">用户 ID</label>
-            <input v-model="userId" type="number" placeholder="请输入用户编号" required>
+        <div class="form-group">
+          <label>选择桌型</label>
+          <div class="radio-group">
+            <label><input v-model="tableType" type="radio" value="normal" /> 普通桌位</label>
+            <label><input v-model="tableType" type="radio" value="private" /> 包厢</label>
           </div>
-
-          <div class="form-group">
-            <label>选择桌型</label>
-            <div class="radio-group">
-              <label>
-                <input v-model="tableType" type="radio" value="normal"> 普通桌位
-              </label>
-              <label>
-                <input v-model="tableType" type="radio" value="private"> 包厢
-              </label>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="numOfPeople">用餐人数</label>
-            <input v-model="numOfPeople" type="number" placeholder="例如：4" required>
-          </div>
-
-          <div class="form-group">
-            <label for="reservationTime">用餐时间</label>
-            <input v-model="reservationTime" type="datetime-local" :min="minTime" required>
-          </div>
-
-          <button @click="submitReservation">确认分配</button>
-
-          <div v-if="successMessage" class="success-message">{{ successMessage }}</div>
-          <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
         </div>
 
-        <!-- 释放餐桌 Form -->
-        <div v-else>
-          <h3>释放餐桌</h3>
-          <div class="form-group">
-            <label for="userId">用户ID：</label>
-            <input v-model="userId" type="number" required>
-          </div>
-
-          <button @click="releaseTable">确认释放</button>
-
-          <div v-if="successMessage" class="success-message">{{ successMessage }}</div>
-          <div v-if="releasedTables.length" class="released-tables">
-            <div>已释放的桌位号：</div>
-            <ul>
-              <li v-for="table in releasedTables" :key="table">{{ table }}</li>
-            </ul>
-          </div>
-          <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
+        <div class="form-group">
+          <label for="numOfPeople">用餐人数</label>
+          <input v-model="numOfPeople" type="number" placeholder="例如：4" required />
         </div>
+
+        <div class="form-group">
+          <label for="reservationTime">用餐时间</label>
+          <input v-model="reservationTime" type="datetime-local" :min="minTime" required />
+        </div>
+
+        <button @click="submitReservation">确认分配</button>
+
+        <div v-if="successMessage" class="success-message">{{ successMessage }}</div>
+        <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
+      </div>
+
+      <!-- 释放餐桌表单 -->
+      <div v-else class="form-card">
+        <div class="form-group">
+          <label for="userId">用户 ID</label>
+          <input v-model="userId" type="number" required />
+        </div>
+
+        <button @click="releaseTable">确认释放</button>
+
+        <div v-if="successMessage" class="success-message">{{ successMessage }}</div>
+
+        <div v-if="releasedTables.length" class="released-tables">
+          <div>已释放的桌位号：</div>
+          <ul>
+            <li v-for="table in releasedTables" :key="table">{{ table }}</li>
+          </ul>
+        </div>
+
+        <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
       </div>
     </div>
   </div>
@@ -89,8 +149,12 @@
 import axios from 'axios';
 
 export default {
+  name: "CounterManageTables",
   data() {
     return {
+      activeSection: 'tables',
+      activeSubsection: null,
+
       showDistribute: true,
       userId: '',
       tableType: 'normal',
@@ -105,15 +169,38 @@ export default {
   created() {
     const now = new Date();
     const offset = -now.getTimezoneOffset();
-    const localISOTime = new Date(now.getTime() + offset * 60000)
-      .toISOString()
-      .slice(0, 16);
+    const localISOTime = new Date(now.getTime() + offset * 60000).toISOString().slice(0, 16);
     this.minTime = localISOTime;
   },
   methods: {
+    selectSection(section) {
+      this.activeSection = section;
+      this.activeSubsection = null;
+    },
+    toggleSection(section) {
+      if (this.activeSection === section) {
+        this.activeSection = null;
+        this.activeSubsection = null;
+      } else {
+        this.activeSection = section;
+        this.activeSubsection = null;
+      }
+    },
+    selectSubsection(subsection) {
+      this.activeSection = 'delivery';
+      this.activeSubsection = subsection;
+    },
+    logout() {
+      localStorage.removeItem("counterId");
+      this.$router.push("/login");
+    },
     async submitReservation() {
       this.successMessage = '';
       this.errorMessage = '';
+      if (!this.userId || !this.numOfPeople || !this.reservationTime) {
+        this.errorMessage = '请填写所有必填项';
+        return;
+      }
       try {
         const res = await axios.post('http://localhost:8080/api/table/distribute', {
           userId: this.userId,
@@ -121,197 +208,275 @@ export default {
           numOfPeople: this.numOfPeople,
           reservationTime: this.reservationTime,
         });
-
         if (res.data.success) {
           this.successMessage = `餐桌分配成功！分配给用户ID：${this.userId}，桌号为：${res.data.tableNumber}`;
-          setTimeout(() => { this.$router.push('/counter'); }, 3000);
+          setTimeout(() => {
+            this.$router.push('/manage-tables');
+          }, 1000);
         } else {
-          this.errorMessage = res.data.message;
+          this.errorMessage = res.data.message || '分配失败';
         }
       } catch (err) {
         this.errorMessage = '请求失败：' + err.message;
       }
     },
-
     async releaseTable() {
       this.successMessage = '';
       this.errorMessage = '';
       this.releasedTables = [];
-
+      if (!this.userId) {
+        this.errorMessage = '请输入用户ID';
+        return;
+      }
       try {
         const response = await axios.post('http://localhost:8080/api/table/relieve', {
           userId: this.userId,
         });
-
         if (response.data.success) {
           this.successMessage = `餐桌释放成功！释放用户ID：${this.userId}`;
-          this.releasedTables = response.data.releasedTables;
-          setTimeout(() => { this.$router.push('/counter'); }, 3000);
+          this.releasedTables = response.data.releasedTables || [];
+          setTimeout(() => {
+            this.$router.push('/manage-tables');
+          }, 100);
         } else {
           this.errorMessage = response.data.message || '释放失败';
         }
       } catch (err) {
         this.errorMessage = '请求失败：' + err.message;
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style scoped>
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Arial', sans-serif;
-    background: #f7f9fc;
-    color: #333;
+ .resume-page {
     display: flex;
+    width: 100vw;
+    height: 100vh;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   }
-  
-  .container {
-    display: flex;
-    width: 1200px;
-    margin: 40px auto;
-    padding: 40px;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
   .sidebar {
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 20px;
-    width: 250px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 240px;
+    background: #1d3557;
+    color: white;
+    padding: 30px 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
   }
-  
-  .sidebar h3 {
-    margin-bottom: 10px;
-    font-size: 20px;
-    color: #2980b9;
-    border-bottom: 2px solid #2980b9;
+  .sidebar h2 {
+    margin-bottom: 30px;
+    font-size: 22px;
+    border-bottom: 2px solid #fff;
     padding-bottom: 10px;
   }
-  
-  .sidebar ul {
-    list-style-type: none;
-    padding: 0;
+  .menu-list {
+    flex: 1;
+    list-style: none;
+    padding-left: 0;
     margin: 0;
+    overflow-y: auto;
   }
-  
-  .sidebar ul li {
-    margin-bottom: 10px;
-  }
-  
-  .sidebar ul li a {
-    text-decoration: none;
-    color: #333;
-    font-size: 16px;
-    transition: color 0.3s ease;
-  }
-  
-  .sidebar ul li a:hover {
-    color: #2980b9;
-    font-weight: bold;
-  }
-  
-  .content {
-    flex-grow: 1;
-    padding: 2rem;
-    width: 780px;
-    background-color: #fafafa;
-  }
-  
-  .form-card {
-    background-color: rgba(255, 255, 255, 0.95);
-    padding: 30px 50px;
-    border-radius: 16px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 700px;
-    margin: 0 auto;
-  }
-
-  h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #2c3e50;
-    font-size: 36px;
-  }
-
-  .button-group {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 20px;
-    justify-content: center;
-  }
-
-  .button-group button {
-    width: 48%;
-    padding: 14px;
-    background-color: #3498db;
-    color: white;
-    font-size: 18px;
-    border: none;
-    border-radius: 8px;
+  .menu-list li {
+    padding: 10px 0;
+    font-size: 15px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    color: #ccc;
+    user-select: none;
   }
-
-  .button-group button:hover {
-    background-color: #2980b9;
-  }
-
-  .button-group .active {
-    background-color: #2980b9;
-  }
-
-  .form-group {
-    margin-bottom: 20px;
-  }
-
-  .form-group label {
-    display: block;
+  .menu-list li.active {
+    color: #00b4d8;
     font-weight: bold;
-    margin-bottom: 8px;
-    color: #333;
+  }
+  .menu-list strong.active {
+    color: #00b4d8;
   }
 
-  .form-group input[type="number"],
-  .form-group input[type="datetime-local"] {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 16px;
-  }
+.logout {
+  color: #ffb3b3;
+  transition: color 0.3s ease;
+  margin-top: auto;
+}
 
-  .success-message {
-    background-color: #2ecc71;
-    color: white;
-    padding: 10px;
-    border-radius: 8px;
-    margin-top: 20px;
-    text-align: center;
-  }
+.logout:hover {
+  color: #ffffff;
+  font-weight: bold;
+}
 
-  .error-message {
-    background-color: #e74c3c;
-    color: white;
-    padding: 10px;
-    border-radius: 8px;
-    margin-top: 20px;
-    text-align: center;
-  }
+.form-section {
+  flex: 1;
+  background: #ffffff;
+  padding: 50px 60px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  border-radius: 0 20px 20px 0;
+  box-shadow: -8px 0 30px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #2c3e50;
+}
 
-  .released-tables {
-    margin-top: 20px;
-  }
+.form-section h3 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 36px;
+  border-left: 6px solid #007bff;
+  padding-left: 18px;
+  color: #34495e;
+  letter-spacing: 0.05em;
+}
 
-  .released-tables ul {
-    padding: 0;
-    margin: 0;
-    list-style-type: none;
-  }
+/* 按钮组 */
+.button-group {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 36px;
+}
+
+.button-group button {
+  flex: 1;
+  padding: 16px 0;
+  background: linear-gradient(135deg, #4a90e2, #357ABD);
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 6px 12px rgba(53, 122, 189, 0.5);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  user-select: none;
+}
+.button-group button.active,
+.button-group button:hover {
+  background: linear-gradient(135deg, #2a5ea8, #1f4a7a);
+  box-shadow: 0 8px 18px rgba(31, 74, 122, 0.8);
+}
+
+/* 表单卡片 */
+.form-card {
+  max-width: 620px;
+  background: #f9fbff;
+  padding: 36px 48px;
+  border-radius: 20px;
+  box-shadow: 0 16px 40px rgba(50, 79, 133, 0.12);
+  margin: 0 auto;
+  transition: box-shadow 0.3s ease;
+}
+.form-card:hover {
+  box-shadow: 0 20px 60px rgba(50, 79, 133, 0.18);
+}
+
+/* 表单组 */
+.form-group {
+  margin-bottom: 28px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #34495e;
+  font-size: 16px;
+  letter-spacing: 0.03em;
+}
+
+.form-group input[type="number"],
+.form-group input[type="datetime-local"] {
+  width: 100%;
+  padding: 14px 18px;
+  font-size: 16px;
+  border: 2px solid #d1d8e0;
+  border-radius: 12px;
+  box-shadow: inset 0 2px 6px #e3ebf8;
+  outline-offset: 0;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.form-group input[type="number"]:focus,
+.form-group input[type="datetime-local"]:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 10px #4a90e2;
+}
+
+/* 单选按钮组 */
+.radio-group {
+  display: flex;
+  gap: 36px;
+  font-weight: 600;
+  color: #34495e;
+  user-select: none;
+}
+.radio-group label {
+  cursor: pointer;
+  font-size: 16px;
+}
+.radio-group input[type="radio"] {
+  margin-right: 10px;
+  cursor: pointer;
+  accent-color: #357abd;
+}
+
+/* 确认按钮 */
+button {
+  background: linear-gradient(135deg, #357ABD, #4a90e2);
+  border: none;
+  color: white;
+  padding: 16px 0;
+  width: 100%;
+  font-size: 18px;
+  font-weight: 700;
+  border-radius: 16px;
+  cursor: pointer;
+  box-shadow: 0 10px 22px rgba(53, 122, 189, 0.5);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  user-select: none;
+  margin-top: 10px;
+}
+button:hover {
+  background: linear-gradient(135deg, #1f4a7a, #2a5ea8);
+  box-shadow: 0 14px 30px rgba(31, 74, 122, 0.75);
+}
+
+/* 成功和错误提示 */
+.success-message {
+  background-color: #27ae60;
+  color: white;
+  padding: 16px;
+  border-radius: 16px;
+  margin-top: 28px;
+  text-align: center;
+  font-weight: 700;
+  box-shadow: 0 6px 20px rgba(39, 174, 96, 0.7);
+  user-select: none;
+}
+
+.error-message {
+  background-color: #e74c3c;
+  color: white;
+  padding: 16px;
+  border-radius: 16px;
+  margin-top: 28px;
+  text-align: center;
+  font-weight: 700;
+  box-shadow: 0 6px 20px rgba(231, 76, 60, 0.7);
+  user-select: none;
+}
+
+/* 释放桌位列表 */
+.released-tables {
+  margin-top: 28px;
+  color: #34495e;
+  font-weight: 600;
+  font-size: 18px;
+  user-select: none;
+}
+.released-tables ul {
+  padding-left: 20px;
+  list-style-type: disc;
+  margin-top: 10px;
+}
 </style>

@@ -8,6 +8,7 @@
           <li @click="$router.push('/hr-employee')">员工档案</li>
           <li><strong>考勤打卡</strong></li>
           <li @click="$router.push('/hr-leave')">请假申请</li>
+          <li @click="$router.push('/hr-leave-progress')">我的请假记录</li>
           <li @click="$router.push('/hr-leave-review')">请假待审批</li>
           <li @click="$router.push('/hr-leavingworking-review')">离职待审批</li>
           <li @click="logout" class="logout">退出系统</li>
@@ -450,7 +451,7 @@
     background: #f0f2f5;
   }
   .sidebar {
-    width: 220px;
+    width: 240px;
     background: #1d3557;
     color: #fff;
     padding: 30px 20px;

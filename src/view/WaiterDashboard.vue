@@ -1,111 +1,114 @@
 <template>
     <div class="resume-page">
       <div class="sidebar">
-        <h2>👨‍🍳 请假申请</h2>
+        <h2>👨‍🍳 个人档案</h2>
         <ul>
-          <li @click="$router.push('/chef-dashboard')">个人档案</li>
-          <li @click="$router.push('/chef-attendance')">考勤打卡</li>
-          <li><strong>请假申请</strong></li>
-          <li @click="$router.push('/chef-leave-progress')">我的请假记录</li>
+          <li><strong>个人档案</strong></li>
+          <li @click="$router.push('/waiter-attendance')">考勤打卡</li>
+          <li @click="$router.push('/waiter-leave')">请假申请</li>
+          <li @click="$router.push('/waiter-leave-progress')">我的请假记录</li>
           <li @click="logout" class="logout">退出系统</li>
         </ul>
       </div>
   
       <div class="form-section">
-        <h3>提交请假申请</h3>
-        <form @submit.prevent="submitLeave">
+        <h3>我的信息</h3>
+  
+        <form @submit.prevent="saveProfile" v-if="waitersInfo">
           <div class="form-row">
-            <label>开始日期：</label>
-            <input type="date" v-model="form.startDate" required />
+            <label>用户名：</label>
+            <input type="text" v-model="waitersInfo.username" disabled />
           </div>
+  
           <div class="form-row">
-            <label>结束日期：</label>
-            <input type="date" v-model="form.endDate" required />
+            <label>姓名：</label>
+            <input type="text" v-model="waitersInfo.name" disabled />
           </div>
+  
           <div class="form-row">
-            <label>请假原因：</label>
-            <textarea v-model="form.reason" required rows="4"></textarea>
+            <label>邮箱：</label>
+            <input type="email" v-model="waitersInfo.email" />
           </div>
-          <button type="submit">提交申请</button>
+  
+          <div class="form-row">
+            <label>电话：</label>
+            <input type="tel" v-model="waitersInfo.phone" />
+          </div>
+  
+          <div class="form-row">
+            <label>门店ID：</label>
+            <input type="number" v-model="waitersInfo.branchId" disabled />
+          </div>
+  
+          <div class="form-row" v-if="waitersInfo.hireDate">
+            <label>入职日期：</label>
+            <input type="text" :value="formatDateDisplay(waitersInfo.hireDate)" disabled />
+          </div>
+  
+          <button type="submit">保存修改</button>
         </form>
+  
+        <p v-else>加载中...</p>
       </div>
     </div>
   </template>
   
   <script>
   export default {
-    name: "ChefLeave",
+    name: "WaiterProfile",
     data() {
       return {
-        form: {
-          startDate: "",
-          endDate: "",
-          reason: "",
-        },
-        chefInfo: null,
+        waitersInfo: null,
       };
     },
     created() {
-      this.loadChefInfo();
+      this.loadWaiterInfo();
     },
     methods: {
-      async loadChefInfo() {
-        const chefId = localStorage.getItem("chefId");
-        if (!chefId) {
+      async loadWaiterInfo() {
+        const waiterId = localStorage.getItem("waiterId");
+        if (!waiterId) {
           alert("未登录");
           this.$router.push("/login");
           return;
         }
         try {
-          const res = await fetch(`/api/chef/${chefId}`);
+          const res = await fetch(`/api/waiters/${waiterId}`);
           const json = await res.json();
           if (json.status === "success") {
-            this.chefInfo = json.data;
+            this.waitersInfo = json.data;
           } else {
             alert(json.message || "加载失败");
           }
-        } catch (err) {
-          alert("请求错误：" + err.message);
+        } catch (error) {
+          alert("请求错误：" + error.message);
         }
       },
-      async submitLeave() {
-        if (!this.chefInfo) {
-          alert("用户信息未加载");
-          return;
-        }
-        // 简单校验
-        if (this.form.endDate < this.form.startDate) {
-          alert("结束日期不能早于开始日期");
-          return;
-        }
+      async saveProfile() {
         try {
-          const payload = {
-            employeeId: this.chefInfo.id,
-            employeeType: "chef",
-            branchId: this.chefInfo.branchId,
-            startDate: this.form.startDate,
-            endDate: this.form.endDate,
-            reason: this.form.reason,
-          };
-          const res = await fetch("/api/leave/apply", {
-            method: "POST",
+          const res = await fetch(`/api/waiters/${this.waitersInfo.id}`, {
+            method: "PUT",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
+            body: JSON.stringify(this.waitersInfo),
           });
           const json = await res.json();
           if (json.status === "success") {
-            alert("请假申请提交成功！");
-            this.form = { startDate: "", endDate: "", reason: "" };
+            alert("保存成功");
           } else {
-            alert(json.message || "提交失败");
+            alert(json.message || "保存失败");
           }
-        } catch (err) {
-          alert("请求错误：" + err.message);
+        } catch (error) {
+          alert("请求错误：" + error.message);
         }
       },
       logout() {
-        localStorage.removeItem("chefId");
+        localStorage.removeItem("waiterId");
         this.$router.push("/login");
+      },
+      formatDateDisplay(dateStr) {
+        const d = new Date(dateStr);
+        if (!d || isNaN(d.getTime())) return "";
+        return d.toLocaleDateString();
       },
     },
   };
@@ -130,12 +133,12 @@
   .sidebar h2 {
     margin-bottom: 30px;
     font-size: 22px;
-    border-bottom: 2px solid white;
+    border-bottom: 2px solid #fff;
     padding-bottom: 10px;
   }
   .sidebar ul {
     list-style: none;
-    padding: 0;
+    padding-left: 0;
     margin: 0;
     flex: 1;
   }
@@ -149,11 +152,11 @@
     transition: color 0.3s ease;
   }
   .logout:hover {
-    color: white;
+    color: #ffffff;
     font-weight: bold;
   }
   .form-section {
-    width: calc(100vw - 240px);
+    width: calc(100vw - 220px);
     background: white;
     padding: 40px 60px;
     box-sizing: border-box;
@@ -176,16 +179,12 @@
     font-weight: 600;
     color: #555;
   }
-  .form-row input,
-  .form-row textarea {
+  .form-row input {
     flex: 1;
-    padding: 8px 12px;
+    padding: 6px 10px;
     font-size: 16px;
-    border: 1px solid #ccc;
+    border: 1px solid #ddd;
     border-radius: 4px;
-  }
-  textarea {
-    resize: vertical;
   }
   button {
     background-color: #007bff;
@@ -203,13 +202,17 @@
     .resume-page {
       flex-direction: column;
     }
+    .form-section {
+      width: 100vw;
+      padding: 30px 20px;
+    }
     .sidebar {
       width: 100vw;
       text-align: center;
     }
-    .form-section {
-      width: 100vw;
-      padding: 20px;
+    .sidebar li {
+      display: inline-block;
+      padding: 10px 15px;
     }
   }
   </style>

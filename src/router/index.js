@@ -31,8 +31,10 @@ import ApplicantRegisterVue from '@/view/ApplicantRegister.vue'
 import ApplicantProgressVue from '@/view/ApplicantProgress.vue'
 import HRDashboardVue from '@/view/HRDashboard.vue'
 import HrProfileVue from '@/view/HrProfile.vue'
+import HrEmployeeVue from '@/view/HrEmployee.vue'
 import HrAttendanceVue from '@/view/HrAttendance.vue'
 import HrLeaveApplyVue from '@/view/HrLeaveApply.vue'
+import HrLeaveProgressVue from '@/view/HrLeaveProgress.vue'
 import HrLeaveReviewVue from '@/view/HrLeaveReview.vue' 
 import DataAnalytics from '@/view/DataAnalytics.vue'
 import AllLogin from '@/view/branch_manager/All_login.vue'
@@ -42,11 +44,6 @@ import BranchEmployeeVue from '@/view/branch_manager/BranchEmployee.vue'
 import ChefDashboardVue from '@/view/ChefDashboard.vue'
 import ChefAttendanceVue from '@/view/ChefAttendance.vue'
 import ChefLeaveApplyVue from '@/view/ChefLeaveApply.vue'
-import BranchLeavingVue from '@/view/branch_manager/BranchLeaving.vue'
-import ChefLeaveWorkingVue from '@/view/employee/ChefLeaveWorking.vue'
-import EmployeeLeavingStatusVue from '@/view/employee/EmployeeLeavingStatus.vue'
-import HrLeavingWorkingReviewVue from '@/view/Hr/HrLeavingWorkingReview.vue'
-import BranchLeavingWorkingReviewVue from '@/view/branch_manager/BranchLeavingWorkingReview.vue'
 const routes = [
   // 默认路由重定向到登录页面
   { path: '/', redirect: '/all-login' },
@@ -90,16 +87,14 @@ const routes = [
   { path: '/delivery-checkout', component: TakeawayOrder },
   // 我的外卖订单
   { path: '/takeaway-order', component: DeliveryOrders },
-  //前台管理餐桌
-  {path: '/manage-tables', component:ManageTable},
   //前台管理外卖员
   {path: '/manage-delivery', component:ManageDelivery},
   //前台分配外卖员
-  {path: '/assign-delivery', component:AssignDelivery},
+  {path: '/delivery-assign', component:AssignDelivery},
   //前台添加外卖员
-  {path: '/add-delivery-person', component:AddDeliveryPerson},
+  {path: '/delivery-add', component:AddDeliveryPerson},
   //前台查看外卖订单
-  {path: '/view-delivery-orders', component:ViewDeliveryOrders},
+  {path: '/delivery-view', component:ViewDeliveryOrders},
   //添加管理员
   {path: '/add-manager',component: AddManagerPage},
   //查看管理员
@@ -116,10 +111,14 @@ const routes = [
   { path: '/hr-dashboard', component: HRDashboardVue },
   //HR个人信息界面
   { path: '/hr-profile', component: HrProfileVue},
+  //HR个人信息界面
+  { path: '/hr-employee', component: HrEmployeeVue},
   //HR打卡界面
   { path: '/hr-attendance', component: HrAttendanceVue},
   //HR请假界面
   { path: '/hr-leave', component: HrLeaveApplyVue},
+  //HR请假查看界面
+  { path: '/hr-leave-progress', component: HrLeaveProgressVue},
   //HR批准请假界面
   { path: '/hr-leave-review', component: HrLeaveReviewVue }, 
 
@@ -138,17 +137,6 @@ const routes = [
   { path: '/chef-attendance', component: ChefAttendanceVue},
   //chef请假界面
   { path: '/chef-leave', component: ChefLeaveApplyVue},
-  //店长审批请假
-  { path: '/branch-leaving', component: BranchLeavingVue},
-  //厨师离职申请
-   { path: '/chef-leaving-working', component: ChefLeaveWorkingVue},
-   //查看离职进度
-   { path: '/employ-leaving-Status', component: EmployeeLeavingStatusVue},
-   //Hr离职审批
-   { path: '/hr-leavingworking-review', component: HrLeavingWorkingReviewVue},
-   //店长离职审批
-   { path: '/branch-leavingworking-review', component: BranchLeavingWorkingReviewVue}
-
 ]
 
 export default createRouter({

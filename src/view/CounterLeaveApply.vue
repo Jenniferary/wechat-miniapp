@@ -1,14 +1,22 @@
 <template>
     <div class="resume-page">
       <div class="sidebar">
-        <h2>👨‍🍳 请假申请</h2>
-        <ul>
-          <li @click="$router.push('/chef-dashboard')">个人档案</li>
-          <li @click="$router.push('/chef-attendance')">考勤打卡</li>
-          <li><strong>请假申请</strong></li>
-          <li @click="$router.push('/chef-leave-progress')">我的请假记录</li>
-          <li @click="logout" class="logout">退出系统</li>
+        <h2>💁‍♀️ 前台管理系统</h2>
+        <ul class="menu-list">
+          <li :class="{ active: activeSection === 'profile' }" @click="selectSection('profile', '/counter-dashboard')">个人档案</li>
+          <li :class="{ active: activeSection === 'dinein' }" @click="selectSection('dinein', '/counter-dinein-order')">管理堂食订单</li>
+          <li :class="{ active: activeSection === 'tables' }" @click="selectSection('tables', '/manage-tables')">管理餐桌</li>
+          <li><strong @click="toggleSection('delivery')" :class="{ active: activeSection === 'delivery' }">外卖管理</strong></li>
+  
+          <li v-if="activeSection === 'delivery'" :class="{ active: activeSubsection === 'assign' }" @click="selectSubsection('assign', '/delivery-assign')">分配外卖员</li>
+          <li v-if="activeSection === 'delivery'" :class="{ active: activeSubsection === 'add' }" @click="selectSubsection('add', '/delivery-add')">添加外卖员</li>
+          <li v-if="activeSection === 'delivery'" :class="{ active: activeSubsection === 'view' }" @click="selectSubsection('view', '/delivery-view')">查看外卖订单</li>
+  
+          <li :class="{ active: activeSection === 'attendance' }" @click="selectSection('attendance', '/counter-attendance')">考勤打卡</li>
+          <li :class="{ active: activeSection === 'leave' }" @click="selectSection('leave', '/counter-leave')">请假申请</li>
+          <li :class="{ active: activeSection === 'leaveProgress' }" @click="selectSection('leaveProgress', '/counter-leave-progress')">我的请假记录</li>
         </ul>
+        <div class="logout" @click="logout">退出系统</div>
       </div>
   
       <div class="form-section">
@@ -34,33 +42,35 @@
   
   <script>
   export default {
-    name: "ChefLeave",
+    name: "CounterLeave",
     data() {
       return {
+        activeSection: 'leave',
+        activeSubsection: '',
         form: {
           startDate: "",
           endDate: "",
           reason: "",
         },
-        chefInfo: null,
+        counterInfo: null,
       };
     },
     created() {
-      this.loadChefInfo();
+      this.loadCounterInfo();
     },
     methods: {
-      async loadChefInfo() {
-        const chefId = localStorage.getItem("chefId");
-        if (!chefId) {
+      async loadCounterInfo() {
+        const counterId = localStorage.getItem("counterId");
+        if (!counterId) {
           alert("未登录");
           this.$router.push("/login");
           return;
         }
         try {
-          const res = await fetch(`/api/chef/${chefId}`);
+          const res = await fetch(`/api/counter/${counterId}`);
           const json = await res.json();
           if (json.status === "success") {
-            this.chefInfo = json.data;
+            this.counterInfo = json.data;
           } else {
             alert(json.message || "加载失败");
           }
@@ -69,20 +79,19 @@
         }
       },
       async submitLeave() {
-        if (!this.chefInfo) {
+        if (!this.counterInfo) {
           alert("用户信息未加载");
           return;
         }
-        // 简单校验
         if (this.form.endDate < this.form.startDate) {
           alert("结束日期不能早于开始日期");
           return;
         }
         try {
           const payload = {
-            employeeId: this.chefInfo.id,
-            employeeType: "chef",
-            branchId: this.chefInfo.branchId,
+            employeeId: this.counterInfo.id,
+            employeeType: "counter",
+            branchId: this.counterInfo.branchId,
             startDate: this.form.startDate,
             endDate: this.form.endDate,
             reason: this.form.reason,
@@ -103,8 +112,21 @@
           alert("请求错误：" + err.message);
         }
       },
+      selectSection(section, path) {
+        this.activeSection = section;
+        this.activeSubsection = '';
+        this.$router.push(path);
+      },
+      toggleSection(section) {
+        this.activeSection = this.activeSection === section ? '' : section;
+      },
+      selectSubsection(subsection, path) {
+        this.activeSubsection = subsection;
+        this.activeSection = 'delivery';
+        this.$router.push(path);
+      },
       logout() {
-        localStorage.removeItem("chefId");
+        localStorage.removeItem("counterId");
         this.$router.push("/login");
       },
     },
@@ -112,6 +134,7 @@
   </script>
   
   <style scoped>
+  /* 可复用你已有样式 */
   .resume-page {
     display: flex;
     width: 100vw;
@@ -123,37 +146,36 @@
     background: #1d3557;
     color: white;
     padding: 30px 20px;
-    display: flex;
-    flex-direction: column;
     box-sizing: border-box;
   }
   .sidebar h2 {
-    margin-bottom: 30px;
     font-size: 22px;
     border-bottom: 2px solid white;
     padding-bottom: 10px;
+    margin-bottom: 20px;
   }
-  .sidebar ul {
+  .menu-list {
     list-style: none;
     padding: 0;
-    margin: 0;
-    flex: 1;
   }
-  .sidebar li {
+  .menu-list li {
     padding: 10px 0;
-    font-size: 15px;
     cursor: pointer;
+  }
+  .menu-list li.active {
+    color: #00b4d8;
+    font-weight: bold;
   }
   .logout {
     color: #ffb3b3;
-    transition: color 0.3s ease;
+    margin-top: 20px;
+    cursor: pointer;
   }
   .logout:hover {
     color: white;
-    font-weight: bold;
   }
   .form-section {
-    width: calc(100vw - 240px);
+    flex: 1;
     background: white;
     padding: 40px 60px;
     box-sizing: border-box;
@@ -184,9 +206,6 @@
     border: 1px solid #ccc;
     border-radius: 4px;
   }
-  textarea {
-    resize: vertical;
-  }
   button {
     background-color: #007bff;
     border: none;
@@ -198,19 +217,6 @@
   }
   button:hover {
     background-color: #0056b3;
-  }
-  @media (max-width: 768px) {
-    .resume-page {
-      flex-direction: column;
-    }
-    .sidebar {
-      width: 100vw;
-      text-align: center;
-    }
-    .form-section {
-      width: 100vw;
-      padding: 20px;
-    }
   }
   </style>
   

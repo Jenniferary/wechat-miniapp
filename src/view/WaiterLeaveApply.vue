@@ -3,10 +3,10 @@
       <div class="sidebar">
         <h2>👨‍🍳 请假申请</h2>
         <ul>
-          <li @click="$router.push('/chef-dashboard')">个人档案</li>
-          <li @click="$router.push('/chef-attendance')">考勤打卡</li>
+          <li @click="$router.push('/waiter-dashboard')">个人档案</li>
+          <li @click="$router.push('/waiter-attendance')">考勤打卡</li>
           <li><strong>请假申请</strong></li>
-          <li @click="$router.push('/chef-leave-progress')">我的请假记录</li>
+          <li @click="$router.push('/waiter-leave-progress')">我的请假记录</li>
           <li @click="logout" class="logout">退出系统</li>
         </ul>
       </div>
@@ -34,7 +34,7 @@
   
   <script>
   export default {
-    name: "ChefLeave",
+    name: "WaiterLeave",
     data() {
       return {
         form: {
@@ -42,25 +42,25 @@
           endDate: "",
           reason: "",
         },
-        chefInfo: null,
+        waiterInfo: null,
       };
     },
     created() {
-      this.loadChefInfo();
+      this.loadWaiterInfo();
     },
     methods: {
-      async loadChefInfo() {
-        const chefId = localStorage.getItem("chefId");
-        if (!chefId) {
+      async loadWaiterInfo() {
+        const waiterId = localStorage.getItem("waiterId");
+        if (!waiterId) {
           alert("未登录");
           this.$router.push("/login");
           return;
         }
         try {
-          const res = await fetch(`/api/chef/${chefId}`);
+          const res = await fetch(`/api/waiters/${waiterId}`);
           const json = await res.json();
           if (json.status === "success") {
-            this.chefInfo = json.data;
+            this.waiterInfo = json.data;
           } else {
             alert(json.message || "加载失败");
           }
@@ -69,20 +69,19 @@
         }
       },
       async submitLeave() {
-        if (!this.chefInfo) {
+        if (!this.waiterInfo) {
           alert("用户信息未加载");
           return;
         }
-        // 简单校验
         if (this.form.endDate < this.form.startDate) {
           alert("结束日期不能早于开始日期");
           return;
         }
         try {
           const payload = {
-            employeeId: this.chefInfo.id,
-            employeeType: "chef",
-            branchId: this.chefInfo.branchId,
+            employeeId: this.waiterInfo.id,
+            employeeType: "waiter",
+            branchId: this.waiterInfo.branchId,
             startDate: this.form.startDate,
             endDate: this.form.endDate,
             reason: this.form.reason,
@@ -104,7 +103,7 @@
         }
       },
       logout() {
-        localStorage.removeItem("chefId");
+        localStorage.removeItem("waiterId");
         this.$router.push("/login");
       },
     },

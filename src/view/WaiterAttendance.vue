@@ -3,10 +3,10 @@
       <div class="sidebar">
         <h2>⏰ 考勤打卡</h2>
         <ul>
-          <li @click="$router.push('/chef-dashboard')">个人档案</li>
+          <li @click="$router.push('/waiter-dashboard')">个人档案</li>
           <li><strong>考勤打卡</strong></li>
-          <li @click="$router.push('/chef-leave')">请假申请</li>
-          <li @click="$router.push('/chef-leave-progress')">我的请假记录</li>
+          <li @click="$router.push('/waiter-leave')">请假申请</li>
+          <li @click="$router.push('/waiter-leave-progress')">我的请假记录</li>
           <li @click="logout" class="logout">退出系统</li>
         </ul>
       </div>
@@ -41,9 +41,9 @@
                     class="check-icon"
                     v-if="!day.beforeHire && !day.isFuture"
                     :class="day.checkedIn ? 'checked' : 'unchecked'"
-                    >
+                  >
                     {{ day.checkedIn ? '✔' : '✘' }}
-                    </span>
+                  </span>
                 </template>
                 <template v-else>
                   <span class="day-number no-current-month">{{ day.day }}</span>
@@ -59,10 +59,10 @@
   <script>
   /* global AMap */
   export default {
-    name: "ChefAttendance",
+    name: "WaiterAttendance",
     data() {
       return {
-        chefId: null,
+        waiterId: null,
         branchId: null,
         branchName: "",
         branchLatLng: null,
@@ -91,7 +91,7 @@
       this.currentYear = now.getFullYear();
       this.currentMonth = now.getMonth();
   
-      if (this.chefId) {
+      if (this.waiterId) {
         await this.loadHireDateAndAttendance();
       }
     },
@@ -162,22 +162,22 @@
   
     methods: {
       async initData() {
-        this.chefId = localStorage.getItem("chefId");
-        if (!this.chefId) {
+        this.waiterId = localStorage.getItem("waiterId");
+        if (!this.waiterId) {
           alert("未登录，请先登录");
           this.$router.push("/login");
           return;
         }
   
         try {
-          const res = await fetch(`/api/chef/${this.chefId}`);
+          const res = await fetch(`/api/waiters/${this.waiterId}`);
           const json = await res.json();
           if (json.status === "success") {
             this.branchId = json.data.branchId;
             await this.loadBranchInfo();
             this.hireDate = new Date(json.data.hireDate);
           } else {
-            alert("获取厨师信息失败：" + (json.message || ""));
+            alert("获取服务员信息失败：" + (json.message || ""));
           }
         } catch (e) {
           alert("请求异常：" + e.message);
@@ -204,7 +204,7 @@
   
       async loadHireDateAndAttendance() {
         try {
-          const res = await fetch(`/api/attendance/history/${this.chefId}?employeeType=chef`);
+          const res = await fetch(`/api/attendance/history/${this.waiterId}?employeeType=waiter`);
           const json = await res.json();
           if (json.status === "success") {
             this.attendanceRecords = json.data.records || [];
@@ -349,16 +349,16 @@
               return;
             }
   
-            const chefId = localStorage.getItem("chefId");
-            if (!chefId) {
+            const waiterId = localStorage.getItem("waiterId");
+            if (!waiterId) {
               this.message = "未登录，无法打卡";
               this.checkingIn = false;
               return;
             }
   
             const checkInData = {
-              employeeId: parseInt(chefId),
-              employeeType: "chef",
+              employeeId: parseInt(waiterId),
+              employeeType: "waiter",
               branchId: this.branchId,
               checkInTime: this.getBeijingTimeString(),
               latitude: pos.coords.latitude,
@@ -430,163 +430,184 @@
       },
   
       logout() {
-        localStorage.removeItem("chefId");
+        localStorage.removeItem("waiterId");
         this.$router.push("/login");
       },
     },
   };
   </script>
-   <style scoped>
-   .attendance-page {
-     display: flex;
-     height: 100vh;
-     width: 100vw;
-     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-     background: #f0f2f5;
-   }
-   .sidebar {
-     width: 220px;
-     background: #1d3557;
-     color: #fff;
-     padding: 30px 20px;
-     box-sizing: border-box;
-     display: flex;
-     flex-direction: column;
-   }
-   .sidebar h2 {
-     font-size: 24px;
-     margin-bottom: 30px;
-     border-bottom: 2px solid #fff;
-     padding-bottom: 10px;
-   }
-   .sidebar ul {
-     list-style: none;
-     padding: 0;
-     margin: 0;
-     flex-grow: 1;
-   }
-   .sidebar li {
-     padding: 12px 0;
-     font-size: 16px;
-     cursor: pointer;
-     user-select: none;
-   }
-   .sidebar li:hover {
-     background-color: #457b9d;
-   }
-   .sidebar .logout {
-     margin-top: auto;
-     color: #ffb3b3;
-     transition: color 0.3s ease;
-   }
-   .sidebar .logout:hover {
-     color: #fff;
-     font-weight: bold;
-   }
-   .map-section {
-     flex: 1;
-     padding: 40px;
-     background: white;
-     box-sizing: border-box;
-     display: flex;
-     flex-direction: column;
-     align-items: center;
-     overflow: auto;
-   }
-   .map-section h3 {
-     margin-bottom: 20px;
-     color: #333;
-     font-weight: 600;
-   }
-   #map {
-     width: 100%;
-     max-width: 1100px;
-     height: 600px;
-     border-radius: 8px;
-     box-shadow: 0 0 15px rgb(0 0 0 / 0.1);
-     margin-bottom: 20px;
-     flex-shrink: 0;
-   }
-   .checkin-btn {
-     background-color: #1d3557;
-     border: none;
-     color: white;
-     font-size: 18px;
-     padding: 12px 30px;
-     border-radius: 6px;
-     cursor: pointer;
-     user-select: none;
-     transition: background-color 0.3s ease;
-   }
-   .checkin-btn:disabled {
-     background-color: #777;
-     cursor: not-allowed;
-   }
-   .checkin-btn:hover:not(:disabled) {
-     background-color: #457b9d;
-   }
-   .message {
-     color: #555;
-     font-size: 16px;
-     margin-top: 10px;
-     min-height: 24px;
-     text-align: center;
-     max-width: 700px;
-   }
-   .history-section {
-     margin-top: 30px;
-     width: 100%;
-     max-width: 700px;
-   }
-   .calendar {
-     border: 1px solid #ccc;
-     border-radius: 6px;
-     padding: 10px;
-   }
-   .calendar-header {
-     display: flex;
-     justify-content: space-between;
-     align-items: center;
-     margin-bottom: 10px;
-   }
-   .calendar-grid {
-     display: grid;
-     grid-template-columns: repeat(7, 1fr);
-     gap: 6px;
-   }
-   .calendar-weekday {
-     font-weight: bold;
-     text-align: center;
-     color: #555;
-   }
-   .calendar-day {
-     background: #f9f9f9;
-     padding: 10px 6px;
-     border-radius: 4px;
-     text-align: center;
-     user-select: none;
-     position: relative;
-     font-weight: 600;
-     font-size: 16px;
-   }
-   .no-current-month {
-     color: #bbb;
-     background: transparent !important;
-   }
-   .day-number {
-     display: block;
-     margin-bottom: 4px;
-   }
-   .check-icon {
-     font-weight: bold;
-     font-size: 20px;
-     user-select: none;
-   }
-   .check-icon.checked {
-     color: green;
-   }
-   .check-icon.unchecked {
-     color: red;
-   }
-   </style>
-   
+  
+  <style scoped>
+  .attendance-page {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f2f5;
+  }
+  .sidebar {
+    width: 220px;
+    background: #1d3557;
+    color: #fff;
+    padding: 30px 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+  }
+  .sidebar h2 {
+    font-size: 24px;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #fff;
+    padding-bottom: 10px;
+  }
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+  }
+  .sidebar li {
+    padding: 12px 0;
+    font-size: 16px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .sidebar li:hover {
+    background-color: #457b9d;
+  }
+  .sidebar .logout {
+    margin-top: auto;
+    color: #ffb3b3;
+    transition: color 0.3s ease;
+  }
+  .sidebar .logout:hover {
+    color: #fff;
+    font-weight: bold;
+  }
+  .map-section {
+    flex: 1;
+    padding: 40px;
+    background: white;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: auto;
+  }
+  .map-section h3 {
+    margin-bottom: 20px;
+    color: #333;
+    font-weight: 600;
+  }
+  #map {
+    width: 100%;
+    max-width: 1100px;
+    height: 600px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgb(0 0 0 / 0.1);
+    margin-bottom: 20px;
+    flex-shrink: 0;
+  }
+  .checkin-btn {
+    background-color: #1d3557;
+    border: none;
+    color: white;
+    font-size: 18px;
+    padding: 12px 30px;
+    border-radius: 6px;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+  .checkin-btn:disabled {
+    background-color: #777;
+    cursor: not-allowed;
+  }
+  .checkin-btn:hover:not(:disabled) {
+    background-color: #457b9d;
+  }
+  .message {
+    color: #555;
+    font-size: 16px;
+    margin-top: 10px;
+    min-height: 24px;
+    text-align: center;
+    max-width: 700px;
+  }
+  .history-section {
+    margin-top: 30px;
+    width: 100%;
+    max-width: 700px;
+  }
+  .calendar {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 10px;
+  }
+  .calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .calendar-header button {
+    background-color: #1d3557;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 12px;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+  .calendar-header button:hover {
+    background-color: #457b9d;
+  }
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+  }
+  .calendar-weekday {
+    font-weight: 600;
+    text-align: center;
+    padding: 6px 0;
+    background-color: #f4f4f4;
+    border-radius: 4px;
+    user-select: none;
+  }
+  .calendar-day {
+    border-radius: 4px;
+    height: 48px;
+    padding: 2px 5px;
+    text-align: center;
+    position: relative;
+    user-select: none;
+    font-size: 14px;
+    line-height: 1;
+    color: #555;
+    background: #fafafa;
+  }
+  .calendar-day.no-current-month {
+    color: #aaa;
+    background: #f9f9f9;
+  }
+  .day-number {
+    display: block;
+    font-weight: 600;
+  }
+  .check-icon {
+    position: absolute;
+    right: 6px;
+    top: 6px;
+    font-size: 18px;
+    user-select: none;
+  }
+  .check-icon.checked {
+    color: green;
+  }
+  .check-icon.unchecked {
+    color: red;
+  }
+  </style>
+  

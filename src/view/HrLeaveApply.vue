@@ -8,6 +8,7 @@
           <li @click="$router.push('/hr-employee')">员工档案</li>
           <li @click="$router.push('/hr-attendance')">考勤打卡</li>
           <li><strong>请假申请</strong></li>
+          <li @click="$router.push('/hr-leave-progress')">我的请假记录</li>
           <li @click="$router.push('/hr-leave-review')">请假待审批</li>
           <li @click="$router.push('/hr-leavingworking-review')">离职待审批</li>
           <li @click="logout" class="logout">退出系统</li>
