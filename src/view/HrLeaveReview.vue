@@ -89,7 +89,7 @@
       },
       async fetchLeaveRequests() {
         try {
-          const url = `/api/leave/by-branch?branchId=${this.hrInfo.branchId}&role=hr&hrId=${this.hrInfo.id}`;
+          const url = `/api/leave/by-branch?branchId=${this.hrInfo.branchId}&role=hr&hrId=${this.hrInfo.id}&hrType=${this.hrInfo.type}`;
           const res = await fetch(url);
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
           const json = await res.json();

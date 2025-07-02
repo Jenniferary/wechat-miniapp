@@ -120,6 +120,7 @@ export default {
             alert("厨师登录成功");
             localStorage.setItem("role", "chef");
             localStorage.setItem("username", username);
+            localStorage.setItem("chefId", result.data.id);
             this.$router.push("/chef-dashboard");
           } else {
             alert("厨师账号或密码错误");
