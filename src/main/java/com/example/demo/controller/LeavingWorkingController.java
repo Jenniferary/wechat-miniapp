@@ -189,4 +189,52 @@ public class LeavingWorkingController {
             return request;
         }, branchId);
     }
+
+    @GetMapping("/progress-by-manager")
+    public List<Map<String, Object>> getApprovalProgressByManager(@RequestParam Integer managerId) {
+        // 获取店长的分支ID
+        String branchIdSql = "SELECT branch_id FROM branch_managers WHERE id = ?";
+        Integer branchId = jdbcTemplate.queryForObject(branchIdSql, Integer.class, managerId);
+
+        if (branchId == null) {
+            return List.of();  // 如果没有找到分支ID，则返回空列表
+        }
+
+        // 获取该分支下的所有离职申请及其状态和进度，包括已离职员工的记录
+        String sql = """
+        SELECT l.id, l.name, l.reason, l.created_at, l.status,
+               CASE
+                   WHEN l.status = '已提交待HR审批' THEN 25
+                   WHEN l.status = 'HR审批通过待店长审批' THEN 50
+                   WHEN l.status = '审批成功' THEN 75
+                   WHEN l.status = '已驳回' THEN 100
+                   WHEN l.status = '已离职' THEN 100
+                   ELSE 0
+               END AS progress
+        FROM leaving_working_requests l
+        WHERE l.branch_id = ?
+    """;
+
+        return jdbcTemplate.queryForList(sql, branchId);
+    }
+
+
+
+    @PutMapping("/chef/{id}/confirm-leave")
+    @Transactional
+    public Map<String, String> confirmLeave(@PathVariable Integer id) {
+        // 先删除员工信息
+        String deleteChefSql = "DELETE FROM chefs WHERE id = ?";
+        int deleteRows = jdbcTemplate.update(deleteChefSql, id);
+
+        if (deleteRows > 0) {
+            // 然后更新离职申请状态
+            String updateStatusSql = "UPDATE leaving_working_requests SET status = '已离职' WHERE employee_id = ?";
+            jdbcTemplate.update(updateStatusSql, id);
+            return Map.of("status", "success", "message", "员工离职确认成功");
+        } else {
+            return Map.of("status", "error", "message", "删除员工信息失败");
+        }
+    }
+
 }
