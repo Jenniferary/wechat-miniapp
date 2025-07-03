@@ -48,6 +48,11 @@ import ChefLeaveWorkingVue from '@/view/employee/ChefLeaveWorking.vue'
 import EmployeeLeavingStatusVue from '@/view/employee/EmployeeLeavingStatus.vue'
 import HrLeavingWorkingReviewVue from '@/view/Hr/HrLeavingWorkingReview.vue'
 import BranchLeavingWorkingReviewVue from '@/view/branch_manager/BranchLeavingWorkingReview.vue'
+import CounterDashboardVue from '@/view/CounterDashboard.vue'
+import CounterDineinOrderVue from '@/view/CounterDineinOrder.vue'
+import CounterAttendanceVue from '@/view/CounterAttendance.vue'
+import CounterLeaveApplyVue from '@/view/CounterLeaveApply.vue'
+import CounterLeaveProgressVue from '@/view/CounterLeaveProgress.vue'
 
 
 const routes = [
@@ -103,6 +108,7 @@ const routes = [
   {path: '/delivery-view', component:ViewDeliveryOrders},
   //添加管理员
   {path: '/add-manager',component: AddManagerPage},
+  {path: '/manage-tables',component: ManageTable},
   //查看管理员
   {path: '/look-manager',componet: LookManagerVue},
   //入职申请
@@ -150,7 +156,19 @@ const routes = [
   //店长离职审批
   {path: '/branch-leavingworking-review', component: BranchLeavingWorkingReviewVue},
   //chef查看离职申请状态
-  {path: '/employ-leaving-Status', component: EmployeeLeavingStatusVue}
+  {path: '/employ-leaving-Status', component: EmployeeLeavingStatusVue},
+  //counter个人信息界面
+  { path: '/counter-dashboard', component: CounterDashboardVue},
+  //counter个人信息界面
+  { path: '/counter-dinein-order', component: CounterDineinOrderVue},
+  //counter管理餐桌
+  {path: '/manage-tables', component:ManageTable},
+  //counter打卡界面
+  { path: '/counter-attendance', component: CounterAttendanceVue},
+  //counter请假界面
+  { path: '/counter-leave', component: CounterLeaveApplyVue},
+  //counter请假查看界面
+  { path: '/counter-leave-progress', component: CounterLeaveProgressVue},
 
 ]
 
