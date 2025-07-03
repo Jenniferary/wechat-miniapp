@@ -142,12 +142,15 @@
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   }
   .sidebar {
-    width: 240px;
-    background: #1d3557;
-    color: white;
-    padding: 30px 20px;
-    box-sizing: border-box;
-  }
+  width: 240px;
+  background: #1d3557;
+  color: white;
+  padding: 30px 20px;
+  box-sizing: border-box;
+  display: flex;              
+  flex-direction: column;     
+}
+
   .sidebar h2 {
     font-size: 22px;
     border-bottom: 2px solid white;
@@ -167,13 +170,15 @@
     font-weight: bold;
   }
   .logout {
-    color: #ffb3b3;
-    margin-top: 20px;
-    cursor: pointer;
-  }
-  .logout:hover {
-    color: white;
-  }
+  color: #ffb3b3;
+  transition: color 0.3s ease;
+  margin-top: auto;
+}
+
+.logout:hover {
+  color: #ffffff;
+  font-weight: bold;
+}
   .form-section {
     flex: 1;
     background: white;

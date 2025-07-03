@@ -41,6 +41,7 @@ import AllLogin from '@/view/branch_manager/All_login.vue'
 import BranchManagerLoginVue from '@/view/branch_manager/BranchManagerLogin.vue'
 import BranchDashBoardVue from '@/view/branch_manager/BranchDashBoard.vue'
 import BranchEmployeeVue from '@/view/branch_manager/BranchEmployee.vue'
+import PerformanceReviewVue from '@/view/branch_manager/PerformanceReview.vue'
 import ChefDashboardVue from '@/view/ChefDashboard.vue'
 import ChefAttendanceVue from '@/view/ChefAttendance.vue'
 import ChefLeaveApplyVue from '@/view/ChefLeaveApply.vue'
@@ -155,6 +156,8 @@ const routes = [
   {path: '/hr-leavingworking-review', component: HrLeavingWorkingReviewVue},
   //店长离职审批
   {path: '/branch-leavingworking-review', component: BranchLeavingWorkingReviewVue},
+  //店长绩效考核
+  {path: '/performance-review', component: PerformanceReviewVue},
   //chef查看离职申请状态
   {path: '/employ-leaving-Status', component: EmployeeLeavingStatusVue},
   //counter个人信息界面

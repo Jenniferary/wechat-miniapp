@@ -9,6 +9,7 @@
         <li @click="$router.push('/branch-leaving')">员工请假审批</li> 
         <li @click="$router.push('/branch-leavingworking-review')">员工离职审批</li>
         <li @click="$router.push('/branch-employee')">员工打卡情况总览</li> 
+        <li @click="$router.push('/performance-review')">绩效考核</li>
         <li @click="$router.push('/branch-feedback')">客户反馈</li>
         <li @click="logout" class="logout">退出系统</li>
       </ul>
