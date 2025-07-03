@@ -214,7 +214,8 @@ export default {
       message: "",
       amapLoaded: false,
       checkType: "", // 'in' or 'out'
-
+      activeSection: 'profile',  // 默认激活第一个菜单
+      activeSubsection: '',
       hireDate: null,
       attendanceRecords: [],
 
@@ -268,6 +269,30 @@ export default {
   },
 
   methods: {
+    selectSection(section, route) {
+      this.activeSection = section;
+      this.activeSubsection = '';
+      if (route) {
+        this.$router.push(route);
+      }
+    },
+
+    selectSubsection(subsection, route) {
+      this.activeSubsection = subsection;
+      if (route) {
+        this.$router.push(route);
+      }
+    },
+
+    toggleSection(section) {
+      if (this.activeSection === section) {
+        this.activeSection = '';
+        this.activeSubsection = '';
+      } else {
+        this.activeSection = section;
+        this.activeSubsection = '';
+      }
+    },
     generateCalendarDays(timeField) {
       const days = [];
       const firstDayOfMonth = new Date(this.currentYear, this.currentMonth, 1);
