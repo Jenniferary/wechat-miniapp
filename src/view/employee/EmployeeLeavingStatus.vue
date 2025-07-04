@@ -1,4 +1,4 @@
-<template>
+<template> 
   <div class="status-page">
     <div class="sidebar">
       <h2>📌 查看离职申请状态</h2>
@@ -20,6 +20,7 @@
             <th>当前状态</th>
             <th>提交时间</th>
             <th>更新时间</th>
+            <th>操作</th>
           </tr>
         </thead>
         <tbody>
@@ -33,6 +34,16 @@
             </td>
             <td>{{ formatDate(leaveRequest.createdAt) }}</td>
             <td>{{ formatDate(leaveRequest.updatedAt) }}</td>
+            <td>
+              <!-- 仅当状态为“审批成功”时，显示“确认离职”按钮 -->
+              <button
+                v-if="leaveRequest.status === '审批成功'"
+                @click="confirmLeave(leaveRequest.id)"
+                class="btn-approve"
+              >
+                确认离职
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -47,23 +58,24 @@ export default {
   name: "EmployeeStatus",
   data() {
     return {
-      leaveRequest: null,
+      leaveRequest: null,  // 存储当前员工的离职申请
     };
   },
   created() {
     this.loadLeaveRequestStatus();
   },
   methods: {
+    // 加载当前员工的离职申请状态
     async loadLeaveRequestStatus() {
       try {
-        const chefId = localStorage.getItem("chefId");  // 使用 chefId 来获取员工信息
+        const chefId = localStorage.getItem("chefId");  // 获取当前员工ID
         if (!chefId) {
           alert("未登录");
           this.$router.push("/login");
           return;
         }
 
-        // 调用后端接口获取某个员工的所有离职申请
+        // 调用后端接口获取该员工的离职申请
         const res = await fetch(`/api/leaving-working/by-applicant?applicantId=${chefId}`);
         if (!res.ok) throw new Error("无法获取离职申请状态");
 
@@ -79,10 +91,30 @@ export default {
         alert("加载离职申请状态失败：" + err.message);
       }
     },
-    formatDate(dateStr) {
-      if (!dateStr) return "";
-      return new Date(dateStr).toLocaleDateString();
-    },
+
+     formatDate(dateStr) {
+    console.log("原始日期字符串:", dateStr);  // 打印原始日期字符串
+    if (!dateStr) return "无效日期";  // 防止无效日期传入
+    console.log("原始日期字符串:", dateStr);  // 打印原始日期字符串
+    // 直接尝试解析ISO 8601格式的日期
+    const date = new Date(dateStr);
+    console.log("解析的日期:", new Date(dateStr));  // 查看解析后的日期对象
+
+    // 检查日期是否有效
+    if (isNaN(date.getTime())) {
+      console.error("无效日期:", dateStr);  // 打印无效日期以便调试
+      return "无效日期";
+    }
+    
+    // 使用 toLocaleDateString 来格式化日期
+    return date.toLocaleDateString("zh-CN", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+  },
+
+    // 状态样式
     statusClass(status) {
       switch (status) {
         case "待HR审批":
@@ -93,28 +125,51 @@ export default {
           return "approved";
         case "已驳回":
           return "rejected";
+        case "已离职":
+          return "resigned";
         default:
           return "unknown";
       }
     },
+
+    // 确认离职操作
+    async confirmLeave(id) {
+      if (confirm("确认离职该员工吗？")) {
+        try {
+          const res = await fetch(`/api/leaving-working/chef/${id}/confirm-leave`, {
+            method: "PUT",
+          });
+
+          const json = await res.json();
+          if (json.status === "success") {
+            alert("员工离职确认成功");
+
+            // 等待 5 秒后跳转到登录页面
+            setTimeout(() => {
+              this.logout();  // 调用退出方法
+            }, 5000); // 5000 毫秒 = 5 秒
+
+            this.loadLeaveRequestStatus(); // 刷新离职申请状态
+          } else {
+            alert("离职确认失败：" + (json.message || ""));
+          }
+        } catch (err) {
+          alert("请求错误：" + err.message);
+        }
+      }
+    },
+
+    // 退出系统
     logout() {
-      localStorage.clear();
-      this.$router.push("/login");
+      localStorage.clear();  // 清空本地存储
+      this.$router.push("/login");  // 跳转到登录页面
     },
   },
 };
 </script>
 
 <style scoped>
-html, body, #app {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-  background: none;
-}
-
+/* 样式保持一致 */
 .status-page {
   display: flex;
   width: 100vw;
@@ -137,6 +192,7 @@ html, body, #app {
   font-size: 22px;
   border-bottom: 2px solid #fff;
   padding-bottom: 10px;
+  color: white;
 }
 
 .sidebar ul {
@@ -152,13 +208,18 @@ html, body, #app {
   cursor: pointer;
 }
 
+.sidebar li:hover {
+  background-color: #ffb3b3;
+  color: #fff;
+}
+
 .logout {
   color: #ffb3b3;
   transition: color 0.3s ease;
 }
 
 .logout:hover {
-  color: #ffffff;
+  color: white;
   font-weight: bold;
 }
 
@@ -170,21 +231,18 @@ html, body, #app {
   overflow-y: auto;
 }
 
-.form-section h3 {
+h3 {
   font-size: 24px;
-  margin-bottom: 30px;
-  border-left: 6px solid #007bff;
-  padding-left: 14px;
   color: #333;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 10px;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  background: #fff;
-  border-radius: 6px;
-  overflow: hidden;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 th, td {
@@ -203,13 +261,6 @@ th {
 
 tr:hover {
   background-color: #f1f7ff;
-}
-
-p {
-  font-size: 18px;
-  margin-top: 30px;
-  color: #888;
-  text-align: center;
 }
 
 .status {
@@ -237,28 +288,20 @@ p {
   background-color: #c0392b;
 }
 
-.status.unknown {
+.status.resigned {
   background-color: #7f8c8d;
 }
 
-@media (max-width: 768px) {
-  .status-page {
-    flex-direction: column;
-  }
+button {
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
 
-  .form-section {
-    width: 100vw;
-    padding: 30px 20px;
-  }
-
-  .sidebar {
-    width: 100vw;
-    text-align: center;
-  }
-
-  table, th, td {
-    font-size: 14px;
-    padding: 10px;
-  }
+button:hover {
+  background-color: #219150;
 }
 </style>

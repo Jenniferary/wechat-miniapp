@@ -2,9 +2,9 @@
   <div class="resume-page">
     <!-- 左侧菜单 -->
     <div class="sidebar">
-      <h2>📌 离职申请审批</h2>
+      <h2>📌 离职申请审批进度</h2>
       <ul>
-        <li @click="$router.push('/br-leavingworking-Progress')">审批进度</li>
+        <li @click="$router.push('/branch-leavingworking-review')">待审批离职申请</li>
         <li @click="$router.push('/branch-dashboard')">返回主页</li>
         <li @click="logout" class="logout">退出系统</li>
       </ul>
@@ -12,9 +12,9 @@
 
     <!-- 右侧内容 -->
     <div class="form-section">
-      <h3>待店长审批离职申请</h3>
+      <h3>离职申请审批进度</h3>
 
-      <table v-if="leaveWorkingRequests.length > 0">
+      <table v-if="progressData.length > 0">
         <thead>
           <tr>
             <th>申请ID</th>
@@ -22,47 +22,41 @@
             <th>离职原因</th>
             <th>提交时间</th>
             <th>当前状态</th>
-            <th>操作</th>
+            <th>审批进度</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="req in leaveWorkingRequests" :key="req.id">
+          <tr v-for="req in progressData" :key="req.id">
             <td>{{ req.id }}</td>
-            <td>{{ req.name }}</td> <!-- 显示员工姓名 -->
+            <td>{{ req.name }}</td>
             <td>{{ req.reason }}</td>
-            <td>{{ formatDate(req.createdAt) }}</td>
+            <td>{{ formatDate(req.created_at) }}</td>
             <td>
               <span :class="['status', statusClass(req.status)]">
                 {{ req.status }}
               </span>
             </td>
             <td>
-              <button
-                v-if="req.status === 'HR审批通过待店长审批'"
-                @click="handleDecision(req.id, 'approve')"
-                class="btn-approve"
-              >通过</button>
-              <button
-                v-if="req.status === 'HR审批通过待店长审批'"
-                @click="handleDecision(req.id, 'reject')"
-                class="btn-reject"
-              >驳回</button>
+              <div class="progress-bar-container">
+                <div :style="getProgressBarStyle(req.progress)" class="progress-bar"></div>
+                <span>{{ req.progress }}%</span>
+              </div>
             </td>
           </tr>
         </tbody>
       </table>
 
-      <p v-else>暂无待审批的离职申请</p>
+      <p v-else>暂无审批进度数据</p>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "BrLeavingWorkingReview",
+  name: "BrLeavingWorkingProgress",
   data() {
     return {
-      leaveWorkingRequests: [],  // 离职申请列表
+      progressData: [],  // 离职申请的进度数据
       managerInfo: null,  // 店长信息
     };
   },
@@ -84,52 +78,44 @@ export default {
         const json = await res.json();
         if (json.status !== "success") throw new Error("获取店长信息失败");
         this.managerInfo = json.data;
-        this.fetchLeaveWorkingRequests(); // 获取待审批离职申请
+        this.fetchProgressData(); // 获取审批进度数据
       } catch (err) {
         alert("加载店长信息失败：" + err.message);
       }
     },
 
-    // 获取待审批的离职申请
-    async fetchLeaveWorkingRequests() {
+    // 获取审批进度数据
+    async fetchProgressData() {
       try {
         const managerId = this.managerInfo.id;  // 获取店长ID
-        const url = `/api/leaving-working/by-manager?managerId=${managerId}`;  // 根据店长ID查询
+        const url = `/api/leaving-working/progress-by-manager?managerId=${managerId}`;  // 根据店长ID查询进度
         const res = await fetch(url);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const json = await res.json();
-        this.leaveWorkingRequests = json;  // 更新离职申请列表
+        this.progressData = json;  // 更新审批进度数据
+        console.log("Returned data:", json);
       } catch (err) {
-        alert("加载离职申请失败：" + err.message);
+        alert("加载审批进度失败：" + err.message);
       }
     },
 
-    // 审批离职申请
-    async handleDecision(id, decision) {
-      try {
-        const res = await fetch(`/api/leaving-working/${id}/manager-approve`, {
-          method: "PUT",
-        });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = await res.json();
-        if (json.status === "success") {
-          alert(`已${decision === "approve" ? "通过" : "驳回"}该离职申请`);
-          this.fetchLeaveWorkingRequests(); // 刷新列表
-        } else {
-          alert("操作失败：" + (json.message || ""));
-        }
-      } catch (err) {
-        alert("请求错误：" + err.message);
-      }
-    },
+formatDate(dateStr) {
+  if (!dateStr) return "";
+  const date = new Date(dateStr);  // 转换为日期对象
+  if (isNaN(date)) {
+    console.error("Invalid date:", dateStr);  // 如果日期无效，输出错误
+    return "Invalid date";
+  }
+  return date.toLocaleDateString("zh-Hans-CN", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  });  // 格式化为本地日期格式
+},
 
-    // 格式化日期
-    formatDate(dateStr) {
-      if (!dateStr) return "";
-      return new Date(dateStr).toLocaleDateString();
-    },
 
-    // 状态的样式
+
+    // 状态样式
     statusClass(status) {
       switch (status) {
         case "已提交待HR审批":
@@ -147,6 +133,14 @@ export default {
       }
     },
 
+    // 获取进度条的样式
+    getProgressBarStyle(progress) {
+      return {
+        width: `${progress}%`,
+        backgroundColor: progress === 100 ? "#27ae60" : "#f39c12",  // 完成时为绿色，进行中为橙色
+      };
+    },
+
     // 退出系统
     logout() {
       localStorage.clear();
@@ -157,7 +151,7 @@ export default {
 </script>
 
 <style scoped>
-/* 页面的主容器 */
+/* 样式保持一致 */
 .resume-page {
   display: flex;
   width: 100vw;
@@ -165,7 +159,6 @@ export default {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* 左侧菜单样式 */
 .sidebar {
   width: 240px;
   background: #1d3557;
@@ -212,7 +205,6 @@ export default {
   font-weight: bold;
 }
 
-/* 右侧内容区域样式 */
 .form-section {
   width: calc(100vw - 240px);
   background: white;
@@ -229,7 +221,6 @@ h3 {
   padding-bottom: 10px;
 }
 
-/* 表格样式 */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -251,7 +242,6 @@ tr:hover {
   background-color: #f1f7ff;
 }
 
-/* 状态标签样式 */
 .status {
   display: inline-block;
   padding: 6px 14px;
@@ -281,31 +271,19 @@ tr:hover {
   background-color: #7f8c8d;
 }
 
-/* 按钮样式 */
-.btn-approve {
-  background-color: #27ae60;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-right: 8px;
+.progress-bar-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 200px;
+  height: 10px;
+  background-color: #e1e1e1;
+  border-radius: 8px;
 }
 
-.btn-approve:hover {
-  background-color: #219150;
+.progress-bar {
+  height: 100%;
+  border-radius: 8px;
 }
 
-.btn-reject {
-  background-color: #c0392b;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.btn-reject:hover {
-  background-color: #992d22;
-}
 </style>

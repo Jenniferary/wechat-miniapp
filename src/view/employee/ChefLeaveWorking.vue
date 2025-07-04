@@ -1,9 +1,9 @@
-<template> 
+<template>
   <div class="resume-page">
     <div class="sidebar">
       <h2>📌 离职申请</h2>
       <ul>
-        <li @click="$router.push('/chef-dashboard')">个人档案</li>
+        <li @click="$router.push('/employee-dashboard')">个人档案</li>
         <li @click="$router.push('/employ-leaving-Status')">查看离职申请进度</li>
         <li @click="$router.push('/employee-attendance')">考勤打卡</li>
         <li><strong>离职申请</strong></li>
@@ -39,7 +39,6 @@ export default {
     this.loadEmployeeInfo();
   },
   methods: {
-    // 加载员工信息，包括姓名（username）
     async loadEmployeeInfo() {
       const chefId = localStorage.getItem("chefId");  // 使用 chefId 来获取员工信息
       if (!chefId) {
@@ -60,7 +59,6 @@ export default {
       }
     },
 
-    // 提交离职申请
     async submitLeaveRequest() {
       if (!this.employeeInfo) {
         alert("员工信息未加载");
@@ -72,7 +70,6 @@ export default {
           employeeType: "chef",  // 假设员工类型是 "chef"
           branchId: this.employeeInfo.branchId,  // 获取员工的 branchId
           reason: this.form.reason,  // 获取离职原因
-          name: this.employeeInfo.username,  // 将员工的 username（即姓名）传递到后端
         };
 
         const res = await fetch("/api/leaving-working/apply", {
@@ -93,7 +90,6 @@ export default {
       }
     },
 
-    // 退出系统
     logout() {
       localStorage.removeItem("chefId");  // 移除 chefId 以退出
       this.$router.push("/login");
@@ -198,5 +194,5 @@ button:hover {
     width: 100vw;
     padding: 20px;
   }
-}  
+}
 </style>

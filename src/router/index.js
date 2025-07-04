@@ -54,8 +54,9 @@ import CounterDineinOrderVue from '@/view/CounterDineinOrder.vue'
 import CounterAttendanceVue from '@/view/CounterAttendance.vue'
 import CounterLeaveApplyVue from '@/view/CounterLeaveApply.vue'
 import CounterLeaveProgressVue from '@/view/CounterLeaveProgress.vue'
-
-
+import BranchLeavingVue from '@/view/branch_manager/BranchLeaving.vue'
+import ChefLeaveProgressVue from '@/view/ChefLeaveProgress.vue'
+import BrLeavingWorkingProgressVue from '@/view/branch_manager/BrLeavingWorkingProgress.vue'
 const routes = [
   // 默认路由重定向到登录页面
   { path: '/', redirect: '/all-login' },
@@ -156,6 +157,8 @@ const routes = [
   {path: '/hr-leavingworking-review', component: HrLeavingWorkingReviewVue},
   //店长离职审批
   {path: '/branch-leavingworking-review', component: BranchLeavingWorkingReviewVue},
+  //店长查看离职审批
+  {path: '/br-leavingworking-Progress', component: BrLeavingWorkingProgressVue},
   //店长绩效考核
   {path: '/performance-review', component: PerformanceReviewVue},
   //chef查看离职申请状态
@@ -172,7 +175,10 @@ const routes = [
   { path: '/counter-leave', component: CounterLeaveApplyVue},
   //counter请假查看界面
   { path: '/counter-leave-progress', component: CounterLeaveProgressVue},
-
+  //branch请假审批界面
+  { path: '/branch-leaving', component: BranchLeavingVue},
+  //chef查看请假流程
+  { path: '/chef-leave-progress', component: ChefLeaveProgressVue}
 ]
 
 export default createRouter({
