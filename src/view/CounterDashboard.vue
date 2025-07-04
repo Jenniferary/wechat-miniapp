@@ -11,6 +11,7 @@
           </li>
           <li @click="$router.push('/counter-dinein-order')">管理堂食订单</li>
           <li @click="$router.push('/manage-tables')">管理餐桌</li>
+          <li @click="$router.push('/counter-leaving-working')">申请离职</li>
   
           <li>
             <strong

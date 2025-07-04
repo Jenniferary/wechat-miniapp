@@ -8,7 +8,6 @@
         <li @click="$router.push('/hr-attendance')">考勤打卡</li>
         <li @click="$router.push('/hr-leave')">请假申请</li>
         <li @click="$router.push('/hr-leave-review')">请假待审批</li>
-        
         <li @click="logout" class="logout">退出系统</li>
       </ul>
     </div>
@@ -274,9 +273,6 @@ p {
 
 .status.rejected {
   background-color: #c0392b;
-}
-.status.resigned {
-  background-color: #7f8c8d;  /* 使用灰色表示已离职 */
 }
 
 .status.unknown {

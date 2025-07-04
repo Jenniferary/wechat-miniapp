@@ -57,6 +57,16 @@ import CounterLeaveProgressVue from '@/view/CounterLeaveProgress.vue'
 import BranchLeavingVue from '@/view/branch_manager/BranchLeaving.vue'
 import ChefLeaveProgressVue from '@/view/ChefLeaveProgress.vue'
 import BrLeavingWorkingProgressVue from '@/view/branch_manager/BrLeavingWorkingProgress.vue'
+import WaiterDashboardVue from '@/view/WaiterDashboard.vue'
+import WaiterAttendanceVue from '@/view/WaiterAttendance.vue'
+import WaiterLeaveApplyVue from '@/view/WaiterLeaveApply.vue'
+import WaiterLeaveProgressVue from '@/view/WaiterLeaveProgress.vue'
+import WaiterLeavingWorkingVue from '@/view/employee/WaiterLeavingWorking.vue'
+import WaiterLeavingWorkStatus from '@/view/employee/WaiterLeavingWorkStatus.vue'
+import CounterLeavingWorkingVue from '@/view/employee/CounterLeavingWorking.vue'
+import CounterLeavingWorkStatusVue from '@/view/employee/CounterLeavingWorkStatus.vue'
+import HrLeavingWorkingVue from '@/view/Hr/HrLeavingWorking.vue'
+import HrLeavingWorkingStatusVue from '@/view/Hr/HrLeavingWorkingStatus.vue'
 const routes = [
   // 默认路由重定向到登录页面
   { path: '/', redirect: '/all-login' },
@@ -178,7 +188,28 @@ const routes = [
   //branch请假审批界面
   { path: '/branch-leaving', component: BranchLeavingVue},
   //chef查看请假流程
-  { path: '/chef-leave-progress', component: ChefLeaveProgressVue}
+  { path: '/chef-leave-progress', component: ChefLeaveProgressVue},
+  //waiter个人页面
+  { path: '/waiter-dashboard', component: WaiterDashboardVue},
+  //waiter打卡界面
+  { path: '/waiter-attendance', component: WaiterAttendanceVue},
+  //waiter请假页面
+  { path: '/waiter-leave', component: WaiterLeaveApplyVue},
+  //waiter请假查看页面
+  { path: '/waiter-leave-progress', component: WaiterLeaveProgressVue},
+  //waiter申请离职
+  {path: '/waiter-leave-working', component: WaiterLeavingWorkingVue},
+  //waiter查看离职申请状态
+  {path: '/waiter-leaving-status', component: WaiterLeavingWorkStatus},
+  //Counter离职申请
+  {path: '/counter-leaving-working', component: CounterLeavingWorkingVue},
+  //Counter查看离职申请
+  {path: '/counter-leaving-status', component: CounterLeavingWorkStatusVue},
+  //hr离职申请
+   {path: '/hr-leaving-working', component: HrLeavingWorkingVue},
+   //hr查看离职申请进度
+   {path: '/hr-leaving-status', component: HrLeavingWorkingStatusVue}
+
 ]
 
 export default createRouter({

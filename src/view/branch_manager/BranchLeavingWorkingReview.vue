@@ -90,19 +90,27 @@ export default {
       }
     },
 
-    // 获取待审批的离职申请
-    async fetchLeaveWorkingRequests() {
-      try {
-        const managerId = this.managerInfo.id;  // 获取店长ID
-        const url = `/api/leaving-working/by-manager?managerId=${managerId}`;  // 根据店长ID查询
-        const res = await fetch(url);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = await res.json();
-        this.leaveWorkingRequests = json;  // 更新离职申请列表
-      } catch (err) {
-        alert("加载离职申请失败：" + err.message);
-      }
-    },
+   async fetchLeaveWorkingRequests() {
+  try {
+    const managerId = this.managerInfo.id;  // 获取店长ID
+    const url = `/api/leaving-working/by-manager?managerId=${managerId}`;  // 根据店长ID查询
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    
+    const json = await res.json();
+    console.log("返回的离职申请数据:", json);  // 打印返回数据
+
+    if (json.status === "success") {
+      this.leaveWorkingRequests = json.data;  // 更新离职申请列表
+      console.log("更新的离职申请列表:", this.leaveWorkingRequests);  // 打印更新后的数据
+    } else {
+      alert("加载离职申请失败：" + (json.message || ""));
+    }
+  } catch (err) {
+    alert("加载离职申请失败：" + err.message);
+  }
+},
+
 
     // 审批离职申请
     async handleDecision(id, decision) {
