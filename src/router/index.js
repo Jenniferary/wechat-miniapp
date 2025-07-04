@@ -36,6 +36,7 @@ import HrAttendanceVue from '@/view/HrAttendance.vue'
 import HrLeaveApplyVue from '@/view/HrLeaveApply.vue'
 import HrLeaveProgressVue from '@/view/HrLeaveProgress.vue'
 import HrLeaveReviewVue from '@/view/HrLeaveReview.vue' 
+import HrSalaryVue from '@/view/HrSalary.vue'
 import DataAnalytics from '@/view/DataAnalytics.vue'
 import AllLogin from '@/view/branch_manager/All_login.vue'
 import BranchManagerLoginVue from '@/view/branch_manager/BranchManagerLogin.vue'
@@ -46,6 +47,7 @@ import ChefDashboardVue from '@/view/ChefDashboard.vue'
 import ChefAttendanceVue from '@/view/ChefAttendance.vue'
 import ChefLeaveApplyVue from '@/view/ChefLeaveApply.vue'
 import ChefLeaveWorkingVue from '@/view/employee/ChefLeaveWorking.vue'
+import ChefSalaryVue from '@/view/ChefSalary.vue'
 import EmployeeLeavingStatusVue from '@/view/employee/EmployeeLeavingStatus.vue'
 import HrLeavingWorkingReviewVue from '@/view/Hr/HrLeavingWorkingReview.vue'
 import BranchLeavingWorkingReviewVue from '@/view/branch_manager/BranchLeavingWorkingReview.vue'
@@ -54,6 +56,7 @@ import CounterDineinOrderVue from '@/view/CounterDineinOrder.vue'
 import CounterAttendanceVue from '@/view/CounterAttendance.vue'
 import CounterLeaveApplyVue from '@/view/CounterLeaveApply.vue'
 import CounterLeaveProgressVue from '@/view/CounterLeaveProgress.vue'
+import CounterSalaryVue from '@/view/CounterSalary.vue'
 import BranchLeavingVue from '@/view/branch_manager/BranchLeaving.vue'
 import ChefLeaveProgressVue from '@/view/ChefLeaveProgress.vue'
 import BrLeavingWorkingProgressVue from '@/view/branch_manager/BrLeavingWorkingProgress.vue'
@@ -63,6 +66,7 @@ import WaiterLeaveApplyVue from '@/view/WaiterLeaveApply.vue'
 import WaiterLeaveProgressVue from '@/view/WaiterLeaveProgress.vue'
 import WaiterLeavingWorkingVue from '@/view/employee/WaiterLeavingWorking.vue'
 import WaiterLeavingWorkStatus from '@/view/employee/WaiterLeavingWorkStatus.vue'
+import WaiterSalaryVue from '@/view/WaiterSalary.vue'
 import CounterLeavingWorkingVue from '@/view/employee/CounterLeavingWorking.vue'
 import CounterLeavingWorkStatusVue from '@/view/employee/CounterLeavingWorkStatus.vue'
 import HrLeavingWorkingVue from '@/view/Hr/HrLeavingWorking.vue'
@@ -156,7 +160,9 @@ const routes = [
   { path: '/hr-leave-progress', component: HrLeaveProgressVue},
   //HR批准请假界面
   { path: '/hr-leave-review', component: HrLeaveReviewVue }, 
-
+  //Hr工资
+  { path: '/hr-salary', component: HrSalaryVue},
+  //数据分析
   {path: '/data-analytics', component: DataAnalytics},
   //总登录界面
   {path: '/all-login', component:AllLogin },
@@ -174,6 +180,8 @@ const routes = [
   { path: '/chef-leave', component: ChefLeaveApplyVue},
   //chef申请离职
   { path: '/chef-leaving-working', component: ChefLeaveWorkingVue},
+  //chef工资
+  { path: '/chef-salary', component: ChefSalaryVue},
   //HR离职审批
   {path: '/hr-leavingworking-review', component: HrLeavingWorkingReviewVue},
   //店长离职审批
@@ -196,6 +204,8 @@ const routes = [
   { path: '/counter-leave', component: CounterLeaveApplyVue},
   //counter请假查看界面
   { path: '/counter-leave-progress', component: CounterLeaveProgressVue},
+  //counter工资
+  { path: '/counter-salary', component: CounterSalaryVue},
   //branch请假审批界面
   { path: '/branch-leaving', component: BranchLeavingVue},
   //chef查看请假流程
@@ -212,6 +222,8 @@ const routes = [
   {path: '/waiter-leave-working', component: WaiterLeavingWorkingVue},
   //waiter查看离职申请状态
   {path: '/waiter-leaving-status', component: WaiterLeavingWorkStatus},
+  //waiter工资
+  { path: '/waiter-salary', component: WaiterSalaryVue},
   //Counter离职申请
   {path: '/counter-leaving-working', component: CounterLeavingWorkingVue},
   //Counter查看离职申请

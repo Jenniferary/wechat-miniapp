@@ -8,6 +8,7 @@
           <li @click="$router.push('/chef-leave')">请假申请</li>
           <li @click="$router.push('/chef-overtime-working')">加班申请</li>
           <li @click="$router.push('/chef-leaving-working')">离职申请</li>
+          <li @click="$router.push('/chef-salary')">工资管理</li>
           <li @click="logout" class="logout">退出系统</li>
         </ul>
       </div>
