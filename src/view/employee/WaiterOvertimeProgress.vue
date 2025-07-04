@@ -76,7 +76,7 @@ export default {
 
     async fetchOvertimeRequests() {
       try {
-        const res = await fetch(`/api/overtime/by-employee?employeeId=${this.waiterInfo.id}`);
+         const res = await fetch(`/api/overtime/by-employee?employee_id=${this.waiterInfo.id}&employee_type=waiter`);
         const json = await res.json();
         if (json.status === "success") {
           this.overtimeRequests = json.data.records;

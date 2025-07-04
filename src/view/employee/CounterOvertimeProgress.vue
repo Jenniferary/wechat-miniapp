@@ -76,7 +76,7 @@ export default {
 
     async fetchOvertimeRequests() {
       try {
-        const res = await fetch(`/api/overtime/by-employee?employeeId=${this.counterInfo.id}`);
+        const res = await fetch(`/api/overtime/by-employee?employee_id=${this.counterInfo.id}&employee_type=counter`);
         const json = await res.json();
         if (json.status === "success") {
           this.overtimeRequests = json.data.records;  // 加载员工的加班记录

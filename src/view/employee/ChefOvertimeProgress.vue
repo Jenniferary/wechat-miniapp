@@ -81,7 +81,7 @@ export default {
     async loadOvertimeRequests() {
       if (!this.chefInfo) return;
       try {
-        const res = await fetch(`/api/overtime/by-employee?employeeId=${this.chefInfo.id}`);
+        const res = await fetch(`/api/overtime/by-employee?employee_id=${this.chefInfo.id}&employee_type=chef`);
         const json = await res.json();
 
         if (json.status === "success") {
