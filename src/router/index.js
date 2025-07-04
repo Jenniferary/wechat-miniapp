@@ -67,6 +67,17 @@ import CounterLeavingWorkingVue from '@/view/employee/CounterLeavingWorking.vue'
 import CounterLeavingWorkStatusVue from '@/view/employee/CounterLeavingWorkStatus.vue'
 import HrLeavingWorkingVue from '@/view/Hr/HrLeavingWorking.vue'
 import HrLeavingWorkingStatusVue from '@/view/Hr/HrLeavingWorkingStatus.vue'
+import ChefOverTimeWorkingVue from '@/view/employee/ChefOverTimeWorking.vue'
+import ChefOvertimeProgressVue from '@/view/employee/ChefOvertimeProgress.vue'
+import HrOvertimeApprovalVue from '@/view/Hr/HrOvertimeApproval.vue'
+import HrOvertimeApprovalHistoryVue from '@/view/Hr/HrOvertimeApprovalHistory.vue'
+import BranchOvertimeApprovalVue from '@/view/branch_manager/BranchOvertimeApproval.vue'
+import WaiterOvertimeApplyVue from '@/view/employee/WaiterOvertimeApply.vue'
+import WaiterOvertimeProgressVue from '@/view/employee/WaiterOvertimeProgress.vue'
+import CounterOvertimeWorkingVue from '@/view/employee/CounterOvertimeWorking.vue'
+import CounterOvertimeProgressVue from '@/view/employee/CounterOvertimeProgress.vue'
+import HrOvertimeWorkingVue from '@/view/Hr/HrOvertimeWorking.vue'
+import HrOvertimeProgressVue from '@/view/Hr/HrOvertimeProgress.vue'
 const routes = [
   // 默认路由重定向到登录页面
   { path: '/', redirect: '/all-login' },
@@ -208,7 +219,30 @@ const routes = [
   //hr离职申请
    {path: '/hr-leaving-working', component: HrLeavingWorkingVue},
    //hr查看离职申请进度
-   {path: '/hr-leaving-status', component: HrLeavingWorkingStatusVue}
+   {path: '/hr-leaving-status', component: HrLeavingWorkingStatusVue},
+   //chef加班申请
+   {path: '/chef-overtime-working', component: ChefOverTimeWorkingVue},
+   //chef查看加班申请
+   {path: '/chef-overtime-progress', component: ChefOvertimeProgressVue},
+   //hr加班审批
+   {path: '/hr-overtime-approval', component: HrOvertimeApprovalVue},
+   //hr查看加班审批记录
+   {path: '/hr-overtime-approval-history', component: HrOvertimeApprovalHistoryVue},
+   //br加班审批
+   {path: '/branch-overtime-approval', component:BranchOvertimeApprovalVue},
+   //waiter加班申请
+   {path: '/waiter-overtime-working', component:WaiterOvertimeApplyVue},
+   //waiter查看加班申请记录
+    {path: '/waiter-overtime-progress', component:WaiterOvertimeProgressVue},
+    //Counter加班申请
+    {path: '/counter-overtime-working', component:CounterOvertimeWorkingVue},
+    //Counter查看加班申请记录
+    {path: '/counter-overtime-progress', component:CounterOvertimeProgressVue},
+    //Hr加班申请
+  {path: '/Hr-overtime-working', component:HrOvertimeWorkingVue},
+  //hr查看自己加班记录
+  {path: '/Hr-overtime-progress', component:HrOvertimeProgressVue}
+  
 
 ]
 

@@ -6,6 +6,7 @@
       <ul>
         <li @click="$router.push('/chef-dashboard')">个人档案</li>
         <li @click="$router.push('/chef-attendance')">考勤打卡</li>
+        <li @click="$router.push('/chef-overtime-working')">加班申请</li>
         <li @click="$router.push('/chef-leave')">请假申请</li>
         <li><strong>我的请假记录</strong></li>
         <li class="logout" @click="logout">退出系统</li>

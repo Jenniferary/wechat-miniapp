@@ -10,6 +10,9 @@
         <li @click="$router.push('/hr-attendance')">考勤打卡</li>
         <li @click="$router.push('/hr-leave')">请假申请</li>
         <li><strong>我的请假记录</strong></li>
+        <li @click="$router.push('/hr-overtime-working')">加班申请</li>
+        <li @click="$router.push('/hr-overtime-approval')">加班待审批</li>
+        <li @click="$router.push('/hr-overtime-approval-history')">加班审批记录</li>
         <li @click="$router.push('/hr-leave-review')">请假待审批</li>
         <li @click="logout" class="logout">退出系统</li>
       </ul>
