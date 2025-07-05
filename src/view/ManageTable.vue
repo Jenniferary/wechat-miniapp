@@ -58,24 +58,14 @@
           查看外卖订单
         </li>
 
-        <li
-          :class="{ active: activeSection === 'attendance' }"
-          @click="selectSection('attendance'); $router.push('/counter-attendance')"
-        >
-          考勤打卡
-        </li>
-        <li
-          :class="{ active: activeSection === 'leave' }"
-          @click="selectSection('leave'); $router.push('/counter-leave')"
-        >
-          请假申请
-        </li>
-        <li
-          :class="{ active: activeSection === 'leave-progress' }"
-          @click="selectSection('leave-progress'); $router.push('/counter-leave-progress')"
-        >
-          我的请假记录
-        </li>
+        <li @click="$router.push('/counter-overtime-working')">申请加班</li>
+          <li @click="$router.push('/counter-overtime-progress')">我的加班记录</li>
+          <li @click="$router.push('/counter-leaving-working')">申请离职</li>
+          <li @click="$router.push('/counter-leaving-status')">查看离职申请进度</li>
+          <li @click="$router.push('/counter-salary')">工资管理</li>
+          <li @click="$router.push('/counter-attendance')">考勤打卡</li>
+          <li @click="$router.push('/counter-leave')">请假申请</li>
+          <li @click="$router.push('/counter-leave-progress')">我的请假记录</li>
       </ul>
 
       <div class="logout" @click="logout">退出系统</div>

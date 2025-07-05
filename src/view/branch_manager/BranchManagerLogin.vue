@@ -42,7 +42,6 @@ export default {
             password: this.password
           })
         });
-          
         const result = await response.json();
 
         if (response.ok && result.status === 'success') {

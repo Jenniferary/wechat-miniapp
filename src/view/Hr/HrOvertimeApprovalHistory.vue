@@ -3,9 +3,22 @@
     <div class="sidebar">
       <h2>📌 查看加班审批记录</h2>
       <ul>
-        <li @click="$router.push('/hr-dashboard')">返回主页</li>
-        <li><strong>查看加班审批记录</strong></li>
-        <li @click="logout" class="logout">退出系统</li>
+        <li @click="$router.push('/hr-dashboard')"><strong>入职待审批列表</strong></li>
+          <li @click="$router.push('/hr-profile')">个人档案</li> 
+          <li @click="$router.push('/hr-employee')">员工档案</li>
+          <li @click="$router.push('/hr-attendance')">考勤打卡</li>
+          <li @click="$router.push('/hr-leave')">请假申请</li>
+          <li @click="$router.push('/hr-leave-progress')">我的请假记录</li>
+          <li @click="$router.push('/hr-leave-review')">请假待审批</li>
+          <li @click="$router.push('/hr-overtime-working')">加班申请</li>
+          <li @click="$router.push('/hr-overtime-progress')">我的加班记录</li>
+          <li @click="$router.push('/hr-overtime-approval')">加班待审批</li>
+          <li @click="$router.push('/hr-overtime-approval-history')">加班审批记录</li>
+          <li @click="$router.push('/hr-leaving-working')">离职申请</li>
+          <li @click="$router.push('/hr-leaving-status')">查看我的离职进度</li>
+          <li @click="$router.push('/hr-leavingworking-review')">离职待审批</li>
+          <li @click="$router.push('/hr-salary')">工资管理</li>
+          <li @click="logout" class="logout">退出系统</li>
       </ul>
     </div>
 
@@ -122,56 +135,45 @@ export default {
 <style scoped>
 .status-page {
   display: flex;
-  width: 100vw;
-  height: 100vh;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    width: 100vw;
+    height: 100vh;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.sidebar {
-  width: 240px;
-  background: #1d3557;
-  color: white;
-  padding: 30px 20px;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-}
-
-.sidebar h2 {
-  margin-bottom: 30px;
-  font-size: 22px;
-  border-bottom: 2px solid #fff;
-  padding-bottom: 10px;
-}
-
-.sidebar ul {
-  list-style: none;
-  padding-left: 0;
-  margin: 0;
-  flex: 1;
-}
-
-.sidebar li {
-  padding: 10px 0;
-  font-size: 15px;
-  cursor: pointer;
-}
-
-.sidebar li:hover {
-  background-color: #ffb3b3;
-  color: #fff;
-}
-
-.logout {
-  color: #ffb3b3;
-  transition: color 0.3s ease;
-}
-
-.logout:hover {
-  color: white;
-  font-weight: bold;
-}
-
+  .sidebar {
+    width: 240px;
+    background: #1d3557;
+    color: white;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+  }
+  .sidebar h2 {
+    margin-bottom: 30px;
+    font-size: 20px;
+    border-bottom: 2px solid #fff;
+    padding-bottom: 10px;
+  }
+  .sidebar ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+    flex: 1;
+  }
+  .sidebar li {
+    padding: 10px 0;
+    font-size: 15px;
+    cursor: pointer;
+  }
+  .logout {
+    color: #ffb3b3;
+    transition: color 0.3s ease;
+  }
+  .logout:hover {
+    color: #ffffff;
+    font-weight: bold;
+  }
 .form-section {
   width: calc(100vw - 240px);
   background: white;

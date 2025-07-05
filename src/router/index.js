@@ -88,6 +88,7 @@ import FranchiseManagementVue from '@/view/FranchiseManagement.vue'
 import FranchiseStoreManagementVue from '@/view/FranchiseStoreManagement.vue'
 import HeadquartersLoginVue from '@/view/HeadquartersLogin.vue'
 import HeadquartersDashboardVue from '@/view/HeadquartersDashboard.vue'
+import BranchEmployeeManagementVue from '@/view/BranchEmployeeManagement.vue'
 const routes = [
   // 默认路由重定向到登录页面
   { path: '/', redirect: '/all-login' },
@@ -272,8 +273,11 @@ const routes = [
    //管理员加盟店铺管理
    { path: '/franchise-store-management', component: FranchiseStoreManagementVue },
    //加盟主页
-   { path: '/franchise', component: () => import('../view/FranchiseHome.vue') }
+   { path: '/franchise', component: () => import('../view/FranchiseHome.vue') },
   
+  //hr查看自己加班记录
+  {path: '/Hr-overtime-progress', component:HrOvertimeProgressVue},
+  {path: '/branch-employee-management',component: BranchEmployeeManagementVue}
 
 ]
 

@@ -4,10 +4,15 @@
       <h2>👨‍🍳 请假管理</h2>
       <ul>
         <li @click="$router.push('/waiter-dashboard')">个人档案</li>
-        <li @click="$router.push('/waiter-attendance')">考勤打卡</li>
-        <li @click="$router.push('/waiter-leave')">请假申请</li>
-        <li><strong>我的请假记录</strong></li>
-        <li @click="logout" class="logout">退出系统</li>
+          <li @click="$router.push('/waiter-attendance')">考勤打卡</li>
+          <li @click="$router.push('/waiter-leave')">请假申请</li>
+          <li @click="$router.push('/waiter-leave-progress')">我的请假记录</li>
+          <li @click="$router.push('/waiter-leave-working')">离职申请</li>
+          <li @click="$router.push('/waiter-leaving-status')">查看离职申请进度</li>
+          <li @click="$router.push('/waiter-overtime-working')">加班申请</li>
+          <li @click="$router.push('/waiter-overtime-progress')">我的加班记录</li>
+          <li @click="$router.push('/waiter-salary')">工资管理</li>
+          <li @click="logout" class="logout">退出系统</li>
       </ul>
     </div>
 
@@ -205,42 +210,39 @@ export default {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 .sidebar {
-  width: 240px;
-  background: #1d3557;
-  color: white;
-  padding: 30px 20px;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-}
-.sidebar h2 {
-  margin-bottom: 30px;
-  font-size: 22px;
-  border-bottom: 2px solid white;
-  padding-bottom: 10px;
-}
-.sidebar ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  flex: 1;
-}
-.sidebar li {
-  padding: 10px 0;
-  font-size: 15px;
-  cursor: pointer;
-}
-.sidebar li strong {
-  font-weight: bold;
-}
-.logout {
-  color: #ffb3b3;
-  transition: color 0.3s ease;
-}
-.logout:hover {
-  color: white;
-  font-weight: bold;
-}
+    width: 240px;
+    background: #1d3557;
+    color: white;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+  }
+  .sidebar h2 {
+    margin-bottom: 30px;
+    font-size: 22px;
+    border-bottom: 2px solid #fff;
+    padding-bottom: 10px;
+  }
+  .sidebar ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+    flex: 1;
+  }
+  .sidebar li {
+    padding: 10px 0;
+    font-size: 15px;
+    cursor: pointer;
+  }
+  .logout {
+    color: #ffb3b3;
+    transition: color 0.3s ease;
+  }
+  .logout:hover {
+    color: #ffffff;
+    font-weight: bold;
+  }
 .form-section {
   width: calc(100vw - 240px);
   background: white;

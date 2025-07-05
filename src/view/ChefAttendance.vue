@@ -4,11 +4,15 @@
       <h2>⏰ 考勤打卡</h2>
       <ul>
         <li @click="$router.push('/chef-dashboard')">个人档案</li>
-        <li><strong>考勤打卡</strong></li>
-        <li @click="$router.push('/chef-leave')">请假申请</li>
-        <li @click="$router.push('/chef-overtime-working')">加班申请</li>
-        <li @click="$router.push('/chef-leave-progress')">我的请假记录</li>
-        <li @click="logout" class="logout">退出系统</li>
+        <li @click="$router.push('/chef-attendance')">考勤打卡</li>
+          <li @click="$router.push('/chef-leave')">请假申请</li>
+          <li @click="$router.push('/chef-leave-progress')">我的请假记录</li>
+          <li @click="$router.push('/chef-overtime-working')">加班申请</li>
+          <li @click="$router.push('/chef-overtime-progress')">我的加班记录</li>
+          <li @click="$router.push('/chef-leaving-working')">离职申请</li>
+          <li @click="$router.push('/employ-leaving-Status')">查看离职申请进度</li>
+          <li @click="$router.push('/chef-salary')">工资管理</li>
+          <li @click="logout" class="logout">退出系统</li>
       </ul>
     </div>
 
@@ -628,50 +632,44 @@ async startCheckOut() {
 <style scoped>
 .attendance-page {
   display: flex;
-  height: 100vh;
-  width: 100vw;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: #f0f2f5;
+    width: 100vw;
+    height: 100vh;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 .sidebar {
-  width: 220px;
-  background: #1d3557;
-  color: #fff;
-  padding: 30px 20px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-}
-.sidebar h2 {
-  font-size: 24px;
-  margin-bottom: 30px;
-  border-bottom: 2px solid #fff;
-  padding-bottom: 10px;
-}
-.sidebar ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  flex-grow: 1;
-}
-.sidebar li {
-  padding: 12px 0;
-  font-size: 16px;
-  cursor: pointer;
-  user-select: none;
-}
-.sidebar li:hover {
-  background-color: #457b9d;
-}
-.sidebar .logout {
-  margin-top: auto;
-  color: #ffb3b3;
-  transition: color 0.3s ease;
-}
-.sidebar .logout:hover {
-  color: #fff;
-  font-weight: bold;
-}
+    width: 240px;
+    background: #1d3557;
+    color: white;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+  }
+  .sidebar h2 {
+    margin-bottom: 30px;
+    font-size: 22px;
+    border-bottom: 2px solid #fff;
+    padding-bottom: 10px;
+  }
+  .sidebar ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+    flex: 1;
+  }
+  .sidebar li {
+    padding: 10px 0;
+    font-size: 15px;
+    cursor: pointer;
+  }
+  .logout {
+    color: #ffb3b3;
+    transition: color 0.3s ease;
+  }
+  .logout:hover {
+    color: #ffffff;
+    font-weight: bold;
+  }
 .map-section {
   flex: 1;
   padding: 40px;

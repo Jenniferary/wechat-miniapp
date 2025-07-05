@@ -1,18 +1,37 @@
 <template>
   <div class="status-page">
     <div class="sidebar">
-      <h2>📌 查看加班记录</h2>
-      <ul>
-        <li @click="$router.push('/counter-dashboard')">个人档案</li>
-        <li @click="$router.push('/counter-attendance')">考勤打卡</li>
-        <li><strong>我的加班记录</strong></li>
-        <li @click="logout" class="logout">退出系统</li>
+      <h2>💁‍♀️ 前台管理系统</h2>
+      <ul class="menu-list">
+        <li :class="{ active: activeSection === 'profile' }" @click="selectSection('profile')"><strong>个人档案</strong></li>
+        <li @click="selectSection('dinein')">管理堂食订单</li>
+        <li @click="selectSection('tables')">管理餐桌</li>
+
+        <li>
+          <strong
+            @click="toggleSection('delivery')"
+            :class="{ active: activeSection === 'delivery' }"
+            style="margin-top: 20px; cursor: pointer; color: #fff; font-weight: bold;"
+          >外卖管理</strong>
+        </li>
+        <li v-if="activeSection === 'delivery'" :class="{ active: activeSubsection === 'assign' }" @click="selectSubsection('assign')" style="padding-left: 15px;">分配外卖员</li>
+        <li v-if="activeSection === 'delivery'" :class="{ active: activeSubsection === 'add' }" @click="selectSubsection('add')" style="padding-left: 15px;">添加外卖员</li>
+        <li v-if="activeSection === 'delivery'" :class="{ active: activeSubsection === 'view' }" @click="selectSubsection('view')" style="padding-left: 15px;">查看外卖订单</li>
+
+        <li :class="{ active: activeSection === 'overtime' }" @click="selectSection('overtime')">申请加班</li>
+        <li :class="{ active: activeSection === 'overtime-progress' }" @click="selectSection('overtime-progress')">我的加班记录</li>
+        <li @click="selectSection('leaving')">申请离职</li>
+        <li @click="selectSection('leaving-status')">查看离职申请进度</li>
+        <li @click="selectSection('salary')">工资管理</li>
+        <li @click="selectSection('attendance')">考勤打卡</li>
+        <li @click="selectSection('leave')">请假申请</li>
+        <li @click="selectSection('leave-progress')">我的请假记录</li>
       </ul>
+      <div class="logout" @click="logout">退出系统</div>
     </div>
 
     <div class="form-section">
       <h3>我的加班记录</h3>
-
       <table v-if="overtimeRequests.length > 0">
         <thead>
           <tr>
@@ -33,7 +52,6 @@
           </tr>
         </tbody>
       </table>
-
       <p v-else>没有找到您的加班记录。</p>
     </div>
   </div>
@@ -44,28 +62,106 @@ export default {
   name: "CounterOvertimeProgress",
   data() {
     return {
-      overtimeRequests: [],  // 存储当前员工的加班记录
-      counterInfo: null, // 存储员工的个人信息
+      counterInfo: null,
+      overtimeRequests: [],
+      activeSection: "overtime-progress",
+      activeSubsection: null,
     };
   },
   created() {
-    this.loadCounterInfo(); // 页面加载时获取员工信息
+    this.syncActiveByRoute(this.$route.path);
+    this.loadCounterInfo();
+  },
+  watch: {
+    '$route.path'(newPath) {
+      this.syncActiveByRoute(newPath);
+    },
   },
   methods: {
+    syncActiveByRoute(path) {
+      if (path.includes('overtime-working')) {
+        this.activeSection = 'overtime';
+      } else if (path.includes('overtime-progress')) {
+        this.activeSection = 'overtime-progress';
+      } else if (path.includes('dashboard')) {
+        this.activeSection = 'profile';
+      } else if (path.includes('attendance')) {
+        this.activeSection = 'attendance';
+      } else if (path.includes('leave-progress')) {
+        this.activeSection = 'leave-progress';
+      } else if (path.includes('leave')) {
+        this.activeSection = 'leave';
+      } else if (path.includes('leaving-status')) {
+        this.activeSection = 'leaving-status';
+      } else if (path.includes('leaving-working')) {
+        this.activeSection = 'leaving';
+      } else if (path.includes('salary')) {
+        this.activeSection = 'salary';
+      } else if (path.startsWith('/delivery-')) {
+        this.activeSection = 'delivery';
+        if (path.includes('assign')) this.activeSubsection = 'assign';
+        else if (path.includes('add')) this.activeSubsection = 'add';
+        else if (path.includes('view')) this.activeSubsection = 'view';
+      } else {
+        this.activeSection = null;
+        this.activeSubsection = null;
+      }
+    },
+    selectSection(section) {
+      this.activeSection = section;
+      this.activeSubsection = null;
+      const routes = {
+        profile: "/counter-dashboard",
+        dinein: "/counter-dinein-order",
+        tables: "/manage-tables",
+        delivery: "/delivery-assign",
+        overtime: "/counter-overtime-working",
+        'overtime-progress': "/counter-overtime-progress",
+        leaving: "/counter-leaving-working",
+        'leaving-status': "/counter-leaving-status",
+        salary: "/counter-salary",
+        attendance: "/counter-attendance",
+        leave: "/counter-leave",
+        'leave-progress': "/counter-leave-progress",
+      };
+      if (routes[section]) {
+        this.$router.push(routes[section]);
+      }
+    },
+    toggleSection(section) {
+      if (this.activeSection === section) {
+        this.activeSection = null;
+        this.activeSubsection = null;
+      } else {
+        this.activeSection = section;
+        this.activeSubsection = "assign";
+        this.$router.push("/delivery-assign");
+      }
+    },
+    selectSubsection(subsection) {
+      this.activeSubsection = subsection;
+      const subRoutes = {
+        assign: "/delivery-assign",
+        add: "/delivery-add",
+        view: "/delivery-view",
+      };
+      if (subRoutes[subsection]) {
+        this.$router.push(subRoutes[subsection]);
+      }
+    },
     async loadCounterInfo() {
       try {
-        const counterId = localStorage.getItem("counterId"); // 获取当前员工ID
+        const counterId = localStorage.getItem("counterId");
         if (!counterId) {
           alert("未登录");
           this.$router.push("/login");
           return;
         }
-
         const res = await fetch(`/api/counter/${counterId}`);
         const json = await res.json();
         if (json.status === "success") {
           this.counterInfo = json.data;
-          this.fetchOvertimeRequests(); // 获取员工的加班记录
+          this.fetchOvertimeRequests();
         } else {
           alert(json.message || "加载失败");
         }
@@ -73,13 +169,12 @@ export default {
         alert("请求错误：" + err.message);
       }
     },
-
     async fetchOvertimeRequests() {
       try {
         const res = await fetch(`/api/overtime/by-employee?employee_id=${this.counterInfo.id}&employee_type=counter`);
         const json = await res.json();
         if (json.status === "success") {
-          this.overtimeRequests = json.data.records;  // 加载员工的加班记录
+          this.overtimeRequests = json.data.records;
         } else {
           alert(json.message || "加载加班记录失败");
         }
@@ -87,37 +182,28 @@ export default {
         alert("请求错误：" + err.message);
       }
     },
-
     formatDate(dateStr) {
-      if (!dateStr) return "无效日期";
-      return new Date(dateStr).toLocaleDateString();
+      return dateStr ? new Date(dateStr).toLocaleDateString() : "无效日期";
     },
-
     statusClass(status) {
       switch (status) {
-        case "待HR审批":
-          return "pending";
-        case "HR审批通过待店长审批":
-          return "in-review";
-        case "审批成功":
-          return "approved";
-        case "已驳回":
-          return "rejected";
-        default:
-          return "unknown";
+        case "待HR审批": return "pending";
+        case "HR审批通过待店长审批": return "in-review";
+        case "审批成功": return "approved";
+        case "已驳回": return "rejected";
+        default: return "unknown";
       }
     },
-
     logout() {
-      localStorage.clear();  // 清空本地存储
-      this.$router.push("/login");  // 跳转到登录页面
+      localStorage.clear();
+      this.$router.push("/login");
     },
   },
 };
 </script>
 
 <style scoped>
-/* 与原先的样式基本相同，适用于查看加班记录页面 */
+/* 样式保持不变，统一与其他页面风格一致 */
 .status-page {
   display: flex;
   width: 100vw;
@@ -132,6 +218,7 @@ export default {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  height: 100vh;
 }
 .sidebar h2 {
   margin-bottom: 30px;
@@ -139,23 +226,33 @@ export default {
   border-bottom: 2px solid white;
   padding-bottom: 10px;
 }
-.sidebar ul {
+.menu-list {
+  flex: 1;
   list-style: none;
   padding: 0;
   margin: 0;
-  flex: 1;
+  overflow-y: auto;
 }
-.sidebar li {
+.menu-list li {
   padding: 10px 0;
   font-size: 15px;
   cursor: pointer;
+  color: #ccc;
+}
+.menu-list li.active {
+  color: #00b4d8;
+  font-weight: bold;
+}
+.menu-list strong.active {
+  color: #00b4d8;
 }
 .logout {
   color: #ffb3b3;
-  transition: color 0.3s ease;
+  margin-top: 20px;
+  cursor: pointer;
 }
 .logout:hover {
-  color: white;
+  color: #fff;
   font-weight: bold;
 }
 .form-section {
@@ -180,8 +277,7 @@ table {
   overflow: hidden;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
 }
-th,
-td {
+th, td {
   padding: 14px 24px;
   text-align: center;
   border-bottom: 1px solid #eee;
@@ -210,19 +306,9 @@ p {
   font-weight: 600;
   font-size: 14px;
 }
-.status.pending {
-  background-color: #f39c12;
-}
-.status.in-review {
-  background-color: #2980b9;
-}
-.status.approved {
-  background-color: #27ae60;
-}
-.status.rejected {
-  background-color: #c0392b;
-}
-.status.unknown {
-  background-color: #7f8c8d;
-}
+.status.pending { background-color: #f39c12; }
+.status.in-review { background-color: #2980b9; }
+.status.approved { background-color: #27ae60; }
+.status.rejected { background-color: #c0392b; }
+.status.unknown { background-color: #7f8c8d; }
 </style>
