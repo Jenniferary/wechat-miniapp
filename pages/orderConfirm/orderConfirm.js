@@ -1,7 +1,9 @@
 Page({
   data: {
     username: '',
+
     branchId:1,
+
     items: [],
     totalPrice: 0,
     formattedTotalPrice: '0.00',
@@ -109,7 +111,9 @@ Page({
       },
       data: {
         username: this.data.username,
+
         branchId:wx.getStorageSync('branchId'),
+
         totalPrice: this.data.totalPrice,
         items: stringItems,
         selectedCoupon: this.data.selectedCoupon,

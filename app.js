@@ -14,7 +14,11 @@ App({
     })
   },
   globalData: {
+<<<<<<< HEAD
     userInfo: null,
     branchInfo:null
+=======
+    userInfo: null
+>>>>>>> origin/structured
   }
 })

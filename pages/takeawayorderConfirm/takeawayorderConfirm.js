@@ -5,7 +5,10 @@ Page({
     deliveryDate: "",
     deliveryTime: "",
     selectedCouponId: 0,
+<<<<<<< HEAD
     branchId:1,
+=======
+>>>>>>> origin/structured
     selectedCouponText: "选择优惠券",
     coupons: [],
     couponDescriptions: [],
@@ -123,7 +126,10 @@ Page({
       method: 'POST',
       data: {
         username,
+<<<<<<< HEAD
         branchId:wx.getStorageSync('branchId'),
+=======
+>>>>>>> origin/structured
         address: deliveryAddress,
         estimatedTime,
         items: dishList.map(d => d.name),

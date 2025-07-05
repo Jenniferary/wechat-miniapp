@@ -34,18 +34,24 @@ Page({
 
   // 开始点餐
   goToMenu() {
+
     wx.removeStorageSync('branchId');
+
     wx.navigateTo({ url: '/pages/menu/menu' });
   },
 
   // 预定餐桌
   goToOrderTable() {
+
     wx.removeStorageSync('branchId');
+
     wx.navigateTo({ url: '/pages/ordertable/ordertable' });
   },
   // 外卖点餐
   goToTakeaway() {
+
     wx.removeStorageSync('branchId');
+
     wx.navigateTo({ url: '/pages/takeaway/takeaway' });
   },
 

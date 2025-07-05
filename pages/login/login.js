@@ -7,6 +7,7 @@ Page({
   },
 
   onLoad() {
+
     wx.removeStorageSync('branchId');
     this.getCaptcha(); // 初始加载验证码
   },
@@ -19,6 +20,7 @@ Page({
       password: '',
       captcha: null
     });
+
     this.getCaptcha(); // 初始加载验证码
   },
 
@@ -61,7 +63,7 @@ Page({
   },
 
   submitLogin() {
-    
+
     const { username, password, captcha } = this.data;
 
     if (!username || !password || !captcha) {
@@ -72,7 +74,9 @@ Page({
     this.userLogin(username, password, captcha)
       .then((res) => {
         if (res.statusCode === 200 && res.data.status === 'success') {
+
           this.setData({ username });
+
           wx.showToast({ title: '登录成功', icon: 'success' });
           wx.setStorageSync('username', username);
           wx.navigateTo({ url: '/pages/main/main' });

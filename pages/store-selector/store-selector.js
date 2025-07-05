@@ -74,7 +74,9 @@ Page({
       data: { lat, lng },
       success: res => {
         if (res.data.status === 'success') {
+
           console.log(res);
+
           const stores = res.data.data.sort((a, b) => a.distanceKm - b.distanceKm);
 
           stores.forEach(store => {
@@ -167,6 +169,7 @@ Page({
       wx.showToast({ title: '请选择餐厅', icon: 'none' });
       return;
     }
+
     wx.setStorageSync('branchId', store.id)
     wx.navigateTo({
       url: `/pages/ordertable/ordertable`
@@ -182,6 +185,7 @@ Page({
     wx.setStorageSync('branchId', store.id)
     wx.navigateTo({
       url: `/pages/takeaway/takeaway`
+
     });
   }
 });

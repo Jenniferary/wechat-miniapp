@@ -57,11 +57,13 @@ Page({
   },
 
   checkout() {
+
     if(wx.getStorageSync('branchId') == ''){
       
       wx.showToast({ title: '请先到首页选择餐厅哦！', icon: 'none' });
       return
     }
+
 
     const cart = this.data.cart.map(item => ({
       name: item.name,
