@@ -2,18 +2,9 @@
   <div class="page">
     <!-- 左侧导航 -->
     <nav class="sidebar">
-      <h2>📊 门店管理</h2>
+      <h2>📊 员工管理</h2>
       <ul>
-        <li @click="$router.push('/branch-dashboard')"><strong>店铺概况</strong></li>
-        <li @click="$router.push('/branch-orders')">订单管理</li>
-        <li @click="$router.push('/branch-employee')">员工入职审批</li> 
-        <li @click="$router.push('/branch-leaving')">员工请假审批</li> 
-        <li @click="$router.push('/branch-overtime-approval')">员工加班审批</li> 
-        <li @click="$router.push('/branch-leavingworking-review')">员工离职审批</li>
-        <li @click="$router.push('/branch-employee')">员工打卡情况总览</li> 
-        <li @click="$router.push('/performance-review')">绩效考核</li>
-        <li @click="$router.push('/branch-feedback')">客户反馈</li>
-        <li @click="$router.push('/branch-employee-management')">员工管理</li>
+        <li @click="$router.push('/branch-dashboard')">返回主页</li>
         <li @click="logout" class="logout">退出系统</li>
       </ul>
     </nav>

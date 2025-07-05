@@ -1,10 +1,9 @@
 <template>
   <div class="leave-approval-page">
     <div class="sidebar">
-      <h2>📌 店长请假审批</h2>
+      <h2>📌请假审批</h2>
       <ul>
-        <li @click="$router.push('/branch-manager-profile')">个人档案</li>
-        <li @click="$router.push('/branch-employee')">员工入职审批</li>
+       <li @click="$router.push('/branch-leaving')">审批待处理列表</li> 
         <li @click="$router.push('/branch-dashboard')">返回主页</li>
         <li @click="logout" class="logout">退出系统</li>
       </ul>

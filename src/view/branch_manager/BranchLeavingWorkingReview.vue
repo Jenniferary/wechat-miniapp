@@ -2,9 +2,10 @@
   <div class="resume-page">
     <!-- 左侧菜单 -->
     <div class="sidebar">
-      <h2>📌 离职申请审批</h2>
+      <h2>📌离职审批</h2>
       <ul>
-        <li @click="$router.push('/br-leavingworking-Progress')">审批进度</li>
+        <li @click="$router.push('/br-leavingworking-Progress')">审批待处理列表</li>
+
         <li @click="$router.push('/branch-dashboard')">返回主页</li>
         <li @click="logout" class="logout">退出系统</li>
       </ul>

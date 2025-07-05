@@ -1,9 +1,10 @@
 <template>
   <div class="resume-page">
     <div class="sidebar">
-      <h2>📌 店长审批</h2>
+      <h2>📌入职审批</h2>
       <ul>
         <li @click="$router.push('/branch-employee')"><strong>审批待处理列表</strong></li>
+        <li @click="$router.push('/branch-dashboard')">返回主页</li>
         <li @click="logout" class="logout">退出系统</li>
       </ul>
     </div>

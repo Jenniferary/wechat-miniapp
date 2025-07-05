@@ -3,8 +3,7 @@
     <div class="sidebar">
       <h2>📌 店长加班审批</h2>
       <ul>
-        <li @click="$router.push('/branch-dashboard')">个人档案</li>
-        <li @click="$router.push('/branch-employee')">员工入职审批</li>
+         <li @click="$router.push('/branch-overtime-approval')">审批待处理列表</li>
         <li @click="$router.push('/branch-dashboard')">返回主页</li>
         <li @click="logout" class="logout">退出系统</li>
       </ul>
