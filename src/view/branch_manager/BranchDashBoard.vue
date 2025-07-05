@@ -297,8 +297,4 @@ p {
 .btn-process:hover {
   background-color: #219150;
 }
-<<<<<<< HEAD
 </style>
-=======
-</style>
->>>>>>> master
