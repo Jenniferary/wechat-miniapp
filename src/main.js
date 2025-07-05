@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';  // 引入路由配置
-import messagePlugin from './plugins/message';  // 引入消息插件
+// import messagePlugin from './plugins/message';  // 引入消息插件
 import axios from 'axios';
 
 // 创建 Vue 应用并挂载路由

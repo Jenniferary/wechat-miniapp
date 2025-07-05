@@ -1,14 +1,6 @@
 <template>
   <div class="status-page">
     <div class="sidebar">
-<<<<<<< HEAD
-      <h2>📌 查看离职申请进度</h2>
-      <ul>
-        <li @click="$router.push('/counter-dashboard')">返回主页</li>
-        <li><strong>查看进度</strong></li>
-        <li @click="logout" class="logout">退出系统</li>
-      </ul>
-=======
       <h2>💁‍♀️ 前台管理系统</h2>
       <ul class="menu-list">
         <li :class="{ active: activeSection === 'profile' }" @click="selectSection('profile')">个人档案</li>
@@ -36,7 +28,6 @@
         <li :class="{ active: activeSection === 'leave-progress' }" @click="selectSection('leave-progress')">我的请假记录</li>
       </ul>
       <div class="logout" @click="logout">退出系统</div>
->>>>>>> origin/frontend
     </div>
 
     <div class="form-section">

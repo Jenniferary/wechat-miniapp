@@ -17,11 +17,6 @@
         <li @click="$router.push('/delivery-add')" style="padding-left: 15px;">添加外卖员</li>
         <li @click="$router.push('/delivery-view')" style="padding-left: 15px;">查看外卖订单</li>
 
-<<<<<<< HEAD
-        <li @click="$router.push('/counter-attendance')">考勤打卡</li>
-        <li @click="$router.push('/counter-leave')">请假申请</li>
-        <li @click="$router.push('/counter-leave-progress')">我的请假记录</li>
-=======
         <li @click="$router.push('/counter-overtime-working')">申请加班</li>
           <li @click="$router.push('/counter-overtime-progress')">我的加班记录</li>
           <li @click="$router.push('/counter-leaving-working')">申请离职</li>
@@ -30,7 +25,6 @@
           <li @click="$router.push('/counter-attendance')">考勤打卡</li>
           <li @click="$router.push('/counter-leave')">请假申请</li>
           <li @click="$router.push('/counter-leave-progress')">我的请假记录</li>
->>>>>>> origin/frontend
       </ul>
 
       <div class="logout" @click="logout">退出系统</div>
