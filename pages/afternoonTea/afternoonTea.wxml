@@ -1,0 +1,56 @@
+<view class="page">
+  <image class="bg" src="/assets/background.jpg" mode="aspectFill" />
+
+  <!-- 轮播图 -->
+  <view class="header-banner">
+    <swiper class="poster-swiper" autoplay interval="3000" circular>
+      <swiper-item><image src="/assets/poster1.png" class="poster-img" mode="aspectFill" /></swiper-item>
+      <swiper-item><image src="/assets/poster2.png" class="poster-img" mode="aspectFill" /></swiper-item>
+      <swiper-item><image src="/assets/poster3.png" class="poster-img" mode="aspectFill" /></swiper-item>
+    </swiper>
+  </view>
+
+  <!-- 内容区：左侧导航 + 右菜单 -->
+  <view class="content-row">
+    <!-- 左侧栏 -->
+    <scroll-view class="sidebar" scroll-y scroll-with-animation>
+      <navigator class="menu-link" url="/pages/menu/menu">主菜单</navigator>
+      <navigator class="menu-link active" url="/pages/afternoonTea/afternoonTea">自助餐</navigator>
+      <navigator class="menu-link " url="/pages/package/package">套餐</navigator>
+    </scroll-view>
+
+    <!-- 菜单列表 -->
+    <scroll-view class="menu-list" scroll-y scroll-with-animation>
+      <view class="category-section">
+        <view class="category-title">甜品展示</view>
+        <view class="dish-grid">
+          <view class="dish-card" wx:for="{{dessertList}}" wx:key="id" wx:for-item="item">
+            <image src="{{item.imgUrl}}" class="dish-card-img" mode="aspectFill" />
+            <text class="dish-card-name">{{item.itemName}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="category-section">
+        <view class="category-title">酒水展示</view>
+        <view class="dish-grid">
+          <view class="dish-card" wx:for="{{drinkList}}" wx:key="id" wx:for-item="item">
+            <image src="{{item.imgUrl}}" class="dish-card-img" mode="aspectFill" />
+            <text class="dish-card-name">{{item.itemName}}</text>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 底部结账 -->
+  <view class="cart-fullwidth">
+    <view class="cart-title">🧾 自助餐购物车（50￥一位，儿童，老人半价）</view>
+    <view class="cart-item">成人：<input class="num-input" type="number" value="{{numAdults}}" bindinput="onInputAdults" /></view>
+    <view class="cart-item">儿童：<input class="num-input" type="number" value="{{numChildren}}" bindinput="onInputChildren" /></view>
+    <view class="cart-item">老人：<input class="num-input" type="number" value="{{numSeniors}}" bindinput="onInputSeniors" /></view>
+    <view class="cart-buttons">
+      <button class="cart-btn" bindtap="checkout">提交订单</button>
+    </view>
+  </view>
+</view>

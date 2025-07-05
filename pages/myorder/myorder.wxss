@@ -1,0 +1,300 @@
+.page {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.bg {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  opacity: 0.5; 
+}
+.overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(255, 255, 255, 0.20);
+  z-index: 1;
+}
+/* 内容区放在遮罩上层 */
+.content {
+  position: relative;
+  z-index: 2;
+  height: calc(100vh - 60px);  /* 与 tabbar 高度一致 */
+  overflow-y: auto;
+  padding: 20rpx 24rpx 100rpx;  /* ⬅️ 增加底部 padding 以避免遮挡 */
+  background: transparent;
+}
+/* 订单视图 */
+.orders-view {
+  display: flex;
+  flex-direction: column;
+  gap: 28rpx;
+}
+
+/* 单张订单卡片 */
+.order-card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 28rpx 32rpx;
+  box-shadow:
+    0 4rpx 6rpx rgba(0, 0, 0, 0.06),
+    0 8rpx 16rpx rgba(0, 0, 0, 0.12);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+.order-card:hover {
+  box-shadow:
+    0 8rpx 12rpx rgba(0, 0, 0, 0.1),
+    0 16rpx 32rpx rgba(0, 0, 0, 0.15);
+  transform: translateY(-4rpx);
+}
+
+/* 订单行 */
+.order-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 14rpx 0;
+  border-bottom: 1rpx solid #eee;
+  font-size: 28rpx;
+  color: #444;
+  line-height: 1.4;
+}
+.order-row:last-child {
+  border-bottom: none;
+}
+
+/* label 和 value 颜色区别 */
+.label {
+  color: #999;
+  font-weight: 600;
+  letter-spacing: 0.5rpx;
+}
+.value {
+  color: #222;
+  max-width: 65%;
+  text-align: right;
+  word-break: break-word;
+  font-weight: 500;
+}
+
+/* 立即结账按钮 */
+.pay-btn {
+  margin-top: 24rpx;
+  width: 100%;
+  background: linear-gradient(135deg, #4a90e2, #357abd);
+  color: #fff;
+  font-weight: 700;
+  font-size: 32rpx;
+  padding: 18rpx 0;
+  border-radius: 14rpx;
+  border: none;
+  box-shadow: 0 6rpx 12rpx rgba(74, 144, 226, 0.4);
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+.pay-btn:hover {
+  background: linear-gradient(135deg, #357abd, #2a5f99);
+  box-shadow: 0 8rpx 16rpx rgba(53, 122, 189, 0.5);
+}
+.pay-btn:active {
+  transform: scale(0.98);
+}
+
+/* 已支付文字 */
+.paid-text {
+  margin-top: 24rpx;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #27ae60;
+  text-align: center;
+}
+
+/* 无订单占位 */
+.empty {
+  font-size: 34rpx;
+  color: #bbb;
+  text-align: center;
+  margin-top: 350rpx;
+  font-style: italic;
+}
+/* 支付弹窗遮罩 */
+.pay-popup-mask {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.38);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 20rpx;
+}
+
+/* 支付弹窗 */
+.pay-popup {
+  width: 620rpx;
+  background: #fff;
+  border-radius: 28rpx;
+  padding: 48rpx 36rpx 36rpx;
+  box-shadow: 0 16rpx 40rpx rgba(0, 0, 0, 0.18);
+  text-align: center;
+  user-select: none;
+}
+
+/* 弹窗标题 */
+.popup-title {
+  font-size: 38rpx;
+  font-weight: 800;
+  color: #222;
+  margin-bottom: 40rpx;
+}
+
+.pay-options {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 20rpx;
+}
+
+.pay-option-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fafcfd;
+  color: white;
+  border-radius: 20rpx;
+  padding: 20rpx;
+  width: 180rpx;
+  box-shadow: 0 6rpx 12rpx rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.pay-option-btn image {
+  width: 64rpx;
+  height: 64rpx;
+  margin-bottom: 12rpx;
+}
+
+.pay-option-btn text {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: black;
+}
+
+.pay-option-btn:active {
+  transform: scale(0.95);
+}
+
+.cancel-btn {
+  margin-top: 14rpx;
+  background: #fc4141;
+  color: rgb(247, 84, 84);
+  font-size: 30rpx;
+  padding: 16rpx 0;
+  border-radius: 16rpx;
+  width: 100%;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.3s ease;
+}
+
+
+
+/* 取消按钮 */
+.cancel-btn {
+  margin-top: 14rpx;
+  background: #f5f5f5;
+  color: #777;
+  font-size: 30rpx;
+  padding: 16rpx 0;
+  border-radius: 16rpx;
+  width: 100%;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.3s ease;
+}
+.cancel-btn:hover {
+  background-color: #e0e0e0;
+}
+
+
+.tabbar {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 60px;
+  display: flex;
+  border-top: 1px solid #ddd;
+  background: #fff;
+  z-index: 10;
+}
+
+.tab-item {
+  flex: 1;
+  text-align: center;
+  padding-top: 6px;
+}
+
+.tab-icon {
+  width: 24px;
+  height: 24px;
+  margin-bottom: 4px;
+}
+
+.tab-item text {
+  display: block;
+  font-size: 12px;
+  color: #666;
+}
+
+.tab-item text.active {
+  color: #3498db;
+  font-weight: bold;
+}
+.order-tabs {
+  display: flex;
+  justify-content: space-around;
+  background: #e6e6e6;
+  border-radius: 30rpx;
+  margin-bottom: 30rpx;
+  overflow: hidden;
+}
+
+.order-tabs .tab {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx 0;
+  font-size: 30rpx;
+  background-color: #f0f0f0;
+  color: #666;
+}
+
+.order-tabs .tab.active {
+  background-color: #3498db;
+  color: white;
+  font-weight: bold;
+}
+.action-btn {
+  text-align: center;
+  margin-top: 24rpx;
+}
+
+.action-btn button {
+  padding: 20rpx 0;
+  width: 100%;
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  border-radius: 14rpx;
+  font-size: 30rpx;
+  font-weight: bold;
+  box-shadow: 0 6rpx 12rpx rgba(52, 152, 219, 0.4);
+  transition: background 0.3s ease;
+}
+
+.action-btn button:hover {
+  background-color: #2980b9;
+}
+

@@ -1,0 +1,50 @@
+<view class="bg">
+  <image src="/assets/background.jpg" mode="aspectFill" style="width: 100%; height: 100%;" />
+</view>
+<view class="container">
+  <view class="order-form">
+    <view class="title">预定餐桌</view>
+
+    <view class="table-images">
+      <image src="/images/table.jpg" mode="aspectFill" class="table-image" />
+      <image src="/images/boxes.jpg" mode="aspectFill" class="table-image" />
+    </view>
+
+    <view class="field">
+      <text class="label">餐桌类型：</text>
+      <radio-group class="radio-group" bindchange="onTypeChange" value="{{form.tableType}}">
+        <label><radio value="normal" /> 普通桌位</label>
+        <label><radio value="private" /> 包厢</label>
+      </radio-group>
+    </view>
+
+    <view class="field">
+      <text class="label">用餐人数：</text>
+      <input type="number" placeholder="请输入人数" class="input" 
+             value="{{form.numOfPeople}}" bindinput="onNumChange"/>
+    </view>
+
+    <view class="field">
+      <text class="label">用餐日期：</text>
+      <picker mode="date" start="{{minDate}}" value="{{reservationDate}}" bindchange="onDateChange">
+        <view class="picker">{{reservationDate}}</view>
+      </picker>
+    </view>
+
+    <view class="field">
+      <text class="label">用餐时间：</text>
+      <picker mode="time" value="{{reservationTime}}" bindchange="onTimeChange">
+        <view class="picker">{{reservationTime}}</view>
+      </picker>
+    </view>
+
+    <button class="btn-submit" bindtap="submitReservation">确认预定</button>
+
+    <text wx:if="{{successMessage}}" class="success">{{successMessage}}</text>
+    <text wx:if="{{errorMessage}}" class="error">{{errorMessage}}</text>
+
+    <button wx:if="{{successMessage}}" bindtap="goMenu" class="btn-redirect">
+      返回菜单
+    </button>
+  </view>
+</view>

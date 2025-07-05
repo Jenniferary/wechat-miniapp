@@ -1,0 +1,62 @@
+<view class="page">
+  <image class="bg" src="/assets/background.jpg" mode="aspectFill" />
+  <view class="overlay"></view>
+
+  <view class="content">
+    <block wx:if="{{orders.length}}">
+      <block wx:for="{{orders}}" wx:for-item="o" wx:key="order_id">
+        <view class="order-card">
+          <view class="order-row"><text class="label">订单号：</text><text class="value">{{o.order_id}}</text></view>
+          <view class="order-row"><text class="label">桌号：</text><text class="value">{{o.table_number}}</text></view>
+          <view class="order-row"><text class="label">菜品：</text><text class="value">{{o.dish_list}}</text></view>
+
+          <!-- 已评价 -->
+          <block wx:if="{{o.reviewed}}">
+            <view class="order-row"><text class="label">评分：</text><text class="value">{{o.rating}} 星</text></view>
+            <view class="order-row"><text class="label">评论：</text><text class="value">{{o.comment}}</text></view>
+          </block>
+
+          <!-- 未评价：显示评价表单 -->
+          <block wx:else>
+            <!-- 星级评分行（替代原picker） -->
+      <view class="order-row">
+          <text class="label">评分：</text>
+          <view class="star-picker">
+          <image wx:for="{{[1,2,3,4,5]}}" wx:key="*" class="star {{o.tempRating >= item ? '' : 'inactive'}}"
+              src="/assets/icons/star.png"
+            data-score="{{item}}"
+            data-order-id="{{o.order_id}}"
+            bindtap="selectStar" />
+      </view>
+      </view>
+            <view class="order-row">
+              <input placeholder="写下您的评价..." data-order-id="{{o.order_id}}" bindinput="onCommentInput" />
+            </view>
+            <button class="pay-btn" data-order-id="{{o.order_id}}" bindtap="submitReview">提交评价</button>
+          </block>
+        </view>
+      </block>
+    </block>
+
+    <view wx:else class="empty">暂无订单可评价</view>
+  </view>
+  <!-- 自定义底部 TabBar -->
+  <view class="tabbar">
+    <view class="tab-item" bindtap="switchTab" data-tab="home">
+      <image class="tab-icon" src="/assets/tab/home-{{activeTab==='home'?'active':'inactive'}}.png" mode="aspectFit" />
+      <text class="{{activeTab==='home'?'active':''}}">主页</text>
+    </view>
+    <view class="tab-item" bindtap="switchTab" data-tab="orders">
+      <image class="tab-icon" src="/assets/tab/orders-{{activeTab==='orders'?'active':'inactive'}}.png" mode="aspectFit" />
+      <text class="{{activeTab==='orders'?'active':''}}">订单</text>
+    </view>
+    <view class="tab-item" bindtap="switchTab" data-tab="review">
+      <image class="tab-icon" src="/assets/tab/review-{{activeTab==='review'?'active':'inactive'}}.png"         mode="aspectFit" />
+      <text class="{{activeTab==='review'?'active':''}}">评价</text>
+    </view>
+    <view class="tab-item" bindtap="switchTab" data-tab="profile">
+      <image class="tab-icon" src="/assets/tab/profile-{{activeTab==='profile'?'active':'inactive'}}.png" mode="aspectFit" />
+      <text class="{{activeTab==='profile'?'active':''}}">我的</text>
+    </view>
+  </view>
+</view>

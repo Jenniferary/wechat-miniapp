@@ -1,0 +1,33 @@
+<view class="page">
+  <!-- 背景图 -->
+  <image class="bg" src="/assets/background.jpg" mode="aspectFill" />
+
+  <!-- 遮罩层 -->
+  <view class="overlay" />
+
+  <!-- 页面标题 -->
+  <view class="header">
+    <image class="logo" src="/assets/logo.png" mode="widthFix" />
+    <text class="main-title">注册账户</text>
+    <text class="sub-title">开启点餐体验</text>
+  </view>
+
+  <!-- 注册卡片 -->
+  <view class="card">
+    <form bindsubmit="submitRegister">
+      <view class="form-item">
+        <text class="label">用户名</text>
+        <input class="input" name="username" bindinput="onUsernameInput" />
+      </view>
+
+      <view class="form-item">
+        <text class="label">密码</text>
+        <input class="input" password name="password" bindinput="onPasswordInput" />
+      </view>
+
+      <button formType="submit" class="login-btn">立即注册</button>
+    </form>
+
+    <navigator url="/pages/login/login" class="register-link">已有账号？去登录</navigator>
+  </view>
+</view>

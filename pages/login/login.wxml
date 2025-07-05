@@ -1,0 +1,36 @@
+<view class="page">
+  <image class="bg" src="/assets/background.jpg" mode="aspectFill" />
+  <view class="overlay" />
+
+  <view class="header">
+    <image class="logo" src="/assets/logo.png" mode="widthFix" />
+    <text class="main-title">食尚阁点餐</text>
+    <text class="sub-title">开启您的美味旅程</text>
+  </view>
+
+  <view class="card animate-fade-in">
+    <form bindsubmit="submitLogin">
+      <view class="form-item">
+        <text class="label">用户名</text>
+        <input class="input" name="username" value="{{username}}" placeholder="请输入用户名" bindinput="onUsernameInput" />
+      </view>
+
+      <view class="form-item">
+        <text class="label">密码</text>
+        <input class="input" password name="password" value="{{password}}" placeholder="请输入密码" bindinput="onPasswordInput" />
+      </view>
+
+      <view class="form-item">
+        <text class="label">验证码</text>
+        <view class="captcha-box">
+          <input class="captcha-input" placeholder="请输入验证码" bindinput="onCaptchaInput" />
+          <image class="captcha-img" src="{{captchaUrl}}" bindtap="refreshCaptcha" mode="aspectFill" />
+        </view>
+      </view>
+
+      <button formType="submit" class="login-btn">立即登录</button>
+    </form>
+
+    <navigator url="/pages/register/register" class="register-link">还没有账号？点击注册</navigator>
+  </view>
+</view>

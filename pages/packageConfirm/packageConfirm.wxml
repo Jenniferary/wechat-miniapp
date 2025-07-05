@@ -1,0 +1,35 @@
+<view class="container">
+  <image class="bg" src="/assets/background.jpg" mode="aspectFill" />
+
+  <view class="checkout-form">
+    <view class="form-title">🧾 提交订单</view>
+
+    <view class="section">
+      <view class="section-title">🍽 已选择的菜品：</view>
+      <view wx:if="{{dishList.length}}">
+        <view class="item" wx:for="{{dishList}}" wx:key="index">
+          <text class="item-name">{{item.dishName}}</text>
+        </view>
+      </view>
+      <view wx:else class="empty-tip">暂无菜品，请返回菜单选择</view>
+    </view>
+
+    <view class="section total">
+      <view class="section-title">💰 总价：<text class="price">￥{{ formattedTotalPrice }}</text></view>
+    </view>
+
+    <view class="section">
+      <view class="section-title">🎁 可用优惠券：</view>
+      <picker mode="selector" range="{{couponLabels}}" bindchange="onCouponChange">
+        <view class="picker">{{selectedCouponLabel}}</view>
+      </picker>
+    </view>
+
+    <view class="section">
+      <view class="section-title">📝 订单备注：</view>
+      <textarea class="remark-input" placeholder="例如：不要辣、打包、尽快送达等" bindinput="onRemarkInput" maxlength="100" auto-height />
+    </view>
+
+    <button class="submit-btn" bindtap="confirmOrder">✅ 确认提交订单</button>
+  </view>
+</view>

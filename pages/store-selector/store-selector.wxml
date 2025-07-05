@@ -1,0 +1,53 @@
+<view class="page">
+  <map
+    id="map"
+    latitude="{{latitude}}"
+    longitude="{{longitude}}"
+    scale="14"
+    markers="{{markers}}"
+    show-location
+    bindmarkertap="markertap"
+    class="map-view"
+  ></map>
+
+  <view class="list-wrapper">
+    <block wx:for="{{storeList}}" wx:key="id">
+      <view
+        class="store-item {{selectedStoreId === item.id ? 'active' : ''}}"
+        bindtap="selectStore"
+        data-store="{{item}}"
+        hover-class="store-item-hover"
+      >
+        <view class="store-info">
+          <view class="store-name">{{item.name}}</view>
+          <view class="store-contact">
+            <text class="phone">📞 {{item.phone}}</text>
+            <text class="distance">📍 {{item.distanceStr}}</text>
+          </view>
+        </view>
+
+       <view style="display: flex;">
+        <button
+          class="order-btn"
+          data-store="{{item}}"
+          bindtap="goToMenu"
+          hover-class="order-btn-hover"
+          hover-start-time="70"
+          hover-stay-time="400"
+        >🍽️ 预约堂食</button>
+        <button
+          class="order-btn"
+          data-store="{{item}}"
+          bindtap="goToTakeaway"
+          hover-class="order-btn-hover"
+          hover-start-time="70"
+          hover-stay-time="400"
+        >🍽️ 点外卖</button>
+       </view>
+        
+      </view>
+    </block>
+
+    <view wx:if="{{loading}}" class="loading">加载中...</view>
+  </view>
+</view>

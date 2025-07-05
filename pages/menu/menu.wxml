@@ -1,0 +1,50 @@
+<!-- pages/menu/menu.wxml -->
+<view class="page">
+  <image class="bg" src="/assets/background.jpg" mode="aspectFill" />
+
+  <view class="header-banner">
+    <swiper class="poster-swiper" autoplay interval="3000" circular>
+      <swiper-item><image src="/assets/poster1.png" mode="aspectFill" class="poster-img" /></swiper-item>
+      <swiper-item><image src="/assets/poster2.png" mode="aspectFill" class="poster-img" /></swiper-item>
+      <swiper-item><image src="/assets/poster3.png" mode="aspectFill" class="poster-img" /></swiper-item>
+    </swiper>
+  </view>
+
+  <view class="container">
+    <view class="main">
+      <view class="sidebar">
+        <navigator class="menu-link active" url="/pages/menu/menu">主菜单</navigator>
+        <navigator class="menu-link " url="/pages/afternoonTea/afternoonTea">自助餐</navigator>
+        <navigator class="menu-link " url="/pages/package/package">套餐</navigator>
+      </view>
+
+      <scroll-view class="menu-list" scroll-y="true">
+        <view class="dish-card" wx:for="{{dishes}}" wx:key="id" wx:for-item="dish" wx:for-index="index">
+          <image class="dish-img" src="{{dish.imgUrl}}" mode="aspectFill" binderror="onImageError" data-index="{{index}}" />
+          <view class="dish-content">
+            <view class="dish-name">{{dish.dishName}}</view>
+            <view class="dish-price">￥{{dish.dishPrice}}</view>
+            <view class="dish-stock">库存：{{dish.dishStock}}</view>
+            <view class="dish-actions">
+              <text class="btn minus" bindtap="removeFromCart" data-name="{{dish.dishName}}" data-price="{{dish.dishPrice}}">-</text>
+              <text class="btn plus" bindtap="addToCart" data-name="{{dish.dishName}}" data-price="{{dish.dishPrice}}">+</text>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <view class="cart-fullwidth">
+    <view class="cart-title">🛒 购物车</view>
+    <scroll-view scroll-y="true" style="max-height: 120px">
+      <view class="cart-item" wx:for="{{cart}}" wx:key="name">
+        {{item.name}} ×1 - ￥{{item.price}} 
+      </view>
+    </scroll-view>
+    <view class="total">合计：<text class="price">￥{{totalPrice}}</text></view>
+    <view class="cart-buttons">
+      <button bindtap="checkout" class="cart-btn">提交订单</button>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,132 @@
+<view class="profile-page">
+  <!-- 顶部背景图容器 -->
+  <view class="page-bg">
+    <image class="bg-img" src="/assets/profile-bg.png" mode="aspectFill" />
+  </view>
+   <!-- 固定头像区域 -->
+   <view class="profile-header-fixed">
+    <image src="/assets/avatar-default.jpg" class="user-avatar" mode="aspectFill" />
+    <text class="greeting">您好，{{user.username || '游客'}}</text>
+    <text class="subtitle">欢迎进入个人中心</text>
+  </view>
+  <!-- 内容区域 -->
+  <scroll-view class="profile-scroll" scroll-y="true">
+
+    <!-- 会员信息卡 -->
+    <view class="card">
+      <text class="card-title">会员信息</text>
+      <view wx:if="{{user.userId}}">
+        <view class="info-row"><text class="info-label">用户ID</text><text class="info-value">{{user.userId}}</text></view>
+        <view class="info-row"><text class="info-label">用户名</text><text class="info-value">{{user.username}}</text></view>
+        <view class="info-row"><text class="info-label">会员等级</text><text class="info-value">{{user.memberLevel}}</text></view>
+        <view class="info-row"><text class="info-label">账户余额</text><text class="info-value">￥{{user.memberBalance}}</text></view>
+        <view class="info-row"><text class="info-label">会员积分</text><text class="info-value">{{user.memberPoints}}</text></view>
+      </view>
+      <view wx:else>
+        <text class="info-text">加载会员信息失败，请稍后再试。</text>
+      </view>
+    </view>
+
+    <view class="card complete-info-card">
+  <text class="card-title">完善会员信息</text>
+
+  <view class="row">
+    <text class="label">用户名：</text>
+    <text class="value">{{user.username || '游客'}}</text>
+  </view>
+
+  <view class="row">
+    <text class="label">手机号：</text>
+    <view class="content">
+      <block wx:if="{{editPhone || !user.memberPhone}}">
+        <input class="input"
+               placeholder="请输入手机号"
+               value="{{user.memberPhone}}"
+               bindinput="onPhoneInput"
+               maxlength="11"
+               type="number" />
+      </block>
+      <block wx:elif="{{user.memberPhone}}">
+        <text class="value">{{user.memberPhone}}</text>
+        <view class="btn-edit" bindtap="enableEditPhone">更新</view>
+
+      </block>
+    </view>
+  </view>
+
+  <view class="row">
+    <text class="label">生日：</text>
+    <view class="content">
+      <block wx:if="{{editBirthday || !user.memberBirthday}}">
+        <input class="input"
+               placeholder="格式：YYYY-MM-DD"
+               value="{{user.memberBirthday}}"
+               bindinput="onBirthdayInput" />
+      </block>
+      <block wx:elif="{{user.memberBirthday}}">
+        <text class="value">{{user.memberBirthday}}</text>
+        <view class="btn-edit" bindtap="enableEditBirthday">更新</view>
+      </block>
+    </view>
+  </view>
+
+  <button class="btn" bindtap="saveUserInfo">保存信息</button>
+</view>
+
+    <!-- 充值卡 -->
+    <view class="card">
+      <text class="card-title">账户充值</text>
+      <view class="form-item">
+        <text class="label">充值金额</text>
+        <input class="input" type="number" placeholder="请输入充值金额" value="{{rechargeAmount}}" bindinput="onAmountInput" />
+        <text class="tooltip" bindtap="toggleInfo">?</text>
+      </view>
+      <button class="btn" bindtap="submitRecharge">立即充值</button>
+
+      <view wx:if="{{showInfo}}" class="info-box">
+        <text class="info-text">1. 充值500元成为 VIP1，充值1000元成为 VIP2，充值2000元成为 VIP3。</text>
+        <text class="info-text">2. VIP1 享95折，VIP2 享88折，VIP3 享75折。</text>
+      </view>
+    </view>
+    <!-- 积分抽奖链接卡片 -->
+   <view class="card" bindtap="goToLottery" hover-class="hover-card">
+      <text class="card-title">🎁 积分抽奖</text>
+     <text class="info-text">点击进入积分抽奖页面，幸运赢好礼！</text>
+   </view>
+   <!-- 智能推荐卡 -->
+    <view class="card" bindtap="goToDeepSeek" hover-class="hover-card">
+      <text class="card-title">🤖 智能推荐</text>
+      <text class="info-text">点击进入，体验 AI 智能点餐推荐</text>
+    </view>
+
+    <view style="height: 100rpx;"></view>
+  </scroll-view>
+
+  <!-- 底部导航栏 -->
+  <view class="tabbar">
+    <view class="tab-item" bindtap="switchTab" data-tab="home">
+      <image class="tab-icon" src="/assets/tab/home-{{activeTab==='home'?'active':'inactive'}}.png" mode="aspectFit" />
+      <text class="{{activeTab==='home'?'active':''}}">主页</text>
+    </view>
+    <view class="tab-item" bindtap="switchTab" data-tab="orders">
+      <image class="tab-icon" src="/assets/tab/orders-{{activeTab==='orders'?'active':'inactive'}}.png" mode="aspectFit" />
+      <text class="{{activeTab==='orders'?'active':''}}">订单</text>
+    </view>
+    <view class="tab-item" bindtap="switchTab" data-tab="review">
+      <image class="tab-icon" src="/assets/tab/review-{{activeTab==='review'?'active':'inactive'}}.png"         mode="aspectFit" />
+      <text class="{{activeTab==='review'?'active':''}}">评价</text>
+    </view>
+    <view class="tab-item" bindtap="switchTab" data-tab="profile">
+      <image class="tab-icon" src="/assets/tab/profile-{{activeTab==='profile'?'active':'inactive'}}.png" mode="aspectFit" />
+      <text class="{{activeTab==='profile'?'active':''}}">我的</text>
+    </view>
+  </view>
+  <view wx:if="{{showBirthdayPopup}}" class="birthday-mask" bindtap="hideBirthdayPopup">
+    <view class="birthday-popup" bindtap="stopPropagation">
+      <image src="/images/cake.png" class="birthday-icon" />
+      <text class="birthday-text">🎉 生日快乐！</text>
+      <text class="birthday-subtext">愿你今天充满喜悦与惊喜~</text>
+      <button class="close-btn" bindtap="hideBirthdayPopup">关闭</button>
+    </view>
+  </view>
+</view>
