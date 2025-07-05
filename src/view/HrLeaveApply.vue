@@ -85,7 +85,7 @@
             endDate: this.form.endDate,
             reason: this.form.reason
           };
-          const res = await fetch("/api/leave/apply", {
+          const res = await fetch("/api/leave/hr-apply", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
