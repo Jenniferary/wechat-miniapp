@@ -3,18 +3,21 @@
       <div class="sidebar">
         <h2>📋 个人档案</h2>
         <ul>
-          <li @click="$router.push('/hr-dashboard')">入职待审批列表</li>
-          <li><strong>个人档案</strong></li>
+          <li @click="$router.push('/hr-dashboard')"><strong>入职待审批列表</strong></li>
+          <li @click="$router.push('/hr-profile')">个人档案</li> 
           <li @click="$router.push('/hr-employee')">员工档案</li>
           <li @click="$router.push('/hr-attendance')">考勤打卡</li>
           <li @click="$router.push('/hr-leave')">请假申请</li>
           <li @click="$router.push('/hr-leave-progress')">我的请假记录</li>
           <li @click="$router.push('/hr-leave-review')">请假待审批</li>
-          <li @click="$router.push('/hr-leaving-working')">离职申请</li>
-           <li @click="$router.push('/hr-overtime-working')">加班申请</li>
+          <li @click="$router.push('/hr-overtime-working')">加班申请</li>
+          <li @click="$router.push('/hr-overtime-progress')">我的加班记录</li>
           <li @click="$router.push('/hr-overtime-approval')">加班待审批</li>
           <li @click="$router.push('/hr-overtime-approval-history')">加班审批记录</li>
+          <li @click="$router.push('/hr-leaving-working')">离职申请</li>
+          <li @click="$router.push('/hr-leaving-status')">查看我的离职进度</li>
           <li @click="$router.push('/hr-leavingworking-review')">离职待审批</li>
+          <li @click="$router.push('/hr-salary')">工资管理</li>
           <li @click="logout" class="logout">退出系统</li>
         </ul>
       </div>

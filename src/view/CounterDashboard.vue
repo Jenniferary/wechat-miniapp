@@ -11,10 +11,7 @@
           </li>
           <li @click="$router.push('/counter-dinein-order')">管理堂食订单</li>
           <li @click="$router.push('/manage-tables')">管理餐桌</li>
-          <li @click="$router.push('/counter-overtime-working')">申请加班</li>
-          <li @click="$router.push('/counter-leaving-working')">申请离职</li>
-          <li @click="$router.push('/counter-salary')">工资管理</li>
-  
+          
           <li>
             <strong
               @click="toggleSection('delivery')"
@@ -49,7 +46,11 @@
           >
             查看外卖订单
           </li>
-  
+          <li @click="$router.push('/counter-overtime-working')">申请加班</li>
+          <li @click="$router.push('/counter-overtime-progress')">我的加班记录</li>
+          <li @click="$router.push('/counter-leaving-working')">申请离职</li>
+          <li @click="$router.push('/counter-leaving-status')">查看离职申请进度</li>
+          <li @click="$router.push('/counter-salary')">工资管理</li>
           <li @click="$router.push('/counter-attendance')">考勤打卡</li>
           <li @click="$router.push('/counter-leave')">请假申请</li>
           <li @click="$router.push('/counter-leave-progress')">我的请假记录</li>

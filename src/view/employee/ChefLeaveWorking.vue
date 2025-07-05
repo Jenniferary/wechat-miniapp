@@ -4,10 +4,15 @@
       <h2>📌 离职申请</h2>
       <ul>
         <li @click="$router.push('/employee-dashboard')">个人档案</li>
-        <li @click="$router.push('/employ-leaving-Status')">查看离职申请进度</li>
-        <li @click="$router.push('/employee-attendance')">考勤打卡</li>
-        <li><strong>离职申请</strong></li>
-        <li @click="logout" class="logout">退出系统</li>
+        <li @click="$router.push('/chef-attendance')">考勤打卡</li>
+          <li @click="$router.push('/chef-leave')">请假申请</li>
+          <li @click="$router.push('/chef-leave-progress')">我的请假记录</li>
+          <li @click="$router.push('/chef-overtime-working')">加班申请</li>
+          <li @click="$router.push('/chef-overtime-progress')">我的加班记录</li>
+          <li @click="$router.push('/chef-leaving-working')">离职申请</li>
+          <li @click="$router.push('/employ-leaving-Status')">查看离职申请进度</li>
+          <li @click="$router.push('/chef-salary')">工资管理</li>
+          <li @click="logout" class="logout">退出系统</li>
       </ul>
     </div>
 

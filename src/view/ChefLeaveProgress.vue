@@ -6,10 +6,14 @@
       <ul>
         <li @click="$router.push('/chef-dashboard')">个人档案</li>
         <li @click="$router.push('/chef-attendance')">考勤打卡</li>
-        <li @click="$router.push('/chef-overtime-working')">加班申请</li>
-        <li @click="$router.push('/chef-leave')">请假申请</li>
-        <li><strong>我的请假记录</strong></li>
-        <li class="logout" @click="logout">退出系统</li>
+          <li @click="$router.push('/chef-leave')">请假申请</li>
+          <li @click="$router.push('/chef-leave-progress')">我的请假记录</li>
+          <li @click="$router.push('/chef-overtime-working')">加班申请</li>
+          <li @click="$router.push('/chef-overtime-progress')">我的加班记录</li>
+          <li @click="$router.push('/chef-leaving-working')">离职申请</li>
+          <li @click="$router.push('/employ-leaving-Status')">查看离职申请进度</li>
+          <li @click="$router.push('/chef-salary')">工资管理</li>
+          <li @click="logout" class="logout">退出系统</li>
       </ul>
     </aside>
 
@@ -188,51 +192,39 @@ export default {
 }
 
 .sidebar {
-  width: 240px;
-  background: #1d3557;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  padding: 28px 20px;
-}
-
-.sidebar h2 {
-  font-size: 22px;
-  border-bottom: 2px solid #fff;
-  padding-bottom: 10px;
-  margin-bottom: 30px;
-}
-
-.sidebar ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  flex: 1;
-}
-.node.rejected .circle {
-  background: #c0392b !important;  /* 红色 */
-  color: #fff;
-  animation: none;
-}
-
-.node.rejected span {
-  color: #c0392b !important;
-}
-.sidebar li {
-  padding: 10px 0;
-  cursor: pointer;
-}
-
-.sidebar .logout {
-  margin-top: auto;
-  color: #ffb3b3;
-  transition: 0.3s;
-}
-
-.sidebar .logout:hover {
-  color: #fff;
-  font-weight: 700;
-}
+    width: 240px;
+    background: #1d3557;
+    color: white;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+  }
+  .sidebar h2 {
+    margin-bottom: 30px;
+    font-size: 22px;
+    border-bottom: 2px solid #fff;
+    padding-bottom: 10px;
+  }
+  .sidebar ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+    flex: 1;
+  }
+  .sidebar li {
+    padding: 10px 0;
+    font-size: 15px;
+    cursor: pointer;
+  }
+  .logout {
+    color: #ffb3b3;
+    transition: color 0.3s ease;
+  }
+  .logout:hover {
+    color: #ffffff;
+    font-weight: bold;
+  }
 
 .main {
   flex: 1;

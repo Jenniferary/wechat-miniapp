@@ -1,18 +1,37 @@
 <template>
   <div class="resume-page">
     <div class="sidebar">
-      <h2>📌 离职申请</h2>
-      <ul>
-        <li @click="$router.push('/counter-dashboard')">个人档案</li>
-        <li @click="$router.push('/counter-leaving-status')">查看离职申请进度</li>
-        <li><strong>离职申请</strong></li>
-        <li @click="logout" class="logout">退出系统</li>
+      <h2>💁‍♀️ 前台管理系统</h2>
+      <ul class="menu-list">
+        <li :class="{ active: activeSection === 'profile' }" @click="selectSection('profile')">个人档案</li>
+        <li @click="selectSection('dinein')">管理堂食订单</li>
+        <li @click="selectSection('tables')">管理餐桌</li>
+
+        <li>
+          <strong
+            @click="toggleSection('delivery')"
+            :class="{ active: activeSection === 'delivery' }"
+            style="margin-top: 20px; cursor: pointer; color: #fff; font-weight: bold;"
+          >外卖管理</strong>
+        </li>
+        <li v-if="activeSection === 'delivery'" :class="{ active: activeSubsection === 'assign' }" @click="selectSubsection('assign')" style="padding-left: 15px;">分配外卖员</li>
+        <li v-if="activeSection === 'delivery'" :class="{ active: activeSubsection === 'add' }" @click="selectSubsection('add')" style="padding-left: 15px;">添加外卖员</li>
+        <li v-if="activeSection === 'delivery'" :class="{ active: activeSubsection === 'view' }" @click="selectSubsection('view')" style="padding-left: 15px;">查看外卖订单</li>
+
+        <li :class="{ active: activeSection === 'overtime' }" @click="selectSection('overtime')">申请加班</li>
+        <li :class="{ active: activeSection === 'overtime-progress' }" @click="selectSection('overtime-progress')">我的加班记录</li>
+        <li :class="{ active: activeSection === 'leaving' }" @click="selectSection('leaving')"><strong>离职申请</strong></li>
+        <li :class="{ active: activeSection === 'leaving-status' }" @click="selectSection('leaving-status')">查看离职申请进度</li>
+        <li :class="{ active: activeSection === 'salary' }" @click="selectSection('salary')">工资管理</li>
+        <li :class="{ active: activeSection === 'attendance' }" @click="selectSection('attendance')">考勤打卡</li>
+        <li :class="{ active: activeSection === 'leave' }" @click="selectSection('leave')">请假申请</li>
+        <li :class="{ active: activeSection === 'leave-progress' }" @click="selectSection('leave-progress')">我的请假记录</li>
       </ul>
+      <div class="logout" @click="logout">退出系统</div>
     </div>
 
     <div class="form-section">
       <h3>提交离职申请</h3>
-
       <form @submit.prevent="submitLeaveRequest">
         <div class="form-row">
           <label>离职原因：</label>
@@ -29,18 +48,95 @@ export default {
   name: "CounterLeavingWorking",
   data() {
     return {
-      form: {
-        reason: "",
-      },
-      counterInfo: null, // 用于存储前台员工信息
+      form: { reason: "" },
+      counterInfo: null,
+      activeSection: "leaving",
+      activeSubsection: null,
     };
   },
   created() {
+    this.syncActiveByRoute(this.$route.path);
     this.loadCounterInfo();
   },
+  watch: {
+    '$route.path'(newPath) {
+      this.syncActiveByRoute(newPath);
+    },
+  },
   methods: {
+    syncActiveByRoute(path) {
+      if (path.includes('overtime-working')) {
+        this.activeSection = 'overtime';
+      } else if (path.includes('overtime-progress')) {
+        this.activeSection = 'overtime-progress';
+      } else if (path.includes('dashboard')) {
+        this.activeSection = 'profile';
+      } else if (path.includes('attendance')) {
+        this.activeSection = 'attendance';
+      } else if (path.includes('leave-progress')) {
+        this.activeSection = 'leave-progress';
+      } else if (path.includes('leave')) {
+        this.activeSection = 'leave';
+      } else if (path.includes('leaving-status')) {
+        this.activeSection = 'leaving-status';
+      } else if (path.includes('leaving-working')) {
+        this.activeSection = 'leaving';
+      } else if (path.includes('salary')) {
+        this.activeSection = 'salary';
+      } else if (path.startsWith('/delivery-')) {
+        this.activeSection = 'delivery';
+        if (path.includes('assign')) this.activeSubsection = 'assign';
+        else if (path.includes('add')) this.activeSubsection = 'add';
+        else if (path.includes('view')) this.activeSubsection = 'view';
+      } else {
+        this.activeSection = null;
+        this.activeSubsection = null;
+      }
+    },
+    selectSection(section) {
+      this.activeSection = section;
+      this.activeSubsection = null;
+      const routes = {
+        profile: "/counter-dashboard",
+        dinein: "/counter-dinein-order",
+        tables: "/manage-tables",
+        delivery: "/delivery-assign",
+        overtime: "/counter-overtime-working",
+        'overtime-progress': "/counter-overtime-progress",
+        leaving: "/counter-leaving-working",
+        'leaving-status': "/counter-leaving-status",
+        salary: "/counter-salary",
+        attendance: "/counter-attendance",
+        leave: "/counter-leave",
+        'leave-progress': "/counter-leave-progress",
+      };
+      if (routes[section]) {
+        this.$router.push(routes[section]);
+      }
+    },
+    toggleSection(section) {
+      if (this.activeSection === section) {
+        this.activeSection = null;
+        this.activeSubsection = null;
+      } else {
+        this.activeSection = section;
+        this.activeSubsection = "assign";
+        this.$router.push("/delivery-assign");
+      }
+    },
+    selectSubsection(subsection) {
+      this.activeSubsection = subsection;
+      const subRoutes = {
+        assign: "/delivery-assign",
+        add: "/delivery-add",
+        view: "/delivery-view",
+      };
+      if (subRoutes[subsection]) {
+        this.$router.push(subRoutes[subsection]);
+      }
+    },
     async loadCounterInfo() {
-      const counterId = localStorage.getItem("counterId");  // 使用 counterId 来获取前台员工信息
+      const counterId = localStorage.getItem("counterId");
       if (!counterId) {
         alert("未登录");
         this.$router.push("/login");
@@ -48,7 +144,7 @@ export default {
       }
 
       try {
-        const res = await fetch(`/api/counter/${counterId}`);  // 使用 counterId 请求前台员工信息
+        const res = await fetch(`/api/counter/${counterId}`);
         const json = await res.json();
         if (json.status === "success") {
           this.counterInfo = json.data;
@@ -59,7 +155,6 @@ export default {
         alert("请求错误：" + err.message);
       }
     },
-
     async submitLeaveRequest() {
       if (!this.counterInfo) {
         alert("前台员工信息未加载");
@@ -68,11 +163,11 @@ export default {
 
       try {
         const payload = {
-          employeeId: this.counterInfo.id,  // 使用 employeeInfo.id 提交离职申请
-          employeeType: "counter",  // 假设员工类型是 "counter"
-          branchId: this.counterInfo.branchId,  // 获取前台员工的 branchId
-          reason: this.form.reason,  // 获取离职原因
-          name: this.counterInfo.name,  // 获取前台员工的姓名
+          employeeId: this.counterInfo.id,
+          employeeType: "counter",
+          branchId: this.counterInfo.branchId,
+          reason: this.form.reason,
+          name: this.counterInfo.name,
         };
 
         const res = await fetch("/api/leaving-working/counter-apply", {
@@ -84,7 +179,7 @@ export default {
         const json = await res.json();
         if (json.status === "success") {
           alert("离职申请提交成功！");
-          this.form.reason = "";  // 清空表单
+          this.form.reason = "";
         } else {
           alert(json.message || "提交失败");
         }
@@ -92,9 +187,8 @@ export default {
         alert("请求错误：" + err.message);
       }
     },
-
     logout() {
-      localStorage.removeItem("counterId");  // 移除 counterId 以退出
+      localStorage.removeItem("counterId");
       this.$router.push("/login");
     },
   },
@@ -117,6 +211,7 @@ export default {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  height: 100vh;
 }
 
 .sidebar h2 {
@@ -126,31 +221,37 @@ export default {
   padding-bottom: 10px;
 }
 
-.sidebar ul {
+.menu-list {
+  flex: 1;
   list-style: none;
   padding: 0;
   margin: 0;
-  flex: 1;
+  overflow-y: auto;
 }
 
-.sidebar li {
+.menu-list li {
   padding: 10px 0;
   font-size: 15px;
   cursor: pointer;
+  color: #ccc;
 }
 
-.sidebar li:hover {
-  background-color: #ffb3b3;
-  color: #fff;
+.menu-list li.active {
+  color: #00b4d8;
+  font-weight: bold;
+}
+
+.menu-list strong.active {
+  color: #00b4d8;
 }
 
 .logout {
   color: #ffb3b3;
-  transition: color 0.3s ease;
+  margin-top: 20px;
+  cursor: pointer;
 }
-
 .logout:hover {
-  color: white;
+  color: #fff;
   font-weight: bold;
 }
 
@@ -201,21 +302,5 @@ button:hover {
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;
-}
-
-@media (max-width: 768px) {
-  .resume-page {
-    flex-direction: column;
-  }
-
-  .sidebar {
-    width: 100vw;
-    text-align: center;
-  }
-
-  .form-section {
-    width: 100vw;
-    padding: 20px;
-  }
 }
 </style>

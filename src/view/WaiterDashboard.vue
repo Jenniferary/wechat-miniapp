@@ -8,7 +8,9 @@
           <li @click="$router.push('/waiter-leave')">请假申请</li>
           <li @click="$router.push('/waiter-leave-progress')">我的请假记录</li>
           <li @click="$router.push('/waiter-leave-working')">离职申请</li>
+          <li @click="$router.push('/waiter-leaving-status')">查看离职申请进度</li>
           <li @click="$router.push('/waiter-overtime-working')">加班申请</li>
+          <li @click="$router.push('/waiter-overtime-progress')">我的加班记录</li>
           <li @click="$router.push('/waiter-salary')">工资管理</li>
           <li @click="logout" class="logout">退出系统</li>
         </ul>

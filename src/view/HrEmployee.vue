@@ -3,17 +3,21 @@
       <nav class="sidebar">
         <h2>📋 员工档案</h2>
         <ul>
-          <li @click="$router.push('/hr-dashboard')">入职待审批列表</li>
-          <li @click="$router.push('/hr-profile')">个人档案</li>
-          <li><strong>员工档案</strong></li>
+          <li @click="$router.push('/hr-dashboard')"><strong>入职待审批列表</strong></li>
+          <li @click="$router.push('/hr-profile')">个人档案</li> 
+          <li @click="$router.push('/hr-employee')">员工档案</li>
           <li @click="$router.push('/hr-attendance')">考勤打卡</li>
           <li @click="$router.push('/hr-leave')">请假申请</li>
           <li @click="$router.push('/hr-leave-progress')">我的请假记录</li>
           <li @click="$router.push('/hr-leave-review')">请假待审批</li>
           <li @click="$router.push('/hr-overtime-working')">加班申请</li>
+          <li @click="$router.push('/hr-overtime-progress')">我的加班记录</li>
           <li @click="$router.push('/hr-overtime-approval')">加班待审批</li>
           <li @click="$router.push('/hr-overtime-approval-history')">加班审批记录</li>
           <li @click="$router.push('/hr-leaving-working')">离职申请</li>
+          <li @click="$router.push('/hr-leaving-status')">查看我的离职进度</li>
+          <li @click="$router.push('/hr-leavingworking-review')">离职待审批</li>
+          <li @click="$router.push('/hr-salary')">工资管理</li>
           <li @click="logout" class="logout">退出系统</li>
         </ul>
       </nav>
@@ -164,59 +168,40 @@
   
   .sidebar {
     width: 240px;
-    background: linear-gradient(180deg, #1d3557, #264064);
-    color: #fff;
+    background: #1d3557;
+    color: white;
     padding: 30px 20px;
     display: flex;
     flex-direction: column;
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    z-index: 100;
-    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
   }
-  
   .sidebar h2 {
-    font-size: 20px;
-    margin-bottom: 25px;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    margin-bottom: 30px;
+    font-size: 22px;
+    border-bottom: 2px solid #fff;
     padding-bottom: 10px;
-    letter-spacing: 1px;
   }
-  
   .sidebar ul {
     list-style: none;
-    padding: 0;
-    flex-grow: 1;
+    padding-left: 0;
+    margin: 0;
+    flex: 1;
   }
   .sidebar li {
     padding: 10px 0;
     font-size: 15px;
     cursor: pointer;
-    transition: all 0.2s ease;
-    color: #f0f0f0;
-  }
-  .sidebar li:hover {
-    color: #ffd166;
-    font-weight: bold;
-  }
-  .sidebar li strong {
-    color: #ffd700;
   }
   .logout {
-    margin-top: auto;
     color: #ffb3b3;
-    font-weight: bold;
-    cursor: pointer;
-    transition: color 0.2s;
+    transition: color 0.3s ease;
   }
   .logout:hover {
-    color: #fff;
+    color: #ffffff;
+    font-weight: bold;
   }
   
   .content {
-    margin-left: 240px;
     width: calc(100vw - 240px);
     height: 100vh;
     overflow-y: auto;

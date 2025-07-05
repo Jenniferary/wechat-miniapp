@@ -3,19 +3,30 @@
     <!-- 侧栏 -->
     <aside class="sidebar">
       <h2>💁‍♀️ 前台管理系统</h2>
-      <ul>
-        <li :class="{ active: activeSection === 'profile' }" @click="selectSection('profile', '/counter-dashboard')">个人档案</li>
-        <li :class="{ active: activeSection === 'dinein' }" @click="selectSection('dinein', '/counter-dinein-order')">管理堂食订单</li>
-        <li :class="{ active: activeSection === 'tables' }" @click="selectSection('tables', '/manage-tables')">管理餐桌</li>
+      <ul class="menu-list">
+        <li :class="{ active: activeSection === 'profile' }" @click="selectSection('profile')">个人档案</li>
+        <li @click="selectSection('dinein')">管理堂食订单</li>
+        <li @click="selectSection('tables')">管理餐桌</li>
+
         <li>
-          <strong @click="toggleSection('delivery')" :class="{ active: activeSection === 'delivery' }">外卖管理</strong>
+          <strong
+            @click="toggleSection('delivery')"
+            :class="{ active: activeSection === 'delivery' }"
+            style="margin-top: 20px; cursor: pointer; color: #fff; font-weight: bold;"
+          >外卖管理</strong>
         </li>
-        <li v-if="activeSection === 'delivery'" :class="{ active: activeSubsection === 'assign' }" @click="selectSubsection('assign', '/delivery-assign')">分配外卖员</li>
-        <li v-if="activeSection === 'delivery'" :class="{ active: activeSubsection === 'add' }" @click="selectSubsection('add', '/delivery-add')">添加外卖员</li>
-        <li v-if="activeSection === 'delivery'" :class="{ active: activeSubsection === 'view' }" @click="selectSubsection('view', '/delivery-view')">查看外卖订单</li>
-        <li :class="{ active: activeSection === 'attendance' }" @click="selectSection('attendance', '/counter-attendance')">考勤打卡</li>
-        <li :class="{ active: activeSection === 'leave' }" @click="selectSection('leave', '/counter-leave')">请假申请</li>
-        <li :class="{ active: activeSection === 'leaveProgress' }" @click="selectSection('leaveProgress', '/counter-leave-progress')"><strong>我的请假记录</strong></li>
+        <li v-if="activeSection === 'delivery'" :class="{ active: activeSubsection === 'assign' }" @click="selectSubsection('assign')" style="padding-left: 15px;">分配外卖员</li>
+        <li v-if="activeSection === 'delivery'" :class="{ active: activeSubsection === 'add' }" @click="selectSubsection('add')" style="padding-left: 15px;">添加外卖员</li>
+        <li v-if="activeSection === 'delivery'" :class="{ active: activeSubsection === 'view' }" @click="selectSubsection('view')" style="padding-left: 15px;">查看外卖订单</li>
+
+        <li :class="{ active: activeSection === 'overtime' }" @click="selectSection('overtime')">申请加班</li>
+        <li :class="{ active: activeSection === 'overtime-progress' }" @click="selectSection('overtime-progress')">我的加班记录</li>
+        <li :class="{ active: activeSection === 'leaving' }" @click="selectSection('leaving')">离职申请</li>
+        <li :class="{ active: activeSection === 'leaving-status' }" @click="selectSection('leaving-status')"><strong>查看离职进度</strong></li>
+        <li :class="{ active: activeSection === 'salary' }" @click="selectSection('salary')">工资管理</li>
+        <li :class="{ active: activeSection === 'attendance' }" @click="selectSection('attendance')">考勤打卡</li>
+        <li :class="{ active: activeSection === 'leave' }" @click="selectSection('leave')">请假申请</li>
+        <li :class="{ active: activeSection === 'leave-progress' }" @click="selectSection('leave-progress')">我的请假记录</li>
       </ul>
       <div class="logout" @click="logout">退出系统</div>
     </aside>
@@ -182,18 +193,58 @@ export default {
       }
       this.detailVisible = true;
     },
-    selectSection(section, path) {
+    syncActiveByRoute(path) {
+      if (path.includes('dashboard')) this.activeSection = 'profile';
+      else if (path.includes('dinein')) this.activeSection = 'dinein';
+      else if (path.includes('manage-tables')) this.activeSection = 'tables';
+      else if (path.includes('overtime-working')) this.activeSection = 'overtime';
+      else if (path.includes('overtime-progress')) this.activeSection = 'overtime-progress';
+      else if (path.includes('leave-progress')) this.activeSection = 'leave-progress';
+      else if (path.includes('leave')) this.activeSection = 'leave';
+      else if (path.includes('attendance')) this.activeSection = 'attendance';
+      else if (path.includes('salary')) this.activeSection = 'salary';
+      else if (path.includes('leaving-working')) this.activeSection = 'leaving';
+      else if (path.includes('leaving-status')) this.activeSection = 'leaving-status';
+      else if (path.startsWith('/delivery-')) {
+        this.activeSection = 'delivery';
+        if (path.includes('assign')) this.activeSubsection = 'assign';
+        else if (path.includes('add')) this.activeSubsection = 'add';
+        else if (path.includes('view')) this.activeSubsection = 'view';
+      }
+    },
+    selectSection(section) {
       this.activeSection = section;
-      this.activeSubsection = '';
-      this.$router.push(path);
+      this.activeSubsection = null;
+      const routes = {
+        profile: "/counter-dashboard",
+        dinein: "/counter-dinein-order",
+        tables: "/manage-tables",
+        overtime: "/counter-overtime-working",
+        'overtime-progress': "/counter-overtime-progress",
+        leaving: "/counter-leaving-working",
+        'leaving-status': "/counter-leaving-status",
+        salary: "/counter-salary",
+        attendance: "/counter-attendance",
+        leave: "/counter-leave",
+        'leave-progress': "/counter-leave-progress",
+      };
+      if (routes[section]) this.$router.push(routes[section]);
     },
     toggleSection(section) {
-      this.activeSection = this.activeSection === section ? '' : section;
+      this.activeSection = this.activeSection === section ? null : section;
+      if (this.activeSection === section) {
+        this.activeSubsection = "assign";
+        this.$router.push("/delivery-assign");
+      }
     },
-    selectSubsection(subsection, path) {
+    selectSubsection(subsection) {
       this.activeSubsection = subsection;
-      this.activeSection = 'delivery';
-      this.$router.push(path);
+      const subRoutes = {
+        assign: "/delivery-assign",
+        add: "/delivery-add",
+        view: "/delivery-view",
+      };
+      if (subRoutes[subsection]) this.$router.push(subRoutes[subsection]);
     },
     logout() {
       localStorage.removeItem('counterId');
@@ -216,49 +267,53 @@ export default {
 .sidebar {
   width: 240px;
   background: #1d3557;
-  color: #fff;
+  color: white;
+  padding: 30px 20px;
   display: flex;
   flex-direction: column;
-  padding: 28px 20px;
+  box-sizing: border-box;
+  height: 100vh;
 }
 
 .sidebar h2 {
-  font-size: 22px;
-  border-bottom: 2px solid #fff;
-  padding-bottom: 10px;
   margin-bottom: 30px;
+  font-size: 22px;
+  border-bottom: 2px solid white;
+  padding-bottom: 10px;
 }
 
-.sidebar ul {
+.menu-list {
+  flex: 1;
   list-style: none;
   padding: 0;
   margin: 0;
-  flex: 1;
+  overflow-y: auto;
 }
 
-.sidebar li {
+.menu-list li {
   padding: 10px 0;
+  font-size: 15px;
   cursor: pointer;
-  user-select: none;
+  color: #ccc;
 }
 
-.sidebar li.active,
-.sidebar strong.active {
+.menu-list li.active {
   color: #00b4d8;
-  font-weight: 700;
+  font-weight: bold;
+}
+
+.menu-list strong.active {
+  color: #00b4d8;
 }
 
 .logout {
-  margin-top: auto;
   color: #ffb3b3;
-  transition: 0.3s;
+  margin-top: 20px;
   cursor: pointer;
-  user-select: none;
 }
-
 .logout:hover {
   color: #fff;
-  font-weight: 700;
+  font-weight: bold;
 }
 
 .main {
