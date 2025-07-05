@@ -34,6 +34,19 @@ public class LeaveRequestController {
         );
         return Map.of("status", rows > 0 ? "success" : "error");
     }
+    // 1. hr提交请假申请
+    @PostMapping("/hr-apply")
+    public Map<String, Object> hr_apply(@RequestBody LeaveRequest req) {
+        String sql = """
+            INSERT INTO leave_requests (employee_id, employee_type, branch_id, start_date, end_date, reason, status)
+            VALUES (?, ?, ?, ?, ?, ?, 'HR审批通过待店长审批git add .')
+        """;
+        int rows = jdbcTemplate.update(sql,
+                req.getEmployeeId(), req.getEmployeeType(), req.getBranchId(),
+                req.getStartDate(), req.getEndDate(), req.getReason()
+        );
+        return Map.of("status", rows > 0 ? "success" : "error");
+    }
 
     // 2. 查询当前分店待审批申请（HR或店长），HR可过滤掉自己提交的
     @GetMapping("/by-branch")
