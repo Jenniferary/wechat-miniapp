@@ -121,19 +121,22 @@ public class OrderController {
         Map<String, Object> response = new HashMap<>();
         System.out.println(orderRequest.toString());
         try {
-            String username = orderRequest.getUsername();
-            double totalPrice = orderRequest.getTotalPrice();
-            List<String> items = orderRequest.getItems();
-            double selectedCoupon = orderRequest.getSelectedCoupon();
+            // 1. 从请求中取值
+            String username        = orderRequest.getUsername();
+            double totalPrice      = orderRequest.getTotalPrice();
+            List<String> items     = orderRequest.getItems();
+            double selectedCoupon  = orderRequest.getSelectedCoupon();
+            int branchId           = orderRequest.getBranchId();
+            String remark          = orderRequest.getRemark();
 
-            // 获取 user_id
+            // 2. 查 user_id
             Integer userId = jdbc.queryForObject(
                     "SELECT user_id FROM users WHERE username = ?",
                     new Object[]{username},
                     Integer.class
             );
 
-            // 获取用户占用的桌号
+            // 3. 查桌号
             String tableNumber;
             try {
                 tableNumber = jdbc.queryForObject(
@@ -146,99 +149,17 @@ public class OrderController {
                 response.put("message", "该用户没有已占用的桌号！");
                 response.put("errorCode", "tableNumberNotFound");
                 return response;
-            } catch (Exception e) {
-                e.printStackTrace();
-                response.put("success", false);
-                response.put("message", "查询桌号时发生错误！");
-                response.put("errorCode", "tableNumberQueryError");
-                return response;
             }
 
-            if (tableNumber == null) {
-                response.put("success", false);
-                response.put("message", "该用户没有已占用的桌号！");
-                response.put("errorCode", "tableNumberNotFound");
-                return response;
-            }
+            // 4. 计算订单字段
+            String dishList   = String.join(", ", items);
+            double finalPrice = totalPrice - selectedCoupon;
 
-            // 存储订单到 orders 表
-            String dishList = String.join(", ", items);  // 菜品列表转换为字符串
-            double finalPrice = totalPrice - selectedCoupon;  // 计算最终价格，扣除优惠券金额
-            String remark = orderRequest.getRemark(); // 获取备注信息
+            // 5. 插入 orders 表（只做一次）
             jdbc.update(
-                    "INSERT INTO orders (user_id, table_number, dish_list, price, time_ordered, discount_amount, is_coupon_used, is_paid, remark) " +
-                            "VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?, ?, ?)",
-                    userId,
-                    tableNumber,
-                    dishList,
-                    finalPrice,
-                    selectedCoupon,
-                    selectedCoupon > 0 ? 1 : 0,
-                    0,
-                    remark
-            );
-
-            // ✅ 更新库存逻辑：将菜品数量合并后处理
-            Map<String, Integer> dishCountMap = new HashMap<>();
-            for (String dishName : items) {
-                dishCountMap.put(dishName, dishCountMap.getOrDefault(dishName, 0) + 1);
-            }
-
-            for (Map.Entry<String, Integer> entry : dishCountMap.entrySet()) {
-                String dishName = entry.getKey();
-                int count = entry.getValue();
-
-                // 检查库存是否足够
-                Integer currentStock = jdbc.queryForObject(
-                        "SELECT dish_stock FROM dishes WHERE dish_name = ?",
-                        new Object[]{dishName},
-                        Integer.class
-                );
-
-                if (currentStock == null || currentStock < count) {
-                    response.put("success", false);
-                    response.put("message", "菜品库存不足：" + dishName);
-                    response.put("errorCode", "stockNotEnough");
-                    return response;
-                }
-
-                // 扣减库存
-                jdbc.update(
-                        "UPDATE dishes SET dish_stock = dish_stock - ? WHERE dish_name = ?",
-                        count,
-                        dishName
-                );
-            }
-
-
-            // 删除使用的优惠券（如有）
-            if (selectedCoupon > 0) {
-                try {
-                    Integer couponId = jdbc.queryForObject(
-                            "SELECT coupon_id FROM coupons WHERE user_id = ? AND discount_amount = ? AND expiry_date >= CURRENT_TIMESTAMP",
-                            new Object[]{userId, selectedCoupon},
-                            Integer.class
-                    );
-                    if (couponId != null) {
-                        jdbc.update("DELETE FROM coupons WHERE coupon_id = ?", couponId);
-                    }
-                } catch (Exception ignore) {}
-            }
-
-            // 查询剩余优惠券
-            List<Map<String, Object>> coupons = jdbc.queryForList(
-                    "SELECT coupon_id, min_threshold, discount_amount FROM coupons " +
-                            "WHERE user_id = ? AND expiry_date >= CURRENT_TIMESTAMP AND min_threshold <= ?",
-                    userId, totalPrice
-            );
-
-            // 存储订单到 orders 表
-            String dishList = String.join(", ", items);  // 菜品列表转换为字符串
-            double finalPrice = totalPrice - selectedCoupon;  // 计算最终价格，扣除优惠券金额
-            String remark = orderRequest.getRemark(); // 获取备注信息
-            int branchId = orderRequest.getBranchId();
-            jdbc.update(
-                    "INSERT INTO orders (user_id, branch_id, table_number, dish_list, price, time_ordered, discount_amount, is_coupon_used, is_paid, remark) " +
+                    "INSERT INTO orders " +
+                            "(user_id, branch_id, table_number, dish_list, price, time_ordered, " +
+                            " discount_amount, is_coupon_used, is_paid, remark) " +
                             "VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?, ?, ?)",
                     userId,
                     branchId,
@@ -251,6 +172,58 @@ public class OrderController {
                     remark
             );
 
+            // 6. 更新库存
+            Map<String, Integer> dishCountMap = new HashMap<>();
+            for (String dishName : items) {
+                dishCountMap.put(dishName, dishCountMap.getOrDefault(dishName, 0) + 1);
+            }
+            for (Map.Entry<String, Integer> entry : dishCountMap.entrySet()) {
+                String dishName = entry.getKey();
+                int count = entry.getValue();
+
+                Integer currentStock = jdbc.queryForObject(
+                        "SELECT dish_stock FROM dishes WHERE dish_name = ?",
+                        new Object[]{dishName},
+                        Integer.class
+                );
+                if (currentStock == null || currentStock < count) {
+                    response.put("success", false);
+                    response.put("message", "菜品库存不足：" + dishName);
+                    response.put("errorCode", "stockNotEnough");
+                    return response;
+                }
+
+                jdbc.update(
+                        "UPDATE dishes SET dish_stock = dish_stock - ? WHERE dish_name = ?",
+                        count,
+                        dishName
+                );
+            }
+
+            // 7. 删除已用优惠券
+            if (selectedCoupon > 0) {
+                try {
+                    Integer couponId = jdbc.queryForObject(
+                            "SELECT coupon_id FROM coupons " +
+                                    "WHERE user_id = ? AND discount_amount = ? AND expiry_date >= CURRENT_TIMESTAMP",
+                            new Object[]{userId, selectedCoupon},
+                            Integer.class
+                    );
+                    if (couponId != null) {
+                        jdbc.update("DELETE FROM coupons WHERE coupon_id = ?", couponId);
+                    }
+                } catch (Exception ignore) {}
+            }
+
+            // 8. 查询剩余可用优惠券
+            List<Map<String, Object>> coupons = jdbc.queryForList(
+                    "SELECT coupon_id, min_threshold, discount_amount " +
+                            "FROM coupons " +
+                            "WHERE user_id = ? AND expiry_date >= CURRENT_TIMESTAMP AND min_threshold <= ?",
+                    userId, totalPrice
+            );
+
+            // 9. 返回结果
             response.put("success", true);
             response.put("availableCoupons", coupons);
             return response;

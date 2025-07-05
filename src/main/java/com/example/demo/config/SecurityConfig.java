@@ -16,10 +16,9 @@ public class SecurityConfig {
 
         http
                 .csrf(csrf -> csrf.disable()) // 禁用 CSRF
-<<<<<<< HEAD
+
                 .cors(cors -> cors.and()) // 启用 CORS 支持
-=======
->>>>>>> origin/main
+
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/**").permitAll()
                         .anyRequest().permitAll() // 所有请求都放行
