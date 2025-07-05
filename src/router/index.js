@@ -254,13 +254,8 @@ const routes = [
     //Hr加班申请
   {path: '/Hr-overtime-working', component:HrOvertimeWorkingVue},
   //hr查看自己加班记录
-<<<<<<< HEAD
-  {path: '/Hr-overtime-progress', component:HrOvertimeProgressVue}
-  
-=======
   {path: '/Hr-overtime-progress', component:HrOvertimeProgressVue},
   {path: '/branch-employee-management',component: BranchEmployeeManagementVue}
->>>>>>> master
 
 ]
 
