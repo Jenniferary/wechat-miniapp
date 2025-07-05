@@ -283,7 +283,8 @@ public class BrController {
                     .append(emp.get("hireDate")).append('\n');
         }
 
-        byte[] bytes = sb.toString().getBytes(StandardCharsets.UTF_8);
+        String bom = "\uFEFF";  // UTF-8 BOM
+        byte[] bytes = (bom + sb.toString()).getBytes(StandardCharsets.UTF_8);
 
         String filename = "employees_branch_" + branchId + ".csv";
         return ResponseEntity.ok()
@@ -493,7 +494,9 @@ public class BrController {
                     .append(stats.get("totalWorkHours")).append('\n');
         }
 
-        byte[] bytes = sb.toString().getBytes(StandardCharsets.UTF_8);
+        String bom = "\uFEFF";  // UTF-8 BOM
+        byte[] bytes = (bom + sb.toString()).getBytes(StandardCharsets.UTF_8);
+
 
         String filename = "attendance_stats_" + month + ".csv";
         return ResponseEntity.ok()
@@ -530,7 +533,9 @@ public class BrController {
                     .append(point.get("totalWorkHours")).append('\n');
         }
 
-        byte[] bytes = sb.toString().getBytes(StandardCharsets.UTF_8);
+        String bom = "\uFEFF";  // UTF-8 BOM
+        byte[] bytes = (bom + sb.toString()).getBytes(StandardCharsets.UTF_8);
+
 
         String filename = "attendance_history_" + granularity + "_" + from + "_to_" + to + ".csv";
         return ResponseEntity.ok()
