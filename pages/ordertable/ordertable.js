@@ -13,10 +13,6 @@ Page({
   },
 
   onLoad() {
-<<<<<<< HEAD
-    
-=======
->>>>>>> origin/structured
     const now = new Date();
     // 格式化最小可选日期 YYYY-MM-DD
     const y = now.getFullYear();
@@ -28,14 +24,13 @@ Page({
       reservationDate: today
     });
   },
-<<<<<<< HEAD
+
   onShow(){
     this.setData({
       'form.username': wx.getStorageSync('username') || ''
     });
   },
-=======
->>>>>>> origin/structured
+
 
   onTypeChange(e) {
     this.setData({
@@ -62,14 +57,13 @@ Page({
   },
 
   submitReservation() {
-<<<<<<< HEAD
+
     if(wx.getStorageSync('branchId') == ''){
       
       wx.showToast({ title: '请先到首页选择餐厅哦！', icon: 'none' });
       return
     }
-=======
->>>>>>> origin/structured
+
     this.setData({ successMessage: '', errorMessage: '' });
     const { tableType, numOfPeople, username } = this.data.form;
     const { reservationDate, reservationTime } = this.data;

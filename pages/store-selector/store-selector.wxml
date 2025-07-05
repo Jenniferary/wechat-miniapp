@@ -26,10 +26,8 @@
           </view>
         </view>
 
-<<<<<<< HEAD
        <view style="display: flex;">
-=======
->>>>>>> origin/structured
+
         <button
           class="order-btn"
           data-store="{{item}}"
@@ -37,7 +35,7 @@
           hover-class="order-btn-hover"
           hover-start-time="70"
           hover-stay-time="400"
-<<<<<<< HEAD
+
         >🍽️ 预约堂食</button>
         <button
           class="order-btn"
@@ -49,9 +47,6 @@
         >🍽️ 点外卖</button>
        </view>
         
-=======
-        >🍽️ 去点餐</button>
->>>>>>> origin/structured
       </view>
     </block>
 
