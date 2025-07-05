@@ -39,7 +39,7 @@ public class LeaveRequestController {
     public Map<String, Object> hr_apply(@RequestBody LeaveRequest req) {
         String sql = """
             INSERT INTO leave_requests (employee_id, employee_type, branch_id, start_date, end_date, reason, status)
-            VALUES (?, ?, ?, ?, ?, ?, 'HR审批通过待店长审批git add .')
+            VALUES (?, ?, ?, ?, ?, ?, 'HR审批通过待店长审批')
         """;
         int rows = jdbcTemplate.update(sql,
                 req.getEmployeeId(), req.getEmployeeType(), req.getBranchId(),
