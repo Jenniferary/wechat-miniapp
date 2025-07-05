@@ -12,6 +12,7 @@
           <li @click="$router.push('/branch-employee-clock')">打卡总览</li>
           <li @click="$router.push('/branch-feedback')">客户反馈</li>
           <li class="active">绩效考核</li>
+          <li @click="$router.push('/branch-employee-management')">员工管理</li>
           <li class="logout" @click="logout">退出系统</li>
         </ul>
       </div>

@@ -82,6 +82,7 @@ import CounterOvertimeWorkingVue from '@/view/employee/CounterOvertimeWorking.vu
 import CounterOvertimeProgressVue from '@/view/employee/CounterOvertimeProgress.vue'
 import HrOvertimeWorkingVue from '@/view/Hr/HrOvertimeWorking.vue'
 import HrOvertimeProgressVue from '@/view/Hr/HrOvertimeProgress.vue'
+import BranchEmployeeManagementVue from '@/view/BranchEmployeeManagement.vue'
 const routes = [
   // 默认路由重定向到登录页面
   { path: '/', redirect: '/all-login' },
@@ -253,8 +254,13 @@ const routes = [
     //Hr加班申请
   {path: '/Hr-overtime-working', component:HrOvertimeWorkingVue},
   //hr查看自己加班记录
+<<<<<<< HEAD
   {path: '/Hr-overtime-progress', component:HrOvertimeProgressVue}
   
+=======
+  {path: '/Hr-overtime-progress', component:HrOvertimeProgressVue},
+  {path: '/branch-employee-management',component: BranchEmployeeManagementVue}
+>>>>>>> master
 
 ]
 

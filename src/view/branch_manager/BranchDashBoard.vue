@@ -12,6 +12,7 @@
         <li @click="$router.push('/branch-employee')">员工打卡情况总览</li> 
         <li @click="$router.push('/performance-review')">绩效考核</li>
         <li @click="$router.push('/branch-feedback')">客户反馈</li>
+        <li @click="$router.push('/branch-employee-management')">员工管理</li>
         <li @click="logout" class="logout">退出系统</li>
       </ul>
     </div>
@@ -296,4 +297,8 @@ p {
 .btn-process:hover {
   background-color: #219150;
 }
+<<<<<<< HEAD
 </style>
+=======
+</style>
+>>>>>>> master
