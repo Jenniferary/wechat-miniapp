@@ -161,7 +161,22 @@ public class OrderController {
                 return response;
             }
 
-
+            // 存储订单到 orders 表
+            String dishList = String.join(", ", items);  // 菜品列表转换为字符串
+            double finalPrice = totalPrice - selectedCoupon;  // 计算最终价格，扣除优惠券金额
+            String remark = orderRequest.getRemark(); // 获取备注信息
+            jdbc.update(
+                    "INSERT INTO orders (user_id, table_number, dish_list, price, time_ordered, discount_amount, is_coupon_used, is_paid, remark) " +
+                            "VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?, ?, ?)",
+                    userId,
+                    tableNumber,
+                    dishList,
+                    finalPrice,
+                    selectedCoupon,
+                    selectedCoupon > 0 ? 1 : 0,
+                    0,
+                    remark
+            );
 
             // ✅ 更新库存逻辑：将菜品数量合并后处理
             Map<String, Integer> dishCountMap = new HashMap<>();

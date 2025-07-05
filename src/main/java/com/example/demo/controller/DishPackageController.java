@@ -14,7 +14,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/packages")
-@CrossOrigin(originPatterns = "http://localhost:*")
+@CrossOrigin(origins = "http://localhost:8081")
 public class DishPackageController {
 
     @Autowired

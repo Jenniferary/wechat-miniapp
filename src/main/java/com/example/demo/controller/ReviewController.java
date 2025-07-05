@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(originPatterns = "http://localhost:*")  // Vue 默认端口
+@CrossOrigin(origins = "http://localhost:8081")  // Vue 默认端口
 public class ReviewController {
 
     @Autowired

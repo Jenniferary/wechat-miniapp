@@ -8,7 +8,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/takeaway")
-@CrossOrigin(originPatterns = "http://localhost:*")
+@CrossOrigin(origins = "http://localhost:8081")
 public class TakeawayController {
 
     @Autowired

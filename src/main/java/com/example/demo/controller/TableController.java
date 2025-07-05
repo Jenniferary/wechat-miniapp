@@ -9,7 +9,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/table")
-@CrossOrigin(originPatterns = "http://localhost:*")
+@CrossOrigin(origins = "http://localhost:8081")
 public class TableController {
 
     // 自动注入JdbcTemplate（Spring提供的数据库操作工具类，底层会自动使用DataSource）

@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/menu")
-@CrossOrigin(originPatterns = "http://localhost:*") // Vue 前端地址
+@CrossOrigin(origins = "http://localhost:8081") // Vue 前端地址
 public class DishController {
 
     @Autowired

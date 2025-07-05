@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/takeaway")
-@CrossOrigin(originPatterns = "http://localhost:*") // Vue 前端端口
+@CrossOrigin(origins = "http://localhost:8081") // Vue 前端端口
 public class TakeawayOrderController {
 
     @Autowired

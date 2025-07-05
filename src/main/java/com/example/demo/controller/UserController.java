@@ -19,7 +19,7 @@ import java.util.Random;
 @CrossOrigin(origins = "http://localhost:8081", allowCredentials = "true")
 public class UserController {
 
-    private final String url = "jdbc:mysql://localhost:3307/order_dish?useSSL=false&serverTimezone=UTC";
+    private final String url = "jdbc:mysql://localhost:3306/order_dish?useSSL=false&serverTimezone=UTC";
     private final String dbUser = "root";
     private final String dbPass = "123456";
     // 添加到 UserController.java 中
